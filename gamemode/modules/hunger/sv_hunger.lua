@@ -12,7 +12,7 @@ timer.Create( "rvr_hunger_subtract", HUNGER_DELAY, 0, function()
         ply:AddHunger(HUNGER_LOSS_AMOUNT)
     
         -- TODO seperate timer
-        if ply:GetHunger() == 0 then
+        if ply:GetHunger() <= 0 then
             ply:TakeDamage( HUNGER_DAMAGE_AMOUNT )
         end
     end
