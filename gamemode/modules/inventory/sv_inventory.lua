@@ -85,6 +85,8 @@ function i.moveItem( ply, fromPosition, toPosition, count )
 
     local fromItem = ply.RVR_Inventory.Inventory[fromPosition]
 
+    if not fromItem then return false, "No item to move" end
+
     if count >= 0 then
         count = math.Min( count, fromItem.count )
     end
@@ -118,4 +120,26 @@ function i.moveItem( ply, fromPosition, toPosition, count )
     end
 
     return true
+end
+
+function i.dropItem( ply, position, count )
+    count = count or -1
+
+    local itemData = ply.RVR_Inventory.Inventory[position]
+    if not itemData then return end
+
+    if count < 0 or count == itemData.count then
+        ply.RVR_Inventory.Inventory[position] = nil
+        count = itemData.count
+    else
+        itemData.count = itemData.count - count
+    end
+
+    local droppedItem = ents.Create( "gmod_button" )
+    if not IsValid( droppedItem ) then return end -- Check whether we successfully made an entity, if not - bail
+    droppedItem:SetPos( ply:GetShootPos() + Angle( 0, ply:EyeAngles().yaw, 0 ):GetForward() * 20 )
+    droppedItem:Setup( itemData.item, itemData.count )
+    droppedItem:Spawn()
+
+    return droppedItem
 end
