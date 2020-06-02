@@ -1,4 +1,3 @@
-RVR = RVR or {}
 RVR.Inventory = RVR.Inventory or {}
 
 local i = RVR.Inventory
@@ -48,14 +47,14 @@ function i.attemptPickupItem( ply, item, count )
     local originalCount = count
 
     for k = 1, ply.RVR_Inventory.MaxSlots do
-        local itemData = ply.RVR_Inventory.Inventory[i]
+        local itemData = ply.RVR_Inventory.Inventory[k]
         -- Empty
         if not itemData then
             if count <= item.maxCount then
-                ply.RVR_Inventory.Inventory[i] = { item = item, count = count }
+                ply.RVR_Inventory.Inventory[k] = { item = item, count = count }
                 return true, originalCount
             else
-                ply.RVR_Inventory.Inventory[i] = { item = item, count = item.maxCount }
+                ply.RVR_Inventory.Inventory[k] = { item = item, count = item.maxCount }
                 count = count - item.maxCount
             end
         end
@@ -157,7 +156,7 @@ function i.dropItem( ply, position, count )
 
     local droppedItem = ents.Create( "rvr_dropped_item" )
     if not IsValid( droppedItem ) then return end -- Check whether we successfully made an entity, if not - bail
-    droppedItem:SetPos( ply:GetShootPos() + Angle( 0, ply:EyeAngles().yaw, 0 ):GetForward() * 20 )
+    droppedItem:SetPos( ply:GetShootPos() + Angle( 0, ply:EyeAngles().yaw, 0 ):Forward() * 20 )
     droppedItem:Setup( itemData.item, itemData.count )
     droppedItem:Spawn()
 

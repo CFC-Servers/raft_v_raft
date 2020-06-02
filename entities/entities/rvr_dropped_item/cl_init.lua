@@ -7,7 +7,7 @@ function ENT:Draw()
     local angles = self:GetAngles()
 
     surface.SetFont("ChatFont")
-    local text = self:GetItemName()
+    local text = self:GetItemType()
     local amount = self:GetAmount()
 
     if amount > 1 then

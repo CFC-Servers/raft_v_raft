@@ -6,6 +6,9 @@ ENT.Spawnable = false
 ENT.IsDroppedItem = true
 
 function ENT:SetupDataTables()
-    self:NetworkVar( "Int", 1, "amount" )
-    self:NetworkVar( "String", "", "itemType" )
+    self:NetworkVar( "Int", 0, "Amount" )
+    self:NetworkVar( "String", 0, "ItemType" )
+
+    self:SetAmount( 1 )
+    self:SetItemType( "" )
 end

@@ -3,6 +3,21 @@ AddCSLuaFile("shared.lua")
 
 include("shared.lua")
 
+function ENT:Initialize()
+    self:PhysicsInit( SOLID_VPHYSICS )
+    self:SetMoveType( MOVETYPE_VPHYSICS )
+    self:SetSolid( SOLID_VPHYSICS )
+    self:SetUseType( SIMPLE_USE )
+    self:SetCollisionGroup( COLLISION_GROUP_WEAPON )
+
+    local physObj = self:GetPhysicsObject()
+
+    if physObj:IsValid() then
+        physObj:Wake()
+        physObj:EnableMotion( true )
+    end
+end
+
 function ENT:Setup( item, count )
     self:SetAmount( count )
     self:SetItemType( item.type )
