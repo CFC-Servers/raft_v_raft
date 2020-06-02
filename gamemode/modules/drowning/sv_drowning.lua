@@ -1,5 +1,5 @@
 local firstSubmergedTime, lastDrownTick = {}
-local Config = GM.Config.Drowning
+local config = GM.Config.Drowning
 
 local WATER_SUBMERGED = 3
 
@@ -9,11 +9,11 @@ util.AddNetworkString( "RVR_Player_Enter_Water" )
 util.AddNetworkString( "RVR_Player_Leave_Water" )
 
 local function isDrowning( player )
-    return ( CurTime() - firstSubmergedTime[player:SteamID()] ) >= Config.DROWNING_THRESHOLD
+    return ( CurTime() - firstSubmergedTime[player:SteamID()] ) >= config.DROWNING_THRESHOLD
 end
 
 local function canTakeDrownDamage( player )
-    return ( CurTime() - lastDrownTick[player:SteamID()] ) >= Config.DROWNING_TICK_DELAY
+    return ( CurTime() - lastDrownTick[player:SteamID()] ) >= config.DROWNING_TICK_DELAY
 end
 
 local function takeDrownDamage( player )
@@ -22,7 +22,7 @@ local function takeDrownDamage( player )
     lastDrownTick[player:SteamID()] = CurTime()
 
     local dmg = DamageInfo()
-    dmg:SetDamage( Config.DROWNING_DAMAGE )
+    dmg:SetDamage( config.DROWNING_DAMAGE )
     dmg:SetDamageType( DMG_DROWN )
 
     player:TakeDamageInfo( dmg )
@@ -56,7 +56,6 @@ local function drowningCheck()
                 takeDrownDamage( ply )
             end
         else
-
             firstSubmergedTime[plySteamID] = nil
             lastDrownTick[plySteamID] = nil
 
