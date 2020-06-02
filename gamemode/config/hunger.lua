@@ -11,5 +11,3 @@ Config.FOOD_LOSS_AMOUNT = -1
 Config.WATER_LOSS_AMOUNT = -1
 Config.DAMAGE_AMOUNT = 10
 Config.DAMAGE_DELAY = 2
-
-
