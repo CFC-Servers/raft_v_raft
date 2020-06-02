@@ -12,7 +12,11 @@ function i.setupPlayer( ply )
         },
         HotbarSelected = 1,
     }
+
+    i.attemptPickupItem( ply, RVR.items[1] )
 end
+
+hook.Add( "PlayerInitialSpawn", "RVR_SetupInventory", i.setupPlayer )
 
 -- Takes a player and table of { item = item, count = count } tables
 function i.playerHasItems( ply, items )
@@ -135,7 +139,7 @@ function i.dropItem( ply, position, count )
         itemData.count = itemData.count - count
     end
 
-    local droppedItem = ents.Create( "gmod_button" )
+    local droppedItem = ents.Create( "rvr_dropped_item" )
     if not IsValid( droppedItem ) then return end -- Check whether we successfully made an entity, if not - bail
     droppedItem:SetPos( ply:GetShootPos() + Angle( 0, ply:EyeAngles().yaw, 0 ):GetForward() * 20 )
     droppedItem:Setup( itemData.item, itemData.count )
