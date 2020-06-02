@@ -3,6 +3,8 @@ local Config = GM.Config.Drowning
 
 local WATER_SUBMERGED = 3
 
+-- TODO: Add Gear specific rules for scuba gear and similar
+
 util.AddNetworkString( "RVR_Player_Enter_Water" )
 util.AddNetworkString( "RVR_Player_Leave_Water" )
 

@@ -3,8 +3,9 @@ AddCSLuaFile( "shared.lua" )
 
 include( "shared.lua" )
 
--- Server Configs
+-- Configs
 include( "config/drowning.lua" )
+AddCSLuaFile( "config/drowning.lua" )
 
 -- Modules
 include( "modules/drowning.lua" )
