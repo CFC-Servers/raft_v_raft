@@ -1,7 +1,6 @@
 "raft_v_raft"
 {
-    "base"       "base"
+    "base"       "sandbox"
     "title"      "Raft V Raft"
     "menusystem" "1"
-
 }
