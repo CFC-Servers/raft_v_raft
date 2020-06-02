@@ -30,4 +30,3 @@ function PlayerMeta:AddWater(n)
     water = math.Clamp( water + n, 0, config.MAX_WATER )
     self:SetNWInt( "rvr_water", water )
 end
-
