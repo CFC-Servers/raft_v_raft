@@ -2,14 +2,15 @@ RVR = RVR or {}
 RVR.Inventory = RVR.Inventory or {}
 
 local i = RVR.Inventory
-RVR.Inventory.MaxSlots = 20
-RVR.Inventory.MaxHotbarSlots = 8
+RVR.Inventory.PlayerMaxSlots = 20
+RVR.Inventory.PlayerMaxHotbarSlots = 8
 
 -- Initialize players inventory to empty
 function i.setupPlayer( ply )
     ply.RVR_Inventory = {
         Inventory = {
         },
+        MaxSlots = RVR.Inventory.PlayerMaxSlots + RVR.Inventory.PlayerMaxHotbarSlots,
         HotbarSelected = 1,
     }
 
@@ -46,7 +47,7 @@ function i.attemptPickupItem( ply, item, count )
     count = count or 1
     local originalCount = count
 
-    for k = 1, RVR.Inventory.MaxHotbarSlots + RVR.Inventory.MaxSlots do
+    for k = 1, ply.RVR_Inventory.MaxSlots do
         local itemData = ply.RVR_Inventory.Inventory[i]
         -- Empty
         if not itemData then
@@ -84,10 +85,25 @@ function i.getSelectedItem( ply )
 end
 
 -- returns success, error
-function i.moveItem( ply, fromPosition, toPosition, count )
+function i.moveItem( fromEnt, toEnt, fromPosition, toPosition, count )
     count = count or -1
 
-    local fromItem = ply.RVR_Inventory.Inventory[fromPosition]
+    local fromInventoryData = fromEnt.RVR_Inventory
+    local toInventoryData = toEnt.RVR_Inventory
+
+    if not fromInventoryData or not toInventoryData then
+        return false, "One or more inventories are invalid"
+    end
+
+    if fromPosition < 1 or fromPosition > fromInventoryData.MaxSlots then
+        return false, "Invalid slot position"
+    end
+
+    if toPosition < 1 or toPosition > toInventoryData.MaxSlots then
+        return false, "Invalid slot position"
+    end
+
+    local fromItem = fromInventoryData.Inventory[fromPosition]
 
     if not fromItem then return false, "No item to move" end
 
@@ -95,18 +111,18 @@ function i.moveItem( ply, fromPosition, toPosition, count )
         count = math.Min( count, fromItem.count )
     end
 
-    local toItem = ply.RVR_Inventory.Inventory[toPosition]
+    local toItem = toInventoryData.Inventory[toPosition]
     if toItem then
         if fromItem.item.type ~= toItem.item.type then
             if count < 0 or count == fromItem.count then
-                ply.RVR_Inventory.Inventory[toPosition] = fromItem
-                ply.RVR_Inventory.Inventory[fromPosition] = toItem
+                toInventoryData.Inventory[toPosition] = fromItem
+                fromInventoryData.Inventory[fromPosition] = toItem
             else
                 return false, "Cannot swap half a stack"
             end
         else
             if count < 0 or count == fromItem.count then
-                ply.RVR_Inventory.Inventory[fromPosition] = nil
+                fromInventoryData.Inventory[fromPosition] = nil
                 toItem.count = toItem.count + fromItem.count
             else
                 fromItem.count = fromItem.count - count
@@ -115,10 +131,10 @@ function i.moveItem( ply, fromPosition, toPosition, count )
         end
     else
         if count < 0 or count == fromItem.count then
-            ply.RVR_Inventory.Inventory[fromPosition] = nil
-            ply.RVR_Inventory.Inventory[toPosition] = fromItem
+            fromInventoryData.Inventory[fromPosition] = nil
+            toInventoryData.Inventory[toPosition] = fromItem
         else
-            ply.RVR_Inventory.Inventory[toPosition] = { count = count, item = fromItem.item }
+            toInventoryData.Inventory[toPosition] = { count = count, item = fromItem.item }
             fromItem.count = fromItem.count - count
         end
     end
