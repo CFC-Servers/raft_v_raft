@@ -4,6 +4,8 @@ local WATER_SUBMERGED = 3
 
 -- How many seconds before a submerged player is considered drowning
 local drowningThreshold = 45
+
+-- How often 
 local drowningTickDelay = 2
 local drowningDamage = 5
 
@@ -11,12 +13,12 @@ local function isDrowning( player )
     return ( CurTime() - firstSubmergedTime[player:SteamID()] ) >= drowningThreshold
 end
 
-local function canDrownDamage( player )
+local function canTakeDrownDamage( player )
     return ( CurTime() - lastDrownTick[player:SteamID()] ) >= drowningTickDelay
 end
 
 local function takeDrownDamage( player )
-    if canDrownDamage( player ) then return end
+    if canTakeDrownDamage( player ) then return end
 
     local dmg = DamageInfo()
     dmg:SetDamage( drowningDamage )
