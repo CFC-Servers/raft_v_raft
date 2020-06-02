@@ -18,7 +18,9 @@ local function canTakeDrownDamage( player )
 end
 
 local function takeDrownDamage( player )
-    if canTakeDrownDamage( player ) then return end
+    if not canTakeDrownDamage( player ) then return end
+
+    lastDrownTick[player:SteamID()] = CurTime()
 
     local dmg = DamageInfo()
     dmg:SetDamage( drowningDamage )
@@ -35,6 +37,7 @@ local function drowningCheck()
         if ply:WaterLevel() == WATER_SUBMERGED then
             if not firstSubmergedTime[plySteamID] then
                 firstSubmergedTime[plySteamID] = CurTime()
+                lastDrownTick[plySteamID] = 0
             end
 
             if isDrowning( ply ) then
@@ -42,8 +45,9 @@ local function drowningCheck()
             end
         else
             firstSubmergedTime[plySteamID] = nil
+            lastDrownTick[plySteamID] = nil
         end
     end
 end
 
-hook.Add( "Think", "RVR_Check_Drowning", drowningCheck )
+hook.Add( "Tick", "RVR_Check_Drowning", drowningCheck )
