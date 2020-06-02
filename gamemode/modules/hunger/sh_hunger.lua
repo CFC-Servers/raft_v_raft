@@ -21,14 +21,14 @@ function PlayerMeta:GetWater()
     return self:GetNWInt( "rvr_water" )
 end
 
-function PlayerMeta:SetWater()
-    self:SetNWInt( "rvr_water" )
+function PlayerMeta:SetWater( n )
+    self:SetNWInt( "rvr_water", n )
 end
 
 function PlayerMeta:AddWater(n)
     local water = self:GetNWInt( "rvr_water" )
-    water = math.Clamp( thirst + n, 0, config.MAX_WATER )
-    self:SetNWInt( "rvr_water", thirst )
+    water = math.Clamp( water + n, 0, config.MAX_WATER )
+    self:SetNWInt( "rvr_water", water )
 end
 
 
