@@ -25,19 +25,27 @@ local stats = {
 
     },
 }
-function GM:HUDPaint()
 
-    draw.RoundedBox( 2, 0, 1070-35*#stats-5, 312, 35*#stats+5, Color(50, 50, 50, 150) ) 
+-- TODO widths and heights should scale with screen resolution
+function GM:HUDPaint()
+    local x = 0
+    local y = ScrH() - 5 - 35 * #stats
+    draw.RoundedBox( 2, x, y, 320, 35*#stats+5, Color(50, 50, 50, 190) ) 
 
     for i, stat in ipairs(stats) do
         local width = 272
+        local height = 30
         width = width * stat.get() / stat.max
-        draw.RoundedBox( 2, 35, 1070-35*i, width, 30, stat.color ) 
+        local x = 40
+        local y = ScrH() - 35*i
+
+        draw.RoundedBox( 2, x, y, width, height, stat.color ) 
         if stat.material then
             surface.SetMaterial(stat.material)
         end
+
         surface.SetDrawColor(Color(255,255,255))
-        surface.DrawTexturedRect( 5, 1070-35*i, 30, 30 )
+        surface.DrawTexturedRect( 5, y, 30, 30 )
     end
 end
 
