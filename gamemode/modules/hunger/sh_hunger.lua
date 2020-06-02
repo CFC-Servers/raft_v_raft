@@ -1,32 +1,32 @@
 local PlayerMeta = FindMetaTable( "Player" )
 
-function PlayerMeta:GetHunger()
-    return self:GetNWInt("rvr_hunger")
+function PlayerMeta:GetFood()
+    return self:GetNWInt("rvr_food")
 end
 
-function PlayerMeta:SetHunger(n)
-    self:SetNWInt("rvr_hunger", n)
+function PlayerMeta:SetFood(n)
+    self:SetNWInt("rvr_food", n)
 end
 
-function PlayerMeta:AddHunger(n)
-    local hunger = self:GetNWInt("rvr_hunger")
-    hunger = math.max( hunger+n, 0 )
-    self:SetNWInt("rvr_hunger", hunger)
+function PlayerMeta:AddFood(n)
+    local food = self:GetNWInt("rvr_food")
+    food = math.max( food+n, 0 )
+    self:SetNWInt("rvr_food", food)
 end
 
 
-function PlayerMeta:GetThirst()
-    return self:GetNWInt("rvr_thirst")
+function PlayerMeta:GetWater()
+    return self:GetNWInt("rvr_water")
 end
 
-function PlayerMeta:SetThirst()
-    self:SetNWInt("rvr_thirst")
+function PlayerMeta:SetWater()
+    self:SetNWInt("rvr_water")
 end
 
-function PlayerMeta:AddThirst(n)
-    local thirst = self:GetNWInt("rvr_thirst")
-    thirst = math.max( thirst + n, 0 )
-    self:SetNWInt("rvr_thirst", thirst)
+function PlayerMeta:AddWater(n)
+    local water = self:GetNWInt("rvr_water")
+    water = math.max( thirst + n, 0 )
+    self:SetNWInt("rvr_water", thirst)
 end
 
 
