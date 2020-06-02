@@ -28,18 +28,18 @@ end
 
 local function drowningCheck()
     for _, ply in pairs( player.GetHumans() ) do
-        local ply_sid = ply:SteamID()
+        local plySteamID = ply:SteamID()
 
         if ply:WaterLevel() == WATER_SUBMERGED then
-            if not firstSubmergedTime[ply_sid] then
-                firstSubmergedTime[ply_sid] = CurTime()
+            if not firstSubmergedTime[plySteamID] then
+                firstSubmergedTime[plySteamID] = CurTime()
             end
 
             if isDrowning( ply ) then
                 takeDrownDamage( ply )
             end
         else
-            firstSubmergedTime[ply_sid] = nil
+            firstSubmergedTime[plySteamID] = nil
         end
     end
 end
