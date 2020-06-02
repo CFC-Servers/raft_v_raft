@@ -7,5 +7,5 @@ local function includeShared( f )
     include( f )
 end
 
-includeShared( "modules/hunger/sh_hunger.lua" )
 includeShared( "config/hunger.lua" )
+includeShared( "modules/hunger/sh_hunger.lua" )
