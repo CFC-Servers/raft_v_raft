@@ -9,4 +9,3 @@ end
 
 includeShared( "config/hunger.lua" )
 includeShared( "modules/hunger/sh_hunger.lua" )
-
