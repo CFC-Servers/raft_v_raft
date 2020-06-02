@@ -1,3 +1,5 @@
+local config = GM.Config.Hunger
+
 local PlayerMeta = FindMetaTable( "Player" )
 
 function PlayerMeta:GetFood()
@@ -10,7 +12,7 @@ end
 
 function PlayerMeta:AddFood( n )
     local food = self:GetNWInt( "rvr_food" )
-    food = math.Clamp( food + n, 0, GM.Config.MAX_FOOD )
+    food = math.Clamp( food + n, 0, config.MAX_FOOD )
     self:SetNWInt( "rvr_food", food )
 end
 
@@ -25,7 +27,7 @@ end
 
 function PlayerMeta:AddWater(n)
     local water = self:GetNWInt( "rvr_water" )
-    water = math.Clamp( thirst + n, 0, GM.Config.MAX_WATER )
+    water = math.Clamp( thirst + n, 0, config.MAX_WATER )
     self:SetNWInt( "rvr_water", thirst )
 end
 
