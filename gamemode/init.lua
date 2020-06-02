@@ -8,4 +8,5 @@ include( "config/drowning.lua" )
 AddCSLuaFile( "config/drowning.lua" )
 
 -- Modules
-include( "modules/drowning.lua" )
+include( "modules/drowning/sv_drowning.lua" )
+AddCSLuaFile( "modules/drowning/cl_drowning.lua" )
