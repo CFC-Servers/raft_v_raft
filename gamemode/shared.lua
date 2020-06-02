@@ -8,4 +8,4 @@ local function includeShared( f )
 end
 
 includeShared( "modules/hunger/sh_hunger.lua" )
-
+includeShared( "config/hunger.lua" )
