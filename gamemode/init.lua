@@ -4,4 +4,10 @@ AddCSLuaFile( "shared.lua" )
 include( "shared.lua" )
 
 AddCSLuaFile( "modules/items/sh_items.lua" )
+AddCSLuaFile( "modules/inventory/cl_inventory.lua" )
+AddCSLuaFile( "modules/inventory/cl_itemslot.lua" )
+AddCSLuaFile( "modules/inventory/cl_playerinventory.lua" )
+AddCSLuaFile( "modules/inventory/cl_boxinventory.lua" )
+AddCSLuaFile( "config/inventory.lua" )
+
 include( "modules/inventory/sv_inventory.lua" )

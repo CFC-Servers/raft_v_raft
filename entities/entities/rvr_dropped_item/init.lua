@@ -29,7 +29,7 @@ end
 function ENT:Use( activator, caller )
     if self.USED then return end
 
-    local success, amount = RVR.Inventory.attemptPickupItem( ply, self.item, self:GetAmount() )
+    local success, amount = RVR.Inventory.attemptPickupItem( caller, self.item, self:GetAmount() )
     if success then
         self.USED = true
         self:Remove()

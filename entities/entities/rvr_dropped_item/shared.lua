@@ -9,6 +9,8 @@ function ENT:SetupDataTables()
     self:NetworkVar( "Int", 0, "Amount" )
     self:NetworkVar( "String", 0, "ItemType" )
 
-    self:SetAmount( 1 )
-    self:SetItemType( "" )
+    if SERVER then
+        self:SetAmount( 1 )
+        self:SetItemType( "" )
+    end
 end

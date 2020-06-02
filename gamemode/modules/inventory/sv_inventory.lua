@@ -1,25 +1,29 @@
 RVR.Inventory = RVR.Inventory or {}
 
-local i = RVR.Inventory
-RVR.Inventory.PlayerMaxSlots = 20
-RVR.Inventory.PlayerMaxHotbarSlots = 8
+local inv = RVR.Inventory
+
+util.AddNetworkString( "RVR_OpenInventory" )
+util.AddNetworkString( "RVR_CloseInventory" )
 
 -- Initialize players inventory to empty
-function i.setupPlayer( ply )
+function inv.setupPlayer( ply )
+    local GM = GAMEMODE
+
     ply.RVR_Inventory = {
         Inventory = {
         },
-        MaxSlots = RVR.Inventory.PlayerMaxSlots + RVR.Inventory.PlayerMaxHotbarSlots,
+        MaxSlots = GM.Config.Inventory.PLAYER_HOTBAR_SLOTS + GM.Config.Inventory.PLAYER_INVENTORY_SLOTS,
         HotbarSelected = 1,
+        InventoryType = "Player",
     }
 
-    i.attemptPickupItem( ply, RVR.items[1] )
+    inv.attemptPickupItem( ply, RVR.items[1] )
 end
 
-hook.Add( "PlayerInitialSpawn", "RVR_SetupInventory", i.setupPlayer )
+hook.Add( "PlayerInitialSpawn", "RVR_SetupInventory", inv.setupPlayer )
 
 -- Takes a player and table of { item = item, count = count } tables
-function i.playerHasItems( ply, items )
+function inv.playerHasItems( ply, items )
     if not ply.RVR_Inventory then return false end
 
     for _, invItem in pairs( ply.RVR_Inventory.Inventory ) do
@@ -41,7 +45,7 @@ function i.playerHasItems( ply, items )
 end
 
 -- returns couldFitAll, amount
-function i.attemptPickupItem( ply, item, count )
+function inv.attemptPickupItem( ply, item, count )
     if not ply.RVR_Inventory then return false, 0 end
     count = count or 1
     local originalCount = count
@@ -76,15 +80,23 @@ function i.attemptPickupItem( ply, item, count )
 end
 
 -- returns item, count
-function i.getSelectedItem( ply )
+function inv.getSelectedItem( ply )
     if not ply.RVR_Inventory then return end
 
     local itemData = ply.RVR_Inventory.Inventory[ply.RVR_Inventory.HotbarSelected]
     return itemData.item, itemData.count
 end
 
+function inv.setSelectedItem( ply, idx )
+    local GM = GAMEMODE
+    if not ply.RVR_Inventory then return end
+    idx = math.Clamp( idx, 1, GM.Config.Inventory.PLAYER_INVENTORY_SLOTS )
+
+    ply.RVR_Inventory.HotbarSelected = idx
+end
+
 -- returns success, error
-function i.moveItem( fromEnt, toEnt, fromPosition, toPosition, count )
+function inv.moveItem( fromEnt, toEnt, fromPosition, toPosition, count )
     count = count or -1
 
     local fromInventoryData = fromEnt.RVR_Inventory
@@ -141,7 +153,7 @@ function i.moveItem( fromEnt, toEnt, fromPosition, toPosition, count )
     return true
 end
 
-function i.dropItem( ply, position, count )
+function inv.dropItem( ply, position, count )
     count = count or -1
 
     local itemData = ply.RVR_Inventory.Inventory[position]
@@ -162,3 +174,38 @@ function i.dropItem( ply, position, count )
 
     return droppedItem
 end
+
+function inv.playerOpenInventory( ply, invEnt )
+    if ply.invOpen then
+        return
+    end
+    invEnt = invEnt or ply
+
+    local inventoryData = invEnt.RVR_Inventory
+    if not inventoryData then return end
+
+    if hook.Run( "RVR_PreventInventory", ply, invEnt ) then return end
+
+    ply.invOpen = true
+
+    local isPlayer = invEnt == ply
+
+    net.Start( "RVR_OpenInventory" )
+    net.WriteTable( inventoryData )
+    net.WriteBool( isPlayer )
+    if not isPlayer then
+        net.WriteTable( ply.RVR_Inventory )
+    end
+    net.Send( ply )
+end
+
+net.Receive( "RVR_CloseInventory", function( len, ply )
+    ply.invOpen = false
+end )
+
+hook.Add( "KeyPress", "RVR_OpenInventory", function( ply, key )
+    -- Todo: change to menu key
+    if key == IN_ZOOM then
+        inv.playerOpenInventory( ply, ply )
+    end
+end )
