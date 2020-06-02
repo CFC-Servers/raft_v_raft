@@ -5,7 +5,7 @@ local WATER_SUBMERGED = 3
 -- How many seconds before a submerged player is considered drowning
 local drowningThreshold = 45
 
--- How often 
+-- How often in seconds a player takes tick damage
 local drowningTickDelay = 2
 local drowningDamage = 5
 
