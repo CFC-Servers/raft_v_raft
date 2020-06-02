@@ -1,12 +1,3 @@
-local MAX_FOOD = 100 -- TODO extract this into a global config table
-local MAX_WATER = 100
-
-local DELAY = 5
-
-local WATER_LOSS_AMOUNT = -1
-local FOOD_LOSS_AMOUNT = -1
-local DAMAGE_AMOUNT = 10
-
 hook.Add( "PlayerSpawn", "RaftVRaft_HungerReset", function( ply, transition )
     ply:SetFood( GM.Config.MAX_FOOD )
     ply:SetWater( GM.Config.MAX_WATER )
