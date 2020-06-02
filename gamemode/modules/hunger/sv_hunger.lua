@@ -34,3 +34,4 @@ end
 
 timer.Create( "rvr_hunger_loss", config.DELAY, 0, hungerThink )
 timer.Create( "rvr_hunger_damage", config.DAMAGE_DELAY, 0, hungerDamageThink )
+
