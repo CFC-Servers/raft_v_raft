@@ -1,4 +1,5 @@
-local firstSubmergedTime, lastDrownTick = {}
+local firstSubmergedTime = {}
+local lastDrownTick = {}
 local config = GM.Config.Drowning
 
 local WATER_SUBMERGED = 3
