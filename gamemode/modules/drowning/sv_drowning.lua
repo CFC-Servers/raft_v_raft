@@ -1,5 +1,3 @@
-local firstSubmergedTime = {}
-local lastDrownTick = {}
 local config = GM.Config.Drowning
 
 local WATER_SUBMERGED = 3
@@ -11,17 +9,17 @@ util.AddNetworkString( "RVR_Player_Leave_Water" )
 util.AddNetworkString( "RVR_Player_Take_Drown_Damage" )
 
 local function isDrowning( player )
-    return ( CurTime() - firstSubmergedTime[player:SteamID()] ) >= config.DROWNING_THRESHOLD
+    return ( CurTime() - player.FirstSubmergedTime ) >= config.DROWNING_THRESHOLD
 end
 
 local function canTakeDrownDamage( player )
-    return ( CurTime() - lastDrownTick[player:SteamID()] ) >= config.DROWNING_TICK_DELAY
+    return ( CurTime() - player.LastDrownTick ) >= config.DROWNING_TICK_DELAY
 end
 
 local function takeDrownDamage( player )
     if not canTakeDrownDamage( player ) then return end
 
-    lastDrownTick[player:SteamID()] = CurTime()
+    player.LastDrownTick = CurTime()
 
     local dmg = DamageInfo()
     dmg:SetDamage( config.DROWNING_DAMAGE )
@@ -43,39 +41,29 @@ end
 
 local function drowningCheck()
     for _, ply in pairs( player.GetHumans() ) do
-        local plySteamID = ply:SteamID()
-
         if ply:WaterLevel() == WATER_SUBMERGED and ply:Alive() then
-            if not firstSubmergedTime[plySteamID] then
+            if not ply.IsInWater then
+                ply.IsInWater = true
+
                 local time = CurTime()
-                firstSubmergedTime[plySteamID] = time
-                lastDrownTick[plySteamID] = 0
+                ply.FirstSubmergedTime = time
+                ply.LastDrownTick = 0
 
                 alertPlayerOfEnterWater( ply, time )
             end
+
+            ply:ChatPrint(ply.FirstSubmergedTime)
 
             if isDrowning( ply ) then
                 takeDrownDamage( ply )
             end
         else
-            firstSubmergedTime[plySteamID] = nil
-            lastDrownTick[plySteamID] = nil
-
-            alertPlayerOfLeaveWater( ply )
+            ply.IsInWater = false
         end
     end
 end
 
 hook.Add( "Tick", "RVR_Check_Drowning", drowningCheck )
-
-local function deleteDrowningData( player )
-    local plySteamID = player:SteamID()
-
-    firstSubmergedTime[plySteamID] = nil
-    lastDrownTick[plySteamID] = nil
-end
-
-hook.Add( "PlayerDisconnected", "RVR_Delete_Drowning", deleteDrowningData )
 
 local function onPlayerTakeDrownDamage( ply, dmg )
     if not IsValid( ply ) or not ply:IsPlayer() then return end

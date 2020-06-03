@@ -1,3 +1,4 @@
+local config = GM.Config.Hunger
 local stats = {
     {
         color = Color( 138, 138, 230 ),
@@ -6,7 +7,6 @@ local stats = {
         end,
         max = config.MAX_WATER,
     },
-
     {
         color = Color( 181, 114, 60 ),
         get = function()
@@ -14,23 +14,21 @@ local stats = {
         end,
         max = config.MAX_FOOD,
     },
-
-    {  
+    {
         material = Material( "icons/health.png" ),
         color = Color( 227, 100, 100 ),
         get = function()
             return LocalPlayer():Health()
         end,
         max = 100,
-
-    },
+    }
 }
 
 -- TODO widths and heights should scale with screen resolution
 function GM:HUDPaint()
     local x = 0
     local y = ScrH() - 5 - 35 * #stats
-    draw.RoundedBox( 2, x, y, 320, 35 * #stats + 5, Color( 50, 50, 50, 190 ) ) 
+    draw.RoundedBox( 2, x, y, 320, 35 * #stats + 5, Color( 50, 50, 50, 190 ) )
 
     for i, stat in ipairs( stats ) do
         local width = 272
@@ -39,7 +37,7 @@ function GM:HUDPaint()
         local x = 40
         local y = ScrH() - 35 * i
 
-        draw.RoundedBox( 2, x, y, width, height, stat.color ) 
+        draw.RoundedBox( 2, x, y, width, height, stat.color )
         if stat.material then
             surface.SetMaterial( stat.material )
         end
@@ -49,7 +47,7 @@ function GM:HUDPaint()
     end
 end
 
-local isHidden = {["CHudHealth"] = true, ["CHudBattery"] = true, ["CHudAmmo"] = true, ["CHudSecondaryAmmo"] = true}
+local isHidden = { ["CHudHealth"] = true, ["CHudBattery"] = true, ["CHudAmmo"] = true, ["CHudSecondaryAmmo"] = true }
 function GM:HUDShouldDraw( name )
     if isHidden[name] then return false end
 
