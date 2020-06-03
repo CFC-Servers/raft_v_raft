@@ -37,7 +37,7 @@ function GM:HUDPaint()
         local height = 30
         width = width * stat.get() / stat.max
         local x = 40
-        local y = ScrH() - 35*i
+        local y = ScrH() - 35 * i
 
         draw.RoundedBox( 2, x, y, width, height, stat.color ) 
         if stat.material then
