@@ -15,7 +15,7 @@ local stats = {
         max = config.MAX_FOOD,
     },
 
-    {   name = "health",
+    {  
         material = Material( "icons/health.png" ),
         color = Color(227, 100, 100),
         get = function()
