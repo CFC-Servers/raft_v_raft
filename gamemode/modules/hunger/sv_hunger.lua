@@ -3,7 +3,6 @@ local config = GM.Config.Hunger
 hook.Add( "PlayerSpawn", "RaftVRaft_HungerReset", function( ply, transition )
     ply:SetFood( config.MAX_FOOD )
     ply:SetWater( config.MAX_WATER )
-    
 end )
 
 local function hungerThink()
