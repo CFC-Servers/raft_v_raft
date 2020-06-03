@@ -6,3 +6,11 @@ RVR = RVR or {}
 
 include( "config/inventory.lua" )
 include( "modules/items/sh_items.lua" )
+
+local function includeShared( f )
+    AddCSLuaFile( f )
+    include( f )
+end
+
+includeShared( "config/hunger.lua" )
+includeShared( "modules/hunger/sh_hunger.lua" )
