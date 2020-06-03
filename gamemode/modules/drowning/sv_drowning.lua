@@ -52,8 +52,6 @@ local function drowningCheck()
                 alertPlayerOfEnterWater( ply, time )
             end
 
-            ply:ChatPrint(ply.FirstSubmergedTime)
-
             if isDrowning( ply ) then
                 takeDrownDamage( ply )
             end
