@@ -10,6 +10,7 @@ function inv.openPlayerInventory( inventory )
     frame:SetDeleteOnClose( false )
     frame:SetSize( w, h )
     frame:SetDraggable( false )
+    frame:ShowCloseButton( false )
     frame:Center()
     frame:MakePopup()
     function frame:Paint( w, h )
@@ -21,6 +22,15 @@ function inv.openPlayerInventory( inventory )
     function frame:OnClose()
         inv.closeInventory()
     end
+
+    local closeButton = vgui.Create( "DImageButton", frame )
+    closeButton:SetPos( w * 0.82, h * 0.11 )
+    closeButton:SetSize( 70, 70 )
+    closeButton:SetImage( "materials/icons/player_inventory_close.png" )
+    function closeButton:DoClick()
+        frame:Close()
+    end
+
 
     local itemsPerRow = 7
     local gridWidthMult = 0.75

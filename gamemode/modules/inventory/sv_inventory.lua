@@ -206,7 +206,10 @@ local function updateItemSlot( ply, ent, slotNum, slotData )
     net.Start( "RVR_UpdateInventorySlot" )
     net.WriteEntity( ent )
     net.WriteInt( slotNum, 8 )
-    net.WriteTable( slotData )
+    net.WriteBool( tobool( slotData ) )
+    if slotData then
+        net.WriteTable( slotData )
+    end
     net.Send( ply )
 end
 
@@ -244,10 +247,17 @@ net.Receive( "RVR_CursorHoldItem", function( len, ply )
 
     if count < 0 or count == itemData.count then
         inventory.Inventory[position] = nil
+        updateItemSlot( ply, ent, position, nil )
+
         ply.RVR_Inventory.CursorSlot = itemData
+        updateItemSlot( ply, ply, -1, itemData )
     else
         itemData.count = itemData.count - count
+        updateItemSlot( ply, ent, position, itemData )
+
+        local cursorItem = { item = itemData.item, count = count }
         ply.RVR_Inventory.CursorSlot = { item = itemData.item, count = count }
+        updateItemSlot( ply, ply, -1, cursorItem )
     end
 end )
 
@@ -260,7 +270,7 @@ net.Receive( "RVR_CursorPutItem", function( len, ply )
 
     if not ply.RVR_Inventory.CursorSlot then return end
 
-    
+
 end )
 
 hook.Add( "KeyPress", "RVR_OpenInventory", function( ply, key )
