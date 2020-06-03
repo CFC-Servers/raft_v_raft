@@ -1,6 +1,9 @@
 local PANEL = {}
 
+RVR.ItemSlots = {}
+
 function PANEL:Init()
+    table.insert( RVR.ItemSlots, self )
     self:SetImage( "materials/icons/slot_background.png" )
 
     self.itemImage = vgui.Create( "DImage", self )
@@ -26,8 +29,16 @@ function PANEL:SetLocationData( ent, position )
     self.slotPosition = position
 end
 
+function PANEL:GetLocationData()
+    return self.parentEnt, self.slotPosition
+end
+
 function PANEL:OnMousePressed( code )
     
+end
+
+function PANEL:OnRemove()
+    table.RemoveByValue( RVR.ItemSlots, self )
 end
 
 function PANEL:SetItemData( item, count )
@@ -41,6 +52,13 @@ function PANEL:SetItemData( item, count )
         self.itemCountLabel:SetText( "" )
     end
     self.itemCountLabel:SizeToContents()
+end
+
+function PANEL:ClearItemData()
+    self.item = nil
+    self.itemCount = nil
+    self.itemImage:SetImage( "" )
+    self.itemCountLabel:SetText( "" )
 end
 
 vgui.Register( "RVR_ItemSlot", PANEL, "DImage" )
