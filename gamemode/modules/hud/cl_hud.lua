@@ -4,7 +4,7 @@ local stats = {
         get  = function()
             return  LocalPlayer():GetWater()
         end,
-        max = 100,
+        max = config.MAX_WATER,
     },
 
     {
