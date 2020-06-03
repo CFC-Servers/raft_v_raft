@@ -2,7 +2,7 @@ local moduleDir = GM.FolderName.."/gamemode/modules/"
 
 local _, modules = file.Find( moduleDir.."*", "LUA" )
 
-for _, moduleName in pairs( ENABLED_MODULES ) do
+for _, moduleName in pairs( modules ) do
     local path = moduleDir..moduleName.."/"
     local files, _ = file.Find( path.."*.lua", "LUA" )
     
@@ -16,7 +16,7 @@ for _, moduleName in pairs( ENABLED_MODULES ) do
         elseif string.StartWith( file, "sv_" ) then
             include( fullPath )
         elseif string.StartWith( file, "cl_" ) then
-            AddCSLuaFile( fullePath )
+            AddCSLuaFile( fullPath )
         end
     end
 end
