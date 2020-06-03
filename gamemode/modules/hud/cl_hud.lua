@@ -12,7 +12,7 @@ local stats = {
         get = function()
             return LocalPlayer():GetFood()
         end,
-        max = 100,
+        max = config.MAX_FOOD,
     },
 
     {   name = "health",
