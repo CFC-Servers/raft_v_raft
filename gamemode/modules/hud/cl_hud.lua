@@ -30,7 +30,7 @@ local stats = {
 function GM:HUDPaint()
     local x = 0
     local y = ScrH() - 5 - 35 * #stats
-    draw.RoundedBox( 2, x, y, 320, 35*#stats+5, Color(50, 50, 50, 190) ) 
+    draw.RoundedBox( 2, x, y, 320, 35 * #stats + 5, Color(50, 50, 50, 190) ) 
 
     for i, stat in ipairs(stats) do
         local width = 272
