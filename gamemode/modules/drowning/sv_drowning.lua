@@ -8,6 +8,7 @@ local WATER_SUBMERGED = 3
 
 util.AddNetworkString( "RVR_Player_Enter_Water" )
 util.AddNetworkString( "RVR_Player_Leave_Water" )
+util.AddNetworkString( "RVR_Player_Take_Drown_Damage" )
 
 local function isDrowning( player )
     return ( CurTime() - firstSubmergedTime[player:SteamID()] ) >= config.DROWNING_THRESHOLD
@@ -44,7 +45,7 @@ local function drowningCheck()
     for _, ply in pairs( player.GetHumans() ) do
         local plySteamID = ply:SteamID()
 
-        if ply:WaterLevel() == WATER_SUBMERGED then
+        if ply:WaterLevel() == WATER_SUBMERGED and ply:Alive() then
             if not firstSubmergedTime[plySteamID] then
                 local time = CurTime()
                 firstSubmergedTime[plySteamID] = time
@@ -75,3 +76,13 @@ local function deleteDrowningData( player )
 end
 
 hook.Add( "PlayerDisconnected", "RVR_Delete_Drowning", deleteDrowningData )
+
+local function onPlayerTakeDrownDamage( ply, dmg )
+    if not IsValid( ply ) or not ply:IsPlayer() then return end
+    if dmg:GetDamageType() ~= DMG_DROWN then return end
+
+    net.Start( "RVR_Player_Take_Drown_Damage" )
+    net.Send( ply )
+end
+
+hook.Add( "EntityTakeDamage", "RVR_Take_Drown_Damage", onPlayerTakeDrownDamage )
