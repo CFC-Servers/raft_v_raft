@@ -1,6 +1,6 @@
 local stats = {
     {
-        color = Color(138, 138, 230),
+        color = Color( 138, 138, 230 ),
         get  = function()
             return  LocalPlayer():GetWater()
         end,
@@ -8,7 +8,7 @@ local stats = {
     },
 
     {
-        color = Color(181, 114, 60),
+        color = Color( 181, 114, 60 ),
         get = function()
             return LocalPlayer():GetFood()
         end,
@@ -17,7 +17,7 @@ local stats = {
 
     {  
         material = Material( "icons/health.png" ),
-        color = Color(227, 100, 100),
+        color = Color( 227, 100, 100 ),
         get = function()
             return LocalPlayer():Health()
         end,
@@ -30,9 +30,9 @@ local stats = {
 function GM:HUDPaint()
     local x = 0
     local y = ScrH() - 5 - 35 * #stats
-    draw.RoundedBox( 2, x, y, 320, 35 * #stats + 5, Color(50, 50, 50, 190) ) 
+    draw.RoundedBox( 2, x, y, 320, 35 * #stats + 5, Color( 50, 50, 50, 190 ) ) 
 
-    for i, stat in ipairs(stats) do
+    for i, stat in ipairs( stats ) do
         local width = 272
         local height = 30
         width = width * stat.get() / stat.max
@@ -41,16 +41,16 @@ function GM:HUDPaint()
 
         draw.RoundedBox( 2, x, y, width, height, stat.color ) 
         if stat.material then
-            surface.SetMaterial(stat.material)
+            surface.SetMaterial( stat.material )
         end
 
-        surface.SetDrawColor(Color(255,255,255))
+        surface.SetDrawColor( Color( 255, 255, 255 ) )
         surface.DrawTexturedRect( 5, y, 30, 30 )
     end
 end
 
 local isHidden = {["CHudHealth"] = true, ["CHudBattery"] = true, ["CHudAmmo"] = true, ["CHudSecondaryAmmo"] = true}
-function GM:HUDShouldDraw(name)
+function GM:HUDShouldDraw( name )
     if isHidden[name] then return false end
 
     return self.BaseClass.HUDShouldDraw( self, name )
