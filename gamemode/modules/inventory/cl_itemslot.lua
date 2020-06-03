@@ -1,22 +1,23 @@
 local PANEL = {}
 
 function PANEL:Init()
-    self:SetImage( "materials/slot_background.png" )
+    self:SetImage( "materials/icons/slot_background.png" )
 
     self.itemImage = vgui.Create( "DImage", self )
     self.itemImage:Dock( FILL )
-    self.itemImage:DockMargin( 5, 5, 5, 5 )
+    self.itemImage:DockMargin( 7, 7, 7, 7 )
 
-    self.itemCount = vgui.Create( "DLabel", self )
-    self.itemCount:SetText( "" )
+    self.itemCountLabel = vgui.Create( "DLabel", self )
+    self.itemCountLabel:SetText( "" )
+    self.itemCountLabel:SetFont( "DermaLarge" )
 
-    function self.itemCount:PerformLayout()
+    function self.itemCountLabel:PerformLayout()
         self:SizeToContents()
         local pw, ph = self:GetParent():GetSize()
 
         local w, h = self:GetSize()
 
-        self:SetPos( pw - w, ph - h )
+        self:SetPos( pw - w - 7, ph - h )
     end
 end
 
@@ -26,8 +27,6 @@ function PANEL:SetLocationData( ent, position )
 end
 
 function PANEL:OnMousePressed( code )
-    local handSlot = LocalPlayer().handSlot
-
     
 end
 
@@ -37,11 +36,11 @@ function PANEL:SetItemData( item, count )
     self.itemImage:SetImage( item.icon )
 
     if count > 1 then
-        self.itemCount:SetText( tostring( count ) )
+        self.itemCountLabel:SetText( tostring( count ) )
     else
-        self.itemCount:SetText( "" )
+        self.itemCountLabel:SetText( "" )
     end
-    self.itemCount:InvalidateLayout()
+    self.itemCountLabel:SizeToContents()
 end
 
 vgui.Register( "RVR_ItemSlot", PANEL, "DImage" )

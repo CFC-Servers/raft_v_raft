@@ -10,6 +10,7 @@ AddCSLuaFile( "modules/inventory/cl_playerinventory.lua" )
 AddCSLuaFile( "modules/inventory/cl_boxinventory.lua" )
 AddCSLuaFile( "config/inventory.lua" )
 
-resource.AddFile( "materials/slot_background.png" )
+resource.AddFile( "materials/icons/slot_background.png" )
+resource.AddFile( "materials/icons/player_inventory_background.png" )
 
 include( "modules/inventory/sv_inventory.lua" )

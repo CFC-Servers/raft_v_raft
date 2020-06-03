@@ -4,17 +4,20 @@ local inv = RVR.Inventory
 
 util.AddNetworkString( "RVR_OpenInventory" )
 util.AddNetworkString( "RVR_CloseInventory" )
+util.AddNetworkString( "RVR_CursorHoldItem" )
+util.AddNetworkString( "RVR_CursorPutItem" )
+util.AddNetworkString( "RVR_UpdateInventorySlot" )
 
 -- Initialize players inventory to empty
 function inv.setupPlayer( ply )
     local GM = GAMEMODE
 
     ply.RVR_Inventory = {
-        Inventory = {
-        },
+        Inventory = {},
         MaxSlots = GM.Config.Inventory.PLAYER_HOTBAR_SLOTS + GM.Config.Inventory.PLAYER_INVENTORY_SLOTS,
         HotbarSelected = 1,
         InventoryType = "Player",
+        CursorSlot = nil
     }
 
     inv.attemptPickupItem( ply, RVR.items[1] )
@@ -176,7 +179,7 @@ function inv.dropItem( ply, position, count )
 end
 
 function inv.playerOpenInventory( ply, invEnt )
-    if ply.invOpen then
+    if ply.RVR_OpenInventory then
         return
     end
     invEnt = invEnt or ply
@@ -186,7 +189,7 @@ function inv.playerOpenInventory( ply, invEnt )
 
     if hook.Run( "RVR_PreventInventory", ply, invEnt ) then return end
 
-    ply.invOpen = true
+    ply.RVR_OpenInventory = invEnt
 
     local isPlayer = invEnt == ply
 
@@ -199,8 +202,65 @@ function inv.playerOpenInventory( ply, invEnt )
     net.Send( ply )
 end
 
+local function updateItemSlot( ply, ent, slotNum, slotData )
+    net.Start( "RVR_UpdateInventorySlot" )
+    net.WriteEntity( ent )
+    net.WriteInt( slotNum, 8 )
+    net.WriteTable( slotData )
+    net.Send( ply )
+end
+
 net.Receive( "RVR_CloseInventory", function( len, ply )
-    ply.invOpen = false
+    ply.RVR_OpenInventory = nil
+end )
+
+net.Receive( "RVR_CursorHoldItem", function( len, ply )
+    if not ply.RVR_Inventory then return end
+    -- Already holding something
+    if ply.RVR_Inventory.CursorSlot then return end
+
+    -- Not in an inventory
+    if not ply.RVR_OpenInventory then return end
+    local ent = net.ReadEntity()
+    local position = net.ReadInt( 8 )
+    local count = net.ReadInt( 8 )
+
+    -- Can't affect an inventory you're not in
+    if ent ~= ply and ent ~= ply.RVR_OpenInventory then
+        return
+    end
+
+    local inventory = ent.RVR_Inventory
+
+    if not inventory then return end
+
+    local itemData = inventory.Inventory[position]
+
+    if not itemData then return end
+
+    if count > itemData.count then
+        count = itemData.count
+    end
+
+    if count < 0 or count == itemData.count then
+        inventory.Inventory[position] = nil
+        ply.RVR_Inventory.CursorSlot = itemData
+    else
+        itemData.count = itemData.count - count
+        ply.RVR_Inventory.CursorSlot = { item = itemData.item, count = count }
+    end
+end )
+
+net.Receive( "RVR_CursorPutItem", function( len, ply )
+    if not ply.RVR_Inventory then return end
+
+    local ent = net.ReadEntity()
+    local position = net.ReadInt( 8 )
+    local count = net.ReadInt( 8 )
+
+    if not ply.RVR_Inventory.CursorSlot then return end
+
+    
 end )
 
 hook.Add( "KeyPress", "RVR_OpenInventory", function( ply, key )
