@@ -9,7 +9,7 @@ local userGroupNames = {
 }
 
 function RVR.getGroupName( userGroup )
-    return userGroupNames( userGroup )
+    return userGroupNames[userGroup]
 end
 
 function RVR.getUserGroup( ply )
