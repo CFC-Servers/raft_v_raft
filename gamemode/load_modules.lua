@@ -1,13 +1,13 @@
-local moduleDir = GM.FolderName.."/gamemode/modules/"
+local moduleDir = GM.FolderName .. "/gamemode/modules/"
 
-local _, modules = file.Find( moduleDir.."*", "LUA" )
+local _, modules = file.Find( moduleDir .. "*", "LUA" )
 
 for _, moduleName in pairs( modules ) do
-    local path = moduleDir..moduleName.."/"
-    local files, _ = file.Find( path.."*.lua", "LUA" )
+    local path = moduleDir .. moduleName .. "/"
+    local files, _ = file.Find( path .. "*.lua", "LUA" )
     
     for _, file in pairs( files ) do
-        local fullPath = path..file
+        local fullPath = path .. file
         if CLIENT then
             include( fullPath )
         elseif string.StartWith( file, "sh_" ) then
