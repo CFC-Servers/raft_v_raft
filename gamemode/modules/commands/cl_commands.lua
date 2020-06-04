@@ -14,7 +14,7 @@ local function processArguments( argsStr )
         elseif char == "\\" then
             i = i + 1
 
-            char = string.sub( argsStr, i, i )
+            char = argsStr[i]
             str = str .. char
         elseif char == " " and not insideQuotes then
             args[#args + 1] = str
