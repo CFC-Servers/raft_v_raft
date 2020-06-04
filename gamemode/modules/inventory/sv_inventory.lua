@@ -98,9 +98,33 @@ function inv.setSelectedItem( ply, idx )
     ply.RVR_Inventory.HotbarSelected = idx
 end
 
+local function notifyItemSlotChange( plys, ent, slotNum, slotData )
+    if #plys == 0 then return end
+
+    net.Start( "RVR_UpdateInventorySlot" )
+    net.WriteEntity( ent )
+    net.WriteInt( slotNum, 8 )
+    net.WriteBool( tobool( slotData ) )
+    if slotData then
+        net.WriteTable( slotData )
+    end
+    net.Send( plys )
+end
+
 -- returns success, error
+-- TODO: Add support for cursor slot (position = -1)
+-- TODO: Make this call notifyItemSlotChange if fromEnt or toEnt are players
+-- TODO: Make this adhere to item.maxCount
 function inv.moveItem( fromEnt, toEnt, fromPosition, toPosition, count )
     count = count or -1
+
+    local plys = {}
+    if type( fromEnt ) == "Player" then
+        table.insert( plys, fromEnt )
+    end
+    if type( toEnt ) == "Player" then
+        table.insert( plys, toEnt )
+    end
 
     local fromInventoryData = fromEnt.RVR_Inventory
     local toInventoryData = toEnt.RVR_Inventory
@@ -121,35 +145,55 @@ function inv.moveItem( fromEnt, toEnt, fromPosition, toPosition, count )
 
     if not fromItem then return false, "No item to move" end
 
-    if count >= 0 then
-        count = math.Min( count, fromItem.count )
+    if count > fromItem.count then
+        count = fromItem.count
     end
 
+    -- TODO: refactor this to look nicer
     local toItem = toInventoryData.Inventory[toPosition]
     if toItem then
         if fromItem.item.type ~= toItem.item.type then
+            -- Item swapping - Only allow if count is all items
             if count < 0 or count == fromItem.count then
                 toInventoryData.Inventory[toPosition] = fromItem
+                notifyItemSlotChange( plys, toEnt, toPosition, fromItem )
+
                 fromInventoryData.Inventory[fromPosition] = toItem
+                notifyItemSlotChange( plys, fromEnt, fromPosition, toItem )
             else
                 return false, "Cannot swap half a stack"
             end
         else
+            -- Item combining
             if count < 0 or count == fromItem.count then
                 fromInventoryData.Inventory[fromPosition] = nil
+                notifyItemSlotChange( plys, fromEnt, fromPosition, nil )
+
                 toItem.count = toItem.count + fromItem.count
+                notifyItemSlotChange( plys, toEnt, toPosition, toItem )
             else
                 fromItem.count = fromItem.count - count
+                notifyItemSlotChange( plys, fromEnt, fromPosition, fromItem )
+
                 toItem.count = toItem.count + count
+                notifyItemSlotChange( plys, toEnt, toPosition, toItem )
             end
         end
     else
+        -- Item putting
         if count < 0 or count == fromItem.count then
             fromInventoryData.Inventory[fromPosition] = nil
+            notifyItemSlotChange( plys, fromEnt, fromPosition, nil )
+
             toInventoryData.Inventory[toPosition] = fromItem
+            notifyItemSlotChange( plys, toEnt, toPosition, fromItem )
         else
-            toInventoryData.Inventory[toPosition] = { count = count, item = fromItem.item }
+            local newItem = { count = count, item = fromItem.item }
+            toInventoryData.Inventory[toPosition] = newItem
+            notifyItemSlotChange( plys, toEnt, toPosition, newItem )
+
             fromItem.count = fromItem.count - count
+            notifyItemSlotChange( plys, fromEnt, fromPosition, fromItem )
         end
     end
 
@@ -178,6 +222,8 @@ function inv.dropItem( ply, position, count )
     return droppedItem
 end
 
+-- TODO: Reject if opened by another player
+-- Store activePlayer on the inventory
 function inv.playerOpenInventory( ply, invEnt )
     if ply.RVR_OpenInventory then
         return
@@ -202,17 +248,7 @@ function inv.playerOpenInventory( ply, invEnt )
     net.Send( ply )
 end
 
-local function updateItemSlot( ply, ent, slotNum, slotData )
-    net.Start( "RVR_UpdateInventorySlot" )
-    net.WriteEntity( ent )
-    net.WriteInt( slotNum, 8 )
-    net.WriteBool( tobool( slotData ) )
-    if slotData then
-        net.WriteTable( slotData )
-    end
-    net.Send( ply )
-end
-
+-- TODO: Try put CursorSlot item into inv, else drop it
 net.Receive( "RVR_CloseInventory", function( len, ply )
     ply.RVR_OpenInventory = nil
 end )
@@ -233,32 +269,7 @@ net.Receive( "RVR_CursorHoldItem", function( len, ply )
         return
     end
 
-    local inventory = ent.RVR_Inventory
-
-    if not inventory then return end
-
-    local itemData = inventory.Inventory[position]
-
-    if not itemData then return end
-
-    if count > itemData.count then
-        count = itemData.count
-    end
-
-    if count < 0 or count == itemData.count then
-        inventory.Inventory[position] = nil
-        updateItemSlot( ply, ent, position, nil )
-
-        ply.RVR_Inventory.CursorSlot = itemData
-        updateItemSlot( ply, ply, -1, itemData )
-    else
-        itemData.count = itemData.count - count
-        updateItemSlot( ply, ent, position, itemData )
-
-        local cursorItem = { item = itemData.item, count = count }
-        ply.RVR_Inventory.CursorSlot = { item = itemData.item, count = count }
-        updateItemSlot( ply, ply, -1, cursorItem )
-    end
+    inv.moveItem( ent, ply, position, -1, count )
 end )
 
 net.Receive( "RVR_CursorPutItem", function( len, ply )
@@ -268,13 +279,16 @@ net.Receive( "RVR_CursorPutItem", function( len, ply )
     local position = net.ReadInt( 8 )
     local count = net.ReadInt( 8 )
 
-    if not ply.RVR_Inventory.CursorSlot then return end
+    -- Can't affect an inventory you're not in
+    if ent ~= ply and ent ~= ply.RVR_OpenInventory then
+        return
+    end
 
-
+    inv.moveItem( ply, ent, -1, position, count )
 end )
 
 hook.Add( "KeyPress", "RVR_OpenInventory", function( ply, key )
-    -- Todo: change to menu key
+    -- TODO: change to menu key
     if key == IN_ZOOM then
         inv.playerOpenInventory( ply, ply )
     end
