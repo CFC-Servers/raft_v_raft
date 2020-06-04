@@ -1,6 +1,39 @@
+local function processArguments( argsStr )
+    local args = {}
+    local str = ""
+
+    local insideQuotes = false
+
+    local i = 1
+
+    while i <= string.len( argsStr ) do
+        local char = string.sub( argsStr, i, i )
+
+        if char == "\"" then
+            insideQuotes = not insideQuotes
+        elseif char == "\\" then
+            i = i + 1
+
+            char = string.sub( argsStr, i, i )
+            str = str .. char
+        elseif char == " " and not insideQuotes then
+            args[#args + 1] = str
+            str = ""
+        else
+            str = str .. char
+        end
+
+        i = i + 1
+    end
+
+    return args
+end
+
 local function consoleCommandAutoComplete( cmd, stringArgs )
     local args = processArguments( string.lower( stringArgs ) )
     local command = table.remove( args, 1 )
+
+    if #args < 2 then return end
 
     local suggestions = {}
 
@@ -11,7 +44,7 @@ local function consoleCommandAutoComplete( cmd, stringArgs )
     for _, ply in pairs( player.GetAll() ) do
         local plyNick = ply:Nick()
 
-        if string.find( string.lower( plyNick ), arg ) then
+        if string.find( string.lower( plyNick ), args[#args] ) then
             suggestions[#suggestions + 1] = suggestion .. " \"" .. plyNick .. "\""
         end
     end

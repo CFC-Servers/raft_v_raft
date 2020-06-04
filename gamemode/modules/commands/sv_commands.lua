@@ -15,11 +15,13 @@ function commands.addType( name, func )
 end
 
 commands.addType( "int", function( arg )
-    if not string.find( arg, "^%-?[0-9]+$" ) then
+    local num = tonumber( arg )
+
+    if not num or num % 1 ~= 0 then
         return nil, "Invalid integer: " .. arg
     end
 
-    return tonumber( arg )
+    return num
 end )
 
 commands.addType( "float", function( arg )
@@ -28,20 +30,22 @@ commands.addType( "float", function( arg )
     if not num then
         return "Invalid float: " .. arg
     end
+
+    return num
 end )
 
 local booleanValues = {
-    "enabled"  = true,
-    "enable"   = true,
-    "true"     = true,
-    "yes"      = true,
-    "1"        = true,
+    ["enabled"]  = true,
+    ["enable"]   = true,
+    ["true"]     = true,
+    ["yes"]      = true,
+    ["1"]        = true,
 
-    "disabled" = false,
-    "disable"  = false,
-    "false"    = false,
-    "no"       = false,
-    "0"        = false
+    ["disabled"] = false,
+    ["disable"]  = false,
+    ["false"]    = false,
+    ["no"]       = false,
+    ["0"]        = false
 }
 
 commands.addType( "bool", function( arg )
@@ -76,12 +80,14 @@ commands.addType( "player", function( arg )
     return nil, "Invalid player: " .. arg
 end )
 
-function commands.checkArguments( argName, argTypes, args )
+function commands.checkArguments( argNames, argTypes, args )
     if #args < #argTypes then
         local commandHelp = ""
 
-        for _, argType in ipairs( argTypes ) do
-            commandHelp = commandHelp .. "<" .. argType .. "> "
+        for i, argName in ipairs( argNames ) do
+            local argType = argTypes[i]
+
+            commandHelp = commandHelp .. argName .. ":" .. argType
         end
 
         return nil, "Missing argument: " .. commandHelp
@@ -105,6 +111,8 @@ function commands.checkArguments( argName, argTypes, args )
 end
 
 local function processArguments( argsStr )
+    argsStr = string.Trim( argsStr )
+
     local args = {}
     local str = ""
 
@@ -115,7 +123,7 @@ local function processArguments( argsStr )
     while i <= string.len( argsStr ) do
         local char = string.sub( argsStr, i, i )
 
-        if char == "\"" and then
+        if char == "\"" then
             insideQuotes = not insideQuotes
         elseif char == "\\" then
             i = i + 1
@@ -123,13 +131,17 @@ local function processArguments( argsStr )
             char = string.sub( argsStr, i, i )
             str = str .. char
         elseif char == " " and not insideQuotes then
-            args[#args + 1] = str
+            table.insert( args, str )
             str = ""
         else
             str = str .. char
         end
 
         i = i + 1
+    end
+
+    if str ~= "" then
+        table.insert( args, str )
     end
 
     return args
@@ -146,12 +158,12 @@ local function processCommand( ply, command, args )
         local newArgs, errorMsg = commands.checkArguments( commandInfo.argNames, commandInfo.argTypes, args )
 
         if errorMsg then
-            return errorMsg
+            return errorMsg, true
         end
 
         local msg = commandInfo.func( unpack( newArgs ) )
 
-        return msg
+        return msg, true
     end
 end
 
@@ -205,33 +217,43 @@ local function onPlayerSay( ply, text )
     local args = processArguments( text )
     local command = table.remove( args, 1 )
 
-    local msg = processCommand( command, args )
+    local msg, validCommand = processCommand( ply, command, args )
 
     if msg then
         ply:ChatPrint( msg )
+    end
+
+    if not validCommand then
+        ply:ChatPrint( "Command \"" .. command .. "\" does not exist" )
+    else
+        return ""
     end
 end
 
 hook.Add( "PlayerSay", "RVR_Commands_onPlayerSay", onPlayerSay )
 
-local function onRunConsoleCommand()
+local function onRunConsoleCommand( len, ply )
     local argsStr = net.ReadString()
 
     local args = processArguments( argsStr )
     local command = table.remove( args, 1 )
 
-    local msg = processCommand( command, args )
+    local msg, validCommand = processCommand( ply, command, args )
 
     if msg then
         ply:PrintMessage( HUD_PRINTCONSOLE, msg )
+    end
+
+    if not validCommand then
+        ply:PrintMessage( HUD_PRINTCONSOLE, "Command \"" .. command .. "\" does not exist" )
     end
 end
 
 net.Receive( "RVR_Commands_runConsoleCommand", onRunConsoleCommand )
 
-commands.register( "help", {"Command"}, {"string"}, RVR_USER_ALL, function( command )
+commands.register( "help", {"command"}, {"string"}, RVR_USER_ALL, function( command )
     if not commands.list[command] then
-        return "Command \"" .. command .. "\" does not exist"
+        return "Help: Command \"" .. command .. "\" does not exist"
     end
 
     return commands.list[command].description
