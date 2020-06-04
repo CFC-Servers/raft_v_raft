@@ -161,7 +161,7 @@ local function processCommand( ply, command, args )
             return errorMsg, true
         end
 
-        local msg = commandInfo.func( unpack( newArgs ) )
+        local msg = commandInfo.func( ply, unpack( newArgs ) )
 
         return msg, true
     end
