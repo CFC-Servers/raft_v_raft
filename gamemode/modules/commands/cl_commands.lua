@@ -45,7 +45,7 @@ local function consoleCommandAutoComplete( cmd, stringArgs )
         local plyNick = ply:Nick()
 
         if string.find( string.lower( plyNick ), args[#args] ) then
-            suggestions[#suggestions + 1] = suggestion .. " \"" .. plyNick .. "\""
+            suggestions[#suggestions + 1] = command .. " \"" .. plyNick .. "\""
         end
     end
 end
