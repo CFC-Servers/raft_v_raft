@@ -15,6 +15,16 @@ Where:
 - Command is the function that will run once all arguments are verified. It's first argument is the player that ran the function and all following arguments are the arguments that have been verified
 - Description (Optional) is a string that will be used by the help command to give information about the command
 
+### Argument types
+The **commands module** implements five types.
+- `int` Checks for an integer value, should it be negative or not
+- `float` Checks for a float value, should it also be negative or not
+- `string` Checks for a string
+- `boolean` Allows for these boolean values:
+  - "true", "yes", "enable", "enabled" and "1" will be converted to `true`
+  - "false", "no", "disable", "disabled" and "0" will be converted to `false`
+- `player` Checks for a player in-game. It works with the player's name as well as their steam id. Passing `^` will pass the player that ran the command and `@` will run the command passing each player as that argument. `@` can only be used once when running a command.
+
 ### Creating a type
 Custom argument types can be created using:
 ```
