@@ -3,7 +3,7 @@ util.AddNetworkString( "RVR_Commands_runConsoleCommand" )
 RVR.Commands = RVR.Commands or {}
 local commands = RVR.Commands
 
-commands.list = {}
+commands.commands = {}
 commands.types = {}
 
 function commands.addType( name, func )
@@ -173,7 +173,7 @@ local function processArguments( argsStr )
 end
 
 local function processCommand( ply, command, args )
-    local commandInfo = commands.list[command]
+    local commandInfo = commands.commands[command]
 
     if commandInfo then
         if not RVR.isUserGroup( ply, commandInfo.userGroup ) then
@@ -231,7 +231,7 @@ function commands.register( names, argNames, argTypes, userGroup, func, desc )
     end
 
     for _, name in ipairs( names ) do
-        if commands.list[name] then
+        if commands.commands[name] then
             error( "A command with the same name (" .. name .. ") already exists" )
         end
 
@@ -253,7 +253,7 @@ function commands.register( names, argNames, argTypes, userGroup, func, desc )
             description = description .. "\nDescription: " .. desc
         end
 
-        commands.list[name] = {
+        commands.commands[name] = {
             argNames = argNames,
             argTypes = argTypes,
             userGroup = userGroup,
@@ -306,9 +306,9 @@ end
 net.Receive( "RVR_Commands_runConsoleCommand", onRunConsoleCommand )
 
 commands.register( "help", {"command"}, {"string"}, RVR_USER_ALL, function( ply, command )
-    if not commands.list[command] then
+    if not commands.commands[command] then
         return "Help: Command \"" .. command .. "\" does not exist"
     end
 
-    return commands.list[command].description
+    return commands.commands[command].description
 end, "Prints the usage and description of a command" )
