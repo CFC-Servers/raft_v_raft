@@ -60,8 +60,12 @@ commands.addType( "string", function( arg )
     return arg
 end )
 
-commands.addType( "player", function( arg )
-    if arg == "^" or arg == "@" then return arg end
+commands.addType( "player", function( arg, ply )
+    if arg == "@" then return arg end
+
+    if arg == "^" then
+        return ply
+    end
 
     local isSteamID = string.find( arg, "STEAM_" )
 
@@ -96,7 +100,7 @@ commands.addType( "player", function( arg )
     return nil, "Invalid player: " .. arg
 end )
 
-function commands.checkArguments( argNames, argTypes, args )
+function commands.checkArguments( argNames, argTypes, args, ply )
     if #args < #argTypes then
         local commandHelp = ""
 
@@ -115,7 +119,7 @@ function commands.checkArguments( argNames, argTypes, args )
     for i, argType in ipairs( argTypes ) do
         local arg = args[i]
 
-        local value, errorMsg = commands.types[argType]( arg )
+        local value, errorMsg = commands.types[argType]( arg, ply )
 
         if errorMsg then
             return nil, errorMsg
@@ -180,7 +184,7 @@ local function processCommand( ply, command, args )
             return "You need to be " .. RVR.getGroupName( commandInfo.userGroup ) .. " to use this command"
         end
 
-        local newArgs, errorMsg = commands.checkArguments( commandInfo.argNames, commandInfo.argTypes, args )
+        local newArgs, errorMsg = commands.checkArguments( commandInfo.argNames, commandInfo.argTypes, args, ply )
 
         if errorMsg then
             return errorMsg, true
@@ -190,10 +194,6 @@ local function processCommand( ply, command, args )
         local allPlayerReferenceLocation = nil
 
         for i, arg in ipairs( newArgs ) do
-            if arg == "^" and commandInfo.argTypes[i] == "player" then
-                newArgs[i] = ply
-            end
-
             if arg == "@" and commandInfo.argTypes[i] == "player" then
                 hasAllPlayerReference = true
                 allPlayerReferenceLocation = i
