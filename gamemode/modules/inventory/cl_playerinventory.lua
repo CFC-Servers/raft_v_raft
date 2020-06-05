@@ -1,6 +1,18 @@
 local inv = RVR.Inventory
 local backgroundMat = Material( "icons/player_inventory_background.png" )
 
+local function makeEquipmentSlot( frame, inventory, startX, startY, spacing, index )
+    local GM = GAMEMODE
+    local equipmentSlotOffset = GM.Config.Inventory.PLAYER_INVENTORY_SLOTS + GM.Config.Inventory.PLAYER_HOTBAR_SLOTS
+
+    local yOffset = ( index - 1 ) * spacing
+
+    local headSlot = vgui.Create( "RVR_ItemSlot", frame )
+    headSlot:SetSize( slotSize * 0.5, slotSize * 0.5 )
+    headSlot:SetPos( w * slotXMult, h * ( slotYMult + yOffset ) )
+    headSlot:SetLocationData( LocalPlayer(), equipmentSlotOffset + index )
+end
+
 function inv.openPlayerInventory( inventory )
     local GM = GAMEMODE
     local w, h = ScrH() * 0.7 * 1.3, ScrH() * 0.7
@@ -38,21 +50,30 @@ function inv.openPlayerInventory( inventory )
     local slotSize = ( w * gridWidthMult ) / itemsPerRow
     local imageSizeMult = 0.7
     local heightSpacingMult = 0.92
-    local rowCount = math.floor( ( GM.Config.Inventory.PLAYER_INVENTORY_SLOTS - 1 ) / itemsPerRow ) + 1
+    -- TODO: Check this is correct
+    local inventoryBottomMult = 0.6
 
     local startX = w * ( 1 - gridWidthMult ) * 0.5
-    local startY = h * 0.89 - rowCount * slotSize
+    local startY = h * inventoryBottomMult
     for k = 1, GM.Config.Inventory.PLAYER_INVENTORY_SLOTS do
         -- TODO: Uncomment when hotbar finished
         local itemSlotNum = k-- + GM.Config.Inventory.PLAYER_HOTBAR_SLOTS
 
-        local x = ( k - 1 ) % itemsPerRow
-        local y = math.floor( ( k - 1 ) / itemsPerRow )
+        -- Work out grid position, where 0, 0 is top left slot
+        local gridX = ( k - 1 ) % itemsPerRow
+        local gridY = math.floor( ( k - 1 ) / itemsPerRow )
 
+        -- Work out real position, offset to account to imageSizeMult
+        local imageOffsetMult = ( 1 - imageSizeMult ) / 2
+        local x = startX + slotSize * ( gridX + imageOffsetMult )
+        local y = startY + slotSize * heightSpacingMult * ( gridY + imageOffsetMult )
+
+        -- Make the slot
         local slot = vgui.Create( "RVR_ItemSlot", frame )
         slot:SetSize( slotSize * imageSizeMult, slotSize * imageSizeMult )
-        local offsetMult = ( 1 - imageSizeMult ) / 2
-        slot:SetPos( startX + slotSize * ( x + offsetMult ), startY + slotSize * heightSpacingMult * ( y + offsetMult ) )
+        slot:SetPos( x, y )
+
+        -- Setup slot location and item data
         slot:SetLocationData( LocalPlayer(), itemSlotNum )
         local itemInfo = inventory.Inventory[itemSlotNum]
         if itemInfo then
@@ -60,22 +81,13 @@ function inv.openPlayerInventory( inventory )
         end
     end
 
-    local offset = GM.Config.Inventory.PLAYER_INVENTORY_SLOTS + GM.Config.Inventory.PLAYER_HOTBAR_SLOTS
+    local eSlotXMult = 0.662
+    local eSlotYMult = 0.124
+    local eSlotYSpacing = 0.085
 
-    local headSlot = vgui.Create( "RVR_ItemSlot", frame )
-    headSlot:SetSize( slotSize * 0.5, slotSize * 0.5 )
-    headSlot:SetPos( w * 0.662, h * 0.124 )
-    headSlot:SetLocationData( LocalPlayer(), offset + 1 )
-
-    local bodySlot = vgui.Create( "RVR_ItemSlot", frame )
-    bodySlot:SetSize( slotSize * 0.5, slotSize * 0.5 )
-    bodySlot:SetPos( w * 0.662, h * ( 0.124 + 0.085 ) )
-    bodySlot:SetLocationData( LocalPlayer(), offset + 2 )
-
-    local footSlot = vgui.Create( "RVR_ItemSlot", frame )
-    footSlot:SetSize( slotSize * 0.5, slotSize * 0.5 )
-    footSlot:SetPos( w * 0.662, h * ( 0.124 + 0.085 + 0.086 ) )
-    footSlot:SetLocationData( LocalPlayer(), offset + 3 )
+    for i = 1, 3 do
+        makeEquipmentSlot( frame, inventory, eSlotXMult, eSlotYMult, eSlotYSpacing, i )
+    end
 
     return frame
 end

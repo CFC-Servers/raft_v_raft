@@ -10,18 +10,19 @@ util.AddNetworkString( "RVR_DropCursorItem" )
 util.AddNetworkString( "RVR_UpdateInventorySlot" )
 
 local function getSendableInventory( inventory )
-    local innerInv = {}
+    inventory = table.Copy( inventory )
     for k, v in pairs( inventory.Inventory ) do
-        innerInv[k] = {
-            count = v.count,
-            item = table.Merge( table.Copy( v.item ), RVR.Items.getItemData( v.item.type ) )
-        }
+        v.item = table.Merge( v.item, RVR.Items.getItemData( v.item.type ) )
     end
 
-    return {
-        InventoryType = inventory.InventoryType,
-        Inventory = innerInv
-    }
+    if inventory.InventoryType == "Player" then
+        local equipmentSlotOffset = GM.Config.Inventory.PLAYER_INVENTORY_SLOTS + GM.Config.Inventory.PLAYER_HOTBAR_SLOTS
+        inventory.Inventory[equipmentSlotOffset + 1] = inventory.HeadGear
+        inventory.Inventory[equipmentSlotOffset + 2] = inventory.BodyGear
+        inventory.Inventory[equipmentSlotOffset + 3] = inventory.FootGear
+    end
+
+    return inventory
 end
 
 function inv.notifyItemSlotChange( plys, ent, slotNum, slotData )

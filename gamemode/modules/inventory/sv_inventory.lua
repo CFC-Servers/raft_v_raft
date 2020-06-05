@@ -15,7 +15,7 @@ function inv.setupPlayer( ply )
         MaxSlots = GM.Config.Inventory.PLAYER_HOTBAR_SLOTS + GM.Config.Inventory.PLAYER_INVENTORY_SLOTS,
         HotbarSelected = 1,
         InventoryType = "Player",
-        CursorSlot = nil
+        CursorSlot = nil,
     }
 
     inv.attemptPickupItem( ply, RVR.Items.getItemInstance( "wood" ), 8 )
