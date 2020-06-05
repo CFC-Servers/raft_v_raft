@@ -9,6 +9,11 @@ util.AddNetworkString( "RVR_CursorPutItem" )
 util.AddNetworkString( "RVR_DropCursorItem" )
 util.AddNetworkString( "RVR_UpdateInventorySlot" )
 
+--TODO:
+-- Player equipment slots
+-- box inventory UI
+-- Dropped item stacking
+
 -- Initialize players inventory to empty
 function inv.setupPlayer( ply )
     local GM = GAMEMODE
