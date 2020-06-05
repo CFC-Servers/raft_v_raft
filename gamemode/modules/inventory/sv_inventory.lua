@@ -2,8 +2,6 @@ RVR.Inventory = RVR.Inventory or {}
 
 local inv = RVR.Inventory
 
-util.AddNetworkString( "RVR_UpdateInventorySlot" )
-
 --TODO:
 -- box inventory UI
 -- Hotbar UI + item selection
