@@ -22,6 +22,9 @@ end
 
 -- Wrapper for now, allows adding metadata to item instances later
 function items.getItemInstance( itemType )
+    if not items.getItemData( itemType ) then
+        error( "Item type " .. itemType .. " does not exist" )
+    end
     return {
         type = itemType
     }
@@ -34,7 +37,6 @@ items.items = {
         maxCount = 10,
         model = "models/Gibs/wood_gib01b.mdl",
         icon = "materials/icons/wood-tmp.png",
-        isHeadGear = true,
         stackable = true,
     }
 }

@@ -14,10 +14,10 @@ function inv.openPlayerInventory( inventory )
     frame:Center()
     frame:MakePopup()
 
-    function frame:Paint( w, h )
+    function frame:Paint( _w, _h )
         surface.SetMaterial( backgroundMat )
         surface.SetDrawColor( Color( 255, 255, 255 ) )
-        surface.DrawTexturedRect( 0, 0, w, h )
+        surface.DrawTexturedRect( 0, 0, _w, _h )
     end
 
     function frame:OnClose()

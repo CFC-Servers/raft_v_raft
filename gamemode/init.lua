@@ -19,6 +19,7 @@ include( "modules/drowning/sv_drowning.lua" )
 AddCSLuaFile( "modules/drowning/cl_drowning.lua" )
 
 include( "modules/inventory/sv_inventory.lua" )
+include( "modules/inventory/sv_inventory_interaction.lua" )
 
 include( "modules/hunger/sv_hunger.lua" )
 
