@@ -40,10 +40,11 @@ for _, moduleName in pairs( modules ) do
             realmStr = "client"
         else
             print( "[RVR] Warning, empty module: " .. moduleName )
-            continue
         end
 
-        print( "[RVR] Loaded " .. realmStr .. " module: " .. moduleName )
+        if realmStr then
+            print( "[RVR] Loaded " .. realmStr .. " module: " .. moduleName )
+        end
     else
         print( "[RVR] Loaded module: " .. moduleName )
     end
