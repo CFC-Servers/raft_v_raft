@@ -103,10 +103,10 @@ function commands.checkArguments( argNames, argTypes, args )
         for i, argName in ipairs( argNames ) do
             local argType = argTypes[i]
 
-            commandHelp = commandHelp .. argName .. ":" .. argType
+            commandHelp = commandHelp .. argName .. ":" .. argType .. " "
         end
 
-        return nil, "Missing argument: " .. commandHelp
+        return nil, "Missing argument. Usage " .. commandHelp
     end
 
     local newArgs = {}
