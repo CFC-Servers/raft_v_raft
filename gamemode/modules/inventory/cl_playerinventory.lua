@@ -13,6 +13,7 @@ function inv.openPlayerInventory( inventory )
     frame:ShowCloseButton( false )
     frame:Center()
     frame:MakePopup()
+
     function frame:Paint( w, h )
         surface.SetMaterial( backgroundMat )
         surface.SetDrawColor( Color( 255, 255, 255 ) )
@@ -56,17 +57,22 @@ function inv.openPlayerInventory( inventory )
         end
     end
 
+    local offset = GM.Config.Inventory.PLAYER_INVENTORY_SLOTS + GM.Config.Inventory.PLAYER_HOTBAR_SLOTS
+
     local headSlot = vgui.Create( "RVR_ItemSlot", frame )
     headSlot:SetSize( slotSize * 0.5, slotSize * 0.5 )
     headSlot:SetPos( w * 0.662, h * 0.124 )
+    headSlot:SetLocationData( LocalPlayer(), offset + 1 )
 
     local bodySlot = vgui.Create( "RVR_ItemSlot", frame )
     bodySlot:SetSize( slotSize * 0.5, slotSize * 0.5 )
     bodySlot:SetPos( w * 0.662, h * ( 0.124 + 0.085 ) )
+    bodySlot:SetLocationData( LocalPlayer(), offset + 2 )
 
     local footSlot = vgui.Create( "RVR_ItemSlot", frame )
     footSlot:SetSize( slotSize * 0.5, slotSize * 0.5 )
     footSlot:SetPos( w * 0.662, h * ( 0.124 + 0.085 + 0.086 ) )
+    footSlot:SetLocationData( LocalPlayer(), offset + 3 )
 
     return frame
 end

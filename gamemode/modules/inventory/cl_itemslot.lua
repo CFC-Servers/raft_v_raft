@@ -1,10 +1,14 @@
+RVR.Inventory = RVR.Inventory or {}
+local inv = RVR.Inventory
+
 local PANEL = {}
 
-RVR.ItemSlots = {}
+inv.ItemSlots = inv.ItemSlots or {}
 
 function PANEL:Init()
-    table.insert( RVR.ItemSlots, self )
+    table.insert( inv.ItemSlots, self )
     self:SetImage( "materials/icons/slot_background.png" )
+    self:SetMouseInputEnabled( true )
 
     self.itemImage = vgui.Create( "DImage", self )
     self.itemImage:Dock( FILL )
@@ -12,6 +16,7 @@ function PANEL:Init()
 
     self.itemCountLabel = vgui.Create( "DLabel", self )
     self.itemCountLabel:SetText( "" )
+    self.itemCountLabel:SetTextColor( Color( 200, 200, 200 ) )
     self.itemCountLabel:SetFont( "DermaLarge" )
 
     function self.itemCountLabel:PerformLayout()
@@ -34,17 +39,42 @@ function PANEL:GetLocationData()
 end
 
 function PANEL:OnMousePressed( code )
-    
+    local cursorItem, cursorItemCount = inv.getCursorItemData()
+
+    if cursorItem then
+        local count = cursorItemCount
+        if code == MOUSE_RIGHT then
+            count = 1
+        end
+        net.Start( "RVR_CursorPutItem" )
+        net.WriteEntity( self.parentEnt )
+        net.WriteInt( self.slotPosition, 8 )
+        net.WriteInt( count, 8 )
+        net.SendToServer()
+    else
+        if not self.item then return end
+
+        local count = self.itemCount
+        if code == MOUSE_RIGHT then
+            count = math.ceil( count / 2 )
+        end
+        net.Start( "RVR_CursorHoldItem" )
+        net.WriteEntity( self.parentEnt )
+        net.WriteInt( self.slotPosition, 8 )
+        net.WriteInt( count, 8 )
+        net.SendToServer()
+    end
 end
 
 function PANEL:OnRemove()
-    table.RemoveByValue( RVR.ItemSlots, self )
+    table.RemoveByValue( inv.ItemSlots, self )
 end
 
 function PANEL:SetItemData( item, count )
     self.item = item
     self.itemCount = count
     self.itemImage:SetImage( item.icon )
+    self.itemImage:SetImageColor( Color( 255, 255, 255 ) )
 
     if count > 1 then
         self.itemCountLabel:SetText( tostring( count ) )
@@ -54,10 +84,14 @@ function PANEL:SetItemData( item, count )
     self.itemCountLabel:SizeToContents()
 end
 
+function PANEL:GetItemData()
+    return self.item, self.itemCount
+end
+
 function PANEL:ClearItemData()
     self.item = nil
     self.itemCount = nil
-    self.itemImage:SetImage( "" )
+    self.itemImage:SetImageColor( Color( 255, 255, 255, 0 ) )
     self.itemCountLabel:SetText( "" )
 end
 
