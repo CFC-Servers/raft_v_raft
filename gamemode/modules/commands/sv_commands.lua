@@ -75,8 +75,22 @@ commands.addType( "player", function( arg )
         end
     end
 
+    local selectedPlayers = {}
+    local playerList = ""
+
     for _, ply in pairs( player.GetAll() ) do
-        if string.find( ply:Nick(), arg ) then return ply end
+        local plyNick = ply:Nick()
+
+        if string.find( plyNick, arg ) then
+            table.insert( selectedPlayers, ply )
+            playerList = playerList .. "\n" .. plyNick
+        end
+    end
+
+    if #selectedPlayers > 1 then
+        return nil, "\"" .. arg .. "\" matches multiple players:" .. playerList
+    elseif #selectedPlayers == 1 then
+        return selectedPlayers[1]
     end
 
     return nil, "Invalid player: " .. arg
