@@ -129,7 +129,7 @@ function commands.checkArguments( argNames, argTypes, args )
             allPlayersReferenced = true
         end
 
-        newArgs[#newArgs + 1] = value
+        newArgs[i] = value
     end
 
     return newArgs
@@ -264,7 +264,7 @@ function commands.register( names, argNames, argTypes, userGroup, func, desc )
 end
 
 local function onPlayerSay( ply, text )
-    if string.sub( text, 1, 1 ) ~= "!" then return end
+    if text[1] ~= "!" then return end
 
     text = string.sub( text, 2 )
 

@@ -7,14 +7,14 @@ local function processArguments( argsStr )
     local i = 1
 
     while i <= string.len( argsStr ) do
-        local char = string.sub( argsStr, i, i )
+        local char = argsStr[i]
 
         if char == "\"" then
             insideQuotes = not insideQuotes
         elseif char == "\\" then
             i = i + 1
 
-            char = string.sub( argsStr, i, i )
+            char = argsStr[i]
             str = str .. char
         elseif char == " " and not insideQuotes then
             args[#args + 1] = str
@@ -45,7 +45,7 @@ local function consoleCommandAutoComplete( cmd, stringArgs )
         local plyNick = ply:Nick()
 
         if string.find( string.lower( plyNick ), args[#args] ) then
-            suggestions[#suggestions + 1] = command .. " \"" .. plyNick .. "\""
+            table.insert( suggestions, command .. " \"" .. plyNick .. "\"" )
         end
     end
 end
