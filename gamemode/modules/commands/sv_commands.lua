@@ -104,7 +104,7 @@ function commands.checkArguments( argNames, argTypes, args )
             return nil, errorMsg
         end
 
-        newArgs[#newArgs + 1] = value
+        newArgs[i] = value
     end
 
     return newArgs
