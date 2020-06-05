@@ -10,12 +10,29 @@
     isFootGear = (bool) can this be equipped in foot slot
 ]]
 
-RVR.items = {
+RVR.Items = RVR.Items or {}
+local items = RVR.Items
+
+function items.getItemData( itemType )
+    for k, v in pairs( items.items ) do
+        if v.type == itemType then return v end
+    end
+end
+
+-- Wrapper for now, allows adding metadata to item instances later
+function items.getItemInstance( itemType )
+    return {
+        type = itemType
+    }
+end
+
+items.items = {
     {
         type = "wood",
         displayName = "Wood",
         maxCount = 10,
         model = "models/Gibs/wood_gib01b.mdl",
-        icon = "materials/icons/player_inventory_background.png",
+        icon = "materials/icons/wood-tmp.png",
+        isHeadGear = true,
     }
 }

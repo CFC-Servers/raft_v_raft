@@ -19,7 +19,7 @@ function ENT:Draw()
 
     local maxSide = math.max( size.x, size.y, size.z )
 
-    local text = self:GetItemType()
+    local text = self:GetItemDisplayName()
     local amount = self:GetAmount()
 
     if amount > 1 then

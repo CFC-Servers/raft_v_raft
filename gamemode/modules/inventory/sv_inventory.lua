@@ -10,7 +10,6 @@ util.AddNetworkString( "RVR_DropCursorItem" )
 util.AddNetworkString( "RVR_UpdateInventorySlot" )
 
 --TODO:
--- Player equipment slots
 -- box inventory UI
 -- Dropped item stacking
 
@@ -26,7 +25,7 @@ function inv.setupPlayer( ply )
         CursorSlot = nil
     }
 
-    inv.attemptPickupItem( ply, RVR.items[1], 8 )
+    inv.attemptPickupItem( ply, RVR.Items.getItemInstance( "wood" ), 8 )
 end
 
 hook.Add( "PlayerInitialSpawn", "RVR_SetupInventory", inv.setupPlayer )
@@ -37,7 +36,7 @@ function inv.playerHasItems( ply, items )
 
     for _, invItem in pairs( ply.RVR_Inventory.Inventory ) do
         for k, craftItem in pairs( items ) do
-            if invItem.item.type == craftItem.item.type then
+            if inv.canItemsStack( invItem.item, craftItem.item ) then
                 craftItem.count = craftItem.count - invItem.count
                 if craftItem.count <= 0 then
                     table.remove( items, k )
@@ -53,14 +52,9 @@ function inv.playerHasItems( ply, items )
     return false
 end
 
-function inv.slotValid( ent, position )
-    if not ent.RVR_Inventory then return false end
-
-    if position == -1 then
-        return type( ent ) == "Player"
-    else
-        return position >= 1 and position <= ent.RVR_Inventory.MaxSlots
-    end
+-- Allows for modifying stack checking later - used for checking crafting as well.
+function inv.canItemsStack( item1, item2 )
+    return item1.type == item2.type
 end
 
 local function notifyItemSlotChange( plys, ent, slotNum, slotData )
@@ -71,7 +65,9 @@ local function notifyItemSlotChange( plys, ent, slotNum, slotData )
     net.WriteInt( slotNum, 8 )
     net.WriteBool( tobool( slotData ) )
     if slotData then
-        net.WriteTable( slotData )
+        local data = table.Copy( slotData )
+        table.Merge( data.item, RVR.Items.getItemData( data.item.type ) )
+        net.WriteTable( data )
     end
     net.Send( plys )
 end
@@ -79,31 +75,80 @@ end
 function inv.setSlot( ent, position, itemData, plysToNotify )
     if not ent.RVR_Inventory then return end
 
+    local isPlayer = type( ent ) == "Player"
+
     if position < 0 then
-        if type( ent ) == "Player" then
+        if isPlayer then
             ent.RVR_Inventory.CursorSlot = itemData
-            if plysToNotify then
-                notifyItemSlotChange( plysToNotify, ent, position, itemData )
-            end
+        else
+            return
         end
     elseif position > 0 and position <= ent.RVR_Inventory.MaxSlots then
         ent.RVR_Inventory.Inventory[position] = itemData
-        if plysToNotify then
-            notifyItemSlotChange( plysToNotify, ent, position, itemData )
+    elseif isPlayer and position > ent.RVR_Inventory.MaxSlots and position < ent.RVR_Inventory.MaxSlots + 3 then
+        if position == ent.RVR_Inventory.MaxSlots + 1 then
+            ent.RVR_Inventory.HeadGear = itemData
+        elseif position == ent.RVR_Inventory.MaxSlots + 2 then
+            ent.RVR_Inventory.BodyGear = itemData
+        elseif position == ent.RVR_Inventory.MaxSlots + 3 then
+            ent.RVR_Inventory.FootGear = itemData
         end
+    else
+        return
+    end
+
+    if plysToNotify then
+        notifyItemSlotChange( plysToNotify, ent, position, itemData )
     end
 end
 
 function inv.getSlot( ent, position )
     if not ent.RVR_Inventory then return end
+    local isPlayer = type( ent ) == "Player"
     local slot
-    if position < 0 and type( ent ) == "Player" then
-        slot = ent.RVR_Inventory.CursorSlot
-    else
+
+    if isPlayer then
+        if position < 0 then
+            slot = ent.RVR_Inventory.CursorSlot
+        elseif position > ent.RVR_Inventory.MaxSlots and position < ent.RVR_Inventory.MaxSlots + 3 then
+            if position == ent.RVR_Inventory.MaxSlots + 1 then
+                slot = ent.RVR_Inventory.HeadGear
+            elseif position == ent.RVR_Inventory.MaxSlots + 2 then
+                slot = ent.RVR_Inventory.BodyGear
+            elseif position == ent.RVR_Inventory.MaxSlots + 3 then
+                slot = ent.RVR_Inventory.FootGear
+            end
+        end
+    end
+
+    if not slot then
         slot = ent.RVR_Inventory.Inventory[position]
     end
 
     return slot and table.Copy( slot )
+end
+
+function inv.slotCanContain( ent, position, item )
+    if not ent.RVR_Inventory then return false end
+
+    local isPlayer = type( ent ) == "Player"
+    if isPlayer then
+        if position == -1 then return true end
+
+        local itemData = RVR.Items.getItemData( item.type )
+
+        if position == ent.RVR_Inventory.MaxSlots + 1 then
+            return tobool( itemData.isHeadGear )
+        end
+        if position == ent.RVR_Inventory.MaxSlots + 2 then
+            return tobool( itemData.isBodyGear )
+        end
+        if position == ent.RVR_Inventory.MaxSlots + 3 then
+            return tobool( itemData.isFootGear )
+        end
+    end
+
+    return position > 0 and position <= ent.RVR_Inventory.MaxSlots
 end
 
 -- returns couldFitAll, amount
@@ -112,19 +157,21 @@ function inv.attemptPickupItem( ply, item, count )
     count = count or 1
     local originalCount = count
 
+    local itemData = RVR.Items.getItemData( item.type )
+
     for k = 1, ply.RVR_Inventory.MaxSlots do
-        local itemData = inv.getSlot( ply, k )
+        local itemSlotData = inv.getSlot( ply, k )
         -- Can fit more
-        if itemData and itemData.item.type == item.type and itemData.count < item.maxCount then
-            local canFit = item.maxCount - itemData.count
+        if itemSlotData and inv.canItemsStack( itemSlotData.item, item ) and itemSlotData.count < itemData.maxCount then
+            local canFit = itemData.maxCount - itemSlotData.count
             if canFit >= count then
-                itemData.count = itemData.count + count
-                inv.setSlot( ply, k, itemData, { ply } )
+                itemSlotData.count = itemSlotData.count + count
+                inv.setSlot( ply, k, itemSlotData, { ply } )
 
                 return true, originalCount
             else
-                itemData.count = itemData.count + canFit
-                inv.setSlot( ply, k, itemData, { ply } )
+                itemSlotData.count = itemSlotData.count + canFit
+                inv.setSlot( ply, k, itemSlotData, { ply } )
 
                 count = count - canFit
             end
@@ -132,15 +179,15 @@ function inv.attemptPickupItem( ply, item, count )
     end
 
     for k = 1, ply.RVR_Inventory.MaxSlots do
-        local itemData = inv.getSlot( ply, k )
+        local itemSlotData = inv.getSlot( ply, k )
         -- Empty
-        if not itemData then
-            if count <= item.maxCount then
+        if not itemSlotData then
+            if count <= itemData.maxCount then
                 inv.setSlot( ply, k, { item = item, count = count }, { ply } )
                 return true, originalCount
             else
-                inv.setSlot( ply, k, { item = item, count = item.maxCount }, { ply } )
-                count = count - item.maxCount
+                inv.setSlot( ply, k, { item = item, count = itemData.maxCount }, { ply } )
+                count = count - itemData.maxCount
             end
         end
     end
@@ -181,11 +228,11 @@ function inv.moveItem( fromEnt, toEnt, fromPosition, toPosition, count )
         return false, "One or more inventories are invalid"
     end
 
-    if not inv.slotValid( toEnt, toPosition ) then
-        return false, "Invalid slot position"
-    end
-
     local fromItem = inv.getSlot( fromEnt, fromPosition )
+
+    if not inv.slotCanContain( toEnt, toPosition, fromItem.item ) then
+        return false, "Item cannot be placed here"
+    end
 
     if not fromItem then return false, "No item to move" end
 
@@ -195,18 +242,26 @@ function inv.moveItem( fromEnt, toEnt, fromPosition, toPosition, count )
 
     local toItem = inv.getSlot( toEnt, toPosition )
     if toItem then
-        if fromItem.item.type ~= toItem.item.type then
+        if not inv.canItemsStack( fromItem.item, toItem.item ) then
             -- Item swapping - Only allow if count is all items
             if count < 0 or count == fromItem.count then
-                inv.setSlot( toEnt, toPosition, fromItem, plys )
+                if not inv.slotCanContain( fromEnt, fromPosition, toItem.item ) then
+                    return false, "Item cannot be placed here"
+                end
+                if not inv.slotCanContain( toEnt, toPosition, fromItem.item ) then
+                    return false, "Item cannot be placed here"
+                end
 
                 inv.setSlot( fromEnt, fromPosition, toItem, plys )
+
+                inv.setSlot( toEnt, toPosition, fromItem, plys )
             else
                 return false, "Cannot swap half a stack"
             end
         else
             -- Item combining
-            count = math.Min( count, fromItem.item.maxCount - toItem.count )
+            local toItemData = RVR.Items.getItemData( toItem.item.type )
+            count = math.Min( count, toItemData.maxCount - toItem.count )
 
             if count == 0 then return end
 
@@ -230,11 +285,11 @@ function inv.moveItem( fromEnt, toEnt, fromPosition, toPosition, count )
 
             inv.setSlot( toEnt, toPosition, fromItem, plys )
         else
-            local newItem = { count = count, item = fromItem.item }
-            inv.setSlot( toEnt, toPosition, newItem, plys )
-
             fromItem.count = fromItem.count - count
             inv.setSlot( fromEnt, fromPosition, fromItem, plys )
+
+            local newItem = { count = count, item = fromItem.item }
+            inv.setSlot( toEnt, toPosition, newItem, plys )
         end
     end
 
@@ -259,10 +314,25 @@ function inv.dropItem( ply, position, count )
     local droppedItem = ents.Create( "rvr_dropped_item" )
     if not IsValid( droppedItem ) then return end -- Check whether we successfully made an entity, if not - bail
     droppedItem:SetPos( ply:GetShootPos() + Angle( 0, ply:EyeAngles().yaw, 0 ):Forward() * 20 )
-    droppedItem:Setup( itemData.item, count )
+    droppedItem:Setup( RVR.Items.getItemData( itemData.item.type ), count )
     droppedItem:Spawn()
 
     return droppedItem
+end
+
+local function getSendableInventory( inventory )
+    local innerInv = {}
+    for k, v in pairs( inventory.Inventory ) do
+        innerInv[k] = {
+            count = v.count,
+            item = table.Merge( table.Copy( v.item ), RVR.Items.getItemData( v.item.type ) )
+        }
+    end
+
+    return {
+        InventoryType = inventory.InventoryType,
+        Inventory = innerInv
+    }
 end
 
 function inv.playerOpenInventory( ply, invEnt )
@@ -285,10 +355,10 @@ function inv.playerOpenInventory( ply, invEnt )
     local isPlayer = invEnt == ply
 
     net.Start( "RVR_OpenInventory" )
-    net.WriteTable( inventoryData )
+    net.WriteTable( getSendableInventory( inventoryData ) )
     net.WriteBool( isPlayer )
     if not isPlayer then
-        net.WriteTable( ply.RVR_Inventory )
+        net.WriteTable( getSendableInventory( ply.RVR_Inventory ) )
     end
     net.Send( ply )
 end

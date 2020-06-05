@@ -21,6 +21,7 @@ end
 function ENT:Setup( item, count )
     self:SetAmount( count )
     self:SetItemType( item.type )
+    self:SetItemDisplayName( item.displayName )
     self:SetModel( item.model )
 
     self.item = item

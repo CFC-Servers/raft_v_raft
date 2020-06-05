@@ -128,8 +128,8 @@ hook.Add( "PostRenderVGUI", "RVR_DrawCursorItem", function()
     local countText = tostring( inv.cursorItemCount )
     surface.SetFont( "DermaLarge" )
     local tw, th = surface.GetTextSize( countText )
-    local tx = x + cursorSlotSize - tw
-    local ty = y + cursorSlotSize - th + 2
+    local tx = x + cursorSlotSize - tw - 1
+    local ty = y + cursorSlotSize - th + 5
 
     surface.SetTextColor( 200, 200, 200 )
     surface.SetTextPos( tx, ty )
