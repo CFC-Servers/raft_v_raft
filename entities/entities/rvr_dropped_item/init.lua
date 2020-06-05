@@ -27,8 +27,19 @@ function ENT:Setup( item, count )
     self.item = item
 end
 
+function ENT:StartTouch( other )
+    if other:GetClass() ~= "rvr_dropped_item" or self.USED or other.USED or self.MERGED or other.MERGED then return end
+    if not RVR.Inventory.canItemsStack( self.item, other.item ) then return end
+
+    other.MERGED = true
+
+    other:Remove()
+
+    self:SetAmount( self:GetAmount() + other:GetAmount() )
+end
+
 function ENT:Use( activator, caller )
-    if self.USED then return end
+    if self.USED or self.MERGED then return end
 
     local success, amount = RVR.Inventory.attemptPickupItem( caller, self.item, self:GetAmount() )
     if success then

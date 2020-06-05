@@ -8,6 +8,7 @@
     isHeadGear = (bool) can this be equipped in head slot
     isBodyGear = (bool) can this be equipped in body slot
     isFootGear = (bool) can this be equipped in foot slot
+    stackable = (bool) can this be stacked in inventory or as dropped item
 ]]
 
 RVR.Items = RVR.Items or {}
@@ -34,5 +35,6 @@ items.items = {
         model = "models/Gibs/wood_gib01b.mdl",
         icon = "materials/icons/wood-tmp.png",
         isHeadGear = true,
+        stackable = true,
     }
 }

@@ -11,7 +11,7 @@ util.AddNetworkString( "RVR_UpdateInventorySlot" )
 
 --TODO:
 -- box inventory UI
--- Dropped item stacking
+-- Hotbar
 
 -- Initialize players inventory to empty
 function inv.setupPlayer( ply )
@@ -54,7 +54,7 @@ end
 
 -- Allows for modifying stack checking later - used for checking crafting as well.
 function inv.canItemsStack( item1, item2 )
-    return item1.type == item2.type
+    return item1.type == item2.type and RVR.Items.getItemData( item1.type ).stackable
 end
 
 local function notifyItemSlotChange( plys, ent, slotNum, slotData )

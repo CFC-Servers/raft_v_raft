@@ -43,6 +43,9 @@ function inv.openPlayerInventory( inventory )
     local startX = w * ( 1 - gridWidthMult ) * 0.5
     local startY = h * 0.89 - rowCount * slotSize
     for k = 1, GM.Config.Inventory.PLAYER_INVENTORY_SLOTS do
+        -- TODO: Uncomment when hotbar finished
+        local itemSlotNum = k-- + GM.Config.Inventory.PLAYER_HOTBAR_SLOTS
+
         local x = ( k - 1 ) % itemsPerRow
         local y = math.floor( ( k - 1 ) / itemsPerRow )
 
@@ -50,8 +53,8 @@ function inv.openPlayerInventory( inventory )
         slot:SetSize( slotSize * imageSizeMult, slotSize * imageSizeMult )
         local offsetMult = ( 1 - imageSizeMult ) / 2
         slot:SetPos( startX + slotSize * ( x + offsetMult ), startY + slotSize * heightSpacingMult * ( y + offsetMult ) )
-        slot:SetLocationData( LocalPlayer(), k )
-        local itemInfo = inventory.Inventory[k]
+        slot:SetLocationData( LocalPlayer(), itemSlotNum )
+        local itemInfo = inventory.Inventory[itemSlotNum]
         if itemInfo then
             slot:SetItemData( itemInfo.item, itemInfo.count )
         end
