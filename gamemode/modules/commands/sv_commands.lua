@@ -210,7 +210,7 @@ function commands.register( names, argNames, argTypes, userGroup, func, desc )
 end
 
 local function onPlayerSay( ply, text )
-    if string.sub( text, 1, 1 ) ~= "!" then return end
+    if text[1] ~= "!" then return end
 
     text = string.sub( text, 2 )
 
