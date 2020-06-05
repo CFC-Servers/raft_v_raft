@@ -112,8 +112,8 @@ function commands.checkArguments( argNames, argTypes, args )
     local newArgs = {}
     local allPlayersReferenced = false
 
-    for i, arg in ipairs( args ) do
-        local argType = argTypes[i]
+    for i, argType in ipairs( argTypes ) do
+        local arg = args[i]
 
         local value, errorMsg = commands.types[argType]( arg )
 
