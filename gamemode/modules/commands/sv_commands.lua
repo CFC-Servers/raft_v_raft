@@ -279,9 +279,9 @@ local function onPlayerSay( ply, text )
 
     if not validCommand then
         ply:ChatPrint( "Command \"" .. command .. "\" does not exist" )
-    else
-        return ""
     end
+    
+    return ""
 end
 
 hook.Add( "PlayerSay", "RVR_Commands_onPlayerSay", onPlayerSay )
