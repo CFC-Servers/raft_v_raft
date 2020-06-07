@@ -18,7 +18,7 @@ local function processArguments( argsStr )
             char = argsStr[i]
             str = str .. char
         elseif char == " " and not insideQuotes then
-            args[#args + 1] = str
+            table.insert( args, str )
             str = ""
         else
             str = str .. char
@@ -28,7 +28,7 @@ local function processArguments( argsStr )
     end
 
     if str ~= "" then
-        args[#args + 1] = str
+        table.insert( args, str )
     end
 
     return args
