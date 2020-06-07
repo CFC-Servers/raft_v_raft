@@ -2,6 +2,10 @@ RVR.Inventory = RVR.Inventory or {}
 
 local inv = RVR.Inventory
 
+-- Players have special cases for the slot number of their inventory
+-- A slot number of -1 indicates the players cursor slot, this is remove when an inventory is closed
+-- A slot number of MaxSlot + 1, 2, 3 are for the 3 equipment slots: head, body and foot
+
 --TODO:
 -- item despawn time -- test
 -- show item pickups on UI -- need to act on net message
@@ -35,12 +39,14 @@ function inv.playerHasItems( ply, items )
         for k, craftItem in pairs( items ) do
             if inv.canItemsStack( invItem.item, craftItem.item ) then
                 craftItem.count = craftItem.count - invItem.count
+
                 if craftItem.count <= 0 then
                     table.remove( items, k )
                     break
                 end
             end
         end
+
         if #items == 0 then
             return true
         end
