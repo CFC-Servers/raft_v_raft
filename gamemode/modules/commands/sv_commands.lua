@@ -65,6 +65,17 @@ commands.addType( "player", function( arg, ply )
         return ply
     end
 
+    if arg == "@" then
+        local target = ply:GetEyeTrace().Entity
+        local isValidPlayer = IsValid( target ) and target:IsPlayer()
+
+        if isValidPlayer then
+            return target
+        end
+
+        return nil, "Not currently aiming at a player!"
+    end
+
     local isSteamID = string.find( arg, "STEAM_" )
 
     if isSteamID then
