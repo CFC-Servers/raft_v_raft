@@ -243,7 +243,7 @@ local function onPlayerSay( ply, text )
     text = string.sub( text, 2 )
 
     local args = processArguments( text )
-    local command = table.remove( args, 1 )
+    local command = table.remove( args, 1 ) or ""
 
     local msg, validCommand = processCommand( ply, command, args )
 
@@ -264,7 +264,7 @@ local function onRunConsoleCommand( len, ply )
     local argsStr = net.ReadString()
 
     local args = processArguments( argsStr )
-    local command = table.remove( args, 1 )
+    local command = table.remove( args, 1 ) or ""
 
     local msg, validCommand = processCommand( ply, command, args )
 
