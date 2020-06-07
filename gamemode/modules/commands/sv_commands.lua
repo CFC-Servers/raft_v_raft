@@ -91,8 +91,10 @@ commands.addType( "player", function( arg, ply )
     local selectedPlayers = {}
     local playerList = ""
 
+    arg = string.lower( arg )
+
     for _, ply in pairs( player.GetAll() ) do
-        local plyNick = ply:Nick()
+        local plyNick = string.lower( ply:Nick() )
 
         if string.find( plyNick, arg ) then
             table.insert( selectedPlayers, ply )
