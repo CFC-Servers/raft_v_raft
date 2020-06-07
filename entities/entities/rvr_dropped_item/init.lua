@@ -5,7 +5,7 @@ include("shared.lua")
 
 local function getSafeRemover( ent )
     return function()
-        if ent then ent:Remove() end
+        if IsValid( ent ) then ent:Remove() end
     end
 end
 

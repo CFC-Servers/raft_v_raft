@@ -11,14 +11,23 @@ net.Receive( "RVR_OpenInventory", function()
     local inventory = net.ReadTable()
     local isSelf = net.ReadBool()
 
-    local plyInventory
+    local plyInventory = inventory
     if not isSelf then
         plyInventory = net.ReadTable()
     end
 
+    for k = 1, GAMEMODE.Config.Inventory.PLAYER_HOTBAR_SLOTS do
+        local data = plyInventory.Inventory[k]
+        if data then
+            inv.hotbar.slots[k]:SetItemData( data.item, data.count )
+        end
+    end
+
     local invType = inventory.InventoryType
 
-    if invType == "Player" then
+    if invType == "PlayerUpdate" then
+        return
+    elseif invType == "Player" then
         inv.openInventory = inv.openPlayerInventory( inventory )
     elseif invType == "Box" then
         inv.openInventory = inv.openBoxInventory( inventory, plyInventory )
@@ -66,11 +75,22 @@ net.Receive( "RVR_UpdateInventorySlot", function()
     end
 end )
 
-hook.Add( "PlayerBindPress", "RVR_OpenInventory", function( ply, bind )
+hook.Add( "PlayerBindPress", "RVR_Inventory", function( _, bind, pressed )
+    if not pressed then return end
+
     if bind == "+menu" then
         inv.openInventoryKey = input.GetKeyCode( input.LookupBinding( "+menu" ) )
         net.Start( "RVR_OpenInventory" )
         net.SendToServer()
+
+        return true
+    elseif string.StartWith( bind, "slot" ) then
+        local slotNum = tonumber( string.sub( bind, 5 ) )
+        if not slotNum then return end
+
+        inv.setHotbarSlot( slotNum )
+
+        return true
     end
 end )
 
@@ -157,6 +177,108 @@ hook.Add( "GUIMousePressed", "RVR_InventoryDropItem", function( code, aimVector 
     net.Start( "RVR_DropCursorItem" )
     net.WriteInt( count, 8 )
     net.SendToServer()
+end )
+
+function inv.makeHotbar()
+    local GM = GAMEMODE
+
+    inv.hotbar = inv.hotbar or {}
+    local hotbar = inv.hotbar
+
+    if hotbar.frame then hotbar.frame:Remove() end
+    local w, h = ScrW(), ScrH()
+
+    local slotCount = GM.Config.Inventory.PLAYER_HOTBAR_SLOTS
+    local hotbarWidth = w * 0.5
+    local slotSpacing = 0.1 -- as percent of slotWidth
+
+    local slotSize = hotbarWidth / slotCount
+    local hotbarHeight = slotSize
+
+    hotbar.frame = vgui.Create( "DFrame" )
+    hotbar.frame:SetPos( ( w - hotbarWidth ) * 0.5, h - hotbarHeight )
+    hotbar.frame:SetSize( hotbarWidth, hotbarHeight )
+    hotbar.frame:SetTitle( "" )
+    hotbar.frame:ShowCloseButton( false )
+    hotbar.frame.bgColor = Color( 100, 100, 100 )
+    function hotbar.frame:Paint( _w, _h )
+        surface.SetDrawColor( self.bgColor )
+        surface.DrawRect( 0, 0, _w, _h )
+    end
+
+    hotbar.slots = {}
+    hotbar.selectedSlot = 0
+
+    for k = 1, slotCount do
+        local imageSizeMult = 1 - slotSpacing
+        local padding = slotSize * slotSpacing * 0.5
+
+        local slot = vgui.Create( "RVR_ItemSlot", hotbar.frame )
+        slot:SetSize( slotSize * imageSizeMult, slotSize * imageSizeMult )
+        slot:SetPos( padding + ( k - 1 ) * slotSize, padding )
+        slot:SetLocationData( LocalPlayer(), k )
+
+        hotbar.slots[k] = slot
+    end
+
+    inv.setHotbarSlot( 1 )
+
+    net.Start( "RVR_RequestPlayerUpdate" )
+    net.SendToServer()
+end
+
+function inv.setHotbarSlot( newIndex )
+    local hotbar = inv.hotbar
+
+    if newIndex == hotbar.selectedSlot then return end
+
+    if newIndex < 1 or newIndex > GAMEMODE.Config.Inventory.PLAYER_HOTBAR_SLOTS then return end
+
+    local prevSlot = hotbar.slots[hotbar.selectedSlot]
+    if prevSlot then
+        prevSlot:SetImageColor( Color( 255, 255, 255 ) )
+    end
+    hotbar.selectedSlot = newIndex
+    hotbar.slots[hotbar.selectedSlot]:SetImageColor( Color( 150, 150, 255 ) )
+
+    net.Start( "RVR_SetHotbarSelected" )
+    net.WriteInt( newIndex, 4 )
+    net.WriteFloat( RealTime() )
+    net.SendToServer()
+
+    -- TODO: play a sound?
+end
+
+hook.Add( "Initialize", "RVR_Inventory_hotbarSetup", inv.makeHotbar )
+
+if GAMEMODE then
+    inv.makeHotbar()
+end
+
+local prevSlotChange = 0
+
+-- I can't find any other way to trigger a hook on scroll
+-- This hook is sometimes called more than once per frame, therefore we ignore any duplicate calls
+hook.Add( "CreateMove", "RVR_Inventory_hotbarSelect", function()
+    if prevSlotChange == RealTime() then return end
+
+    local slotCount = GAMEMODE.Config.Inventory.PLAYER_HOTBAR_SLOTS
+    local nextSlot = inv.hotbar.selectedSlot
+
+    if input.WasMousePressed( MOUSE_WHEEL_DOWN ) then
+        nextSlot = nextSlot + 1
+    elseif input.WasMousePressed( MOUSE_WHEEL_UP ) then
+        nextSlot = nextSlot - 1
+    else
+        return
+    end
+
+    -- Loop around
+    if nextSlot < 1 then nextSlot = slotCount end
+    if nextSlot > slotCount then nextSlot = 1 end
+
+    inv.setHotbarSlot( nextSlot )
+    prevSlotChange = RealTime()
 end )
 
 net.Receive( "RVR_OnItemPickup", function()

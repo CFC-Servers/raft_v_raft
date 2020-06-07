@@ -7,11 +7,16 @@ local inv = RVR.Inventory
 -- A slot number of MaxSlot + 1, 2, 3 are for the 3 equipment slots: head, body and foot
 
 --TODO:
--- item despawn time -- test
--- show item pickups on UI -- need to act on net message
--- box inventory UI
 -- Hotbar UI + item selection -> client keeps track of item slot and sends updates to server on change
 --     should send time of update as well so we can guarantee the server is using the most recent
+
+-- show item pickups on UI -- need to act on net message
+-- box inventory UI
+-- Change itemSlots to support a background item (like outside of hat)
+-- inventory open prediction?
+-- distance checking on storage open net message
+-- update active weapon if setslot on hotbar
+-- make all hooks + net names consistent (look at other code on git)
 
 
 -- Initialize players inventory to empty
@@ -207,15 +212,20 @@ function inv.setSelectedItem( ply, idx )
 
     ply.RVR_Inventory.HotbarSelected = idx
 
-    local itemSlotData = ply.RVR_Inventory.Inventory[idx]
-    local itemData = RVR.Items.getItemData( itemSlotData.item.type )
+    -- TODO: Remove current selected swep
 
-    -- TODO: Finish this
-    -- Remove current selected swep
-    if itemData.swep then
-        -- Set active to itemData.swep
+    local itemSlotData = ply.RVR_Inventory.Inventory[idx]
+
+    if itemSlotData then
+        local itemData = RVR.Items.getItemData( itemSlotData.item.type )
+
+        if itemData.swep then
+            -- TODO: Set active to itemData.swep
+        else
+            -- TODO: Set active to normalitem swep, and set model to itemData.model
+        end
     else
-        -- Set active to normalitem swep, and set model to itemData.model
+        -- TODO: Set active to hands
     end
 end
 
