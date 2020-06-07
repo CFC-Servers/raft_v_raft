@@ -61,8 +61,6 @@ commands.addType( "string", function( arg )
 end )
 
 commands.addType( "player", function( arg, ply )
-    if arg == "@" then return arg end
-
     if arg == "^" then
         return ply
     end
@@ -114,7 +112,6 @@ function commands.checkArguments( argNames, argTypes, args, ply )
     end
 
     local newArgs = {}
-    local allPlayersReferenced = false
 
     for i, argType in ipairs( argTypes ) do
         local arg = args[i]
@@ -123,14 +120,6 @@ function commands.checkArguments( argNames, argTypes, args, ply )
 
         if errorMsg then
             return nil, errorMsg
-        end
-
-        if argType == "player" and value == "@" then
-            if allPlayersReferenced then
-                return nil, "Cannot use @ more than once on a command"
-            end
-
-            allPlayersReferenced = true
         end
 
         newArgs[i] = value
@@ -190,34 +179,8 @@ local function processCommand( ply, command, args )
             return errorMsg, true
         end
 
-        local hasAllPlayerReference = false
-        local allPlayerReferenceLocation = nil
-
-        for i, arg in ipairs( newArgs ) do
-            if arg == "@" and commandInfo.argTypes[i] == "player" then
-                hasAllPlayerReference = true
-                allPlayerReferenceLocation = i
-            end
-        end
-
-        if hasAllPlayerReference then
-            local msg = ""
-
-            for _, ply in pairs( player.GetAll() ) do
-                newArgs[allPlayerReferenceLocation] = ply
-
-                local message = commandInfo.func( ply, unpack( newArgs ) )
-
-                if message then
-                    msg = msg .. message .. "\n"
-                end
-            end
-
-            return msg, true
-        else
-            local msg = commandInfo.func( ply, unpack( newArgs ) )
-            return msg, true
-        end
+        local msg = commandInfo.func( ply, unpack( newArgs ) )
+        return msg, true
     end
 end
 
