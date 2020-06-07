@@ -120,7 +120,7 @@ hook.Add( "PostRenderVGUI", "RVR_DrawCursorItem", function()
     local x, y = mx - cursorSlotSize / 2, my - cursorSlotSize / 2
 
     surface.SetDrawColor( 255, 255, 255, 255 )
-    surface.SetMaterial( inv.cursorItemMaterial ) -- If you use Material, cache it!
+    surface.SetMaterial( inv.cursorItemMaterial )
     surface.DrawTexturedRect( x, y, cursorSlotSize, cursorSlotSize )
 
     if inv.cursorItemCount <= 1 then return end
@@ -157,4 +157,11 @@ hook.Add( "GUIMousePressed", "RVR_InventoryDropItem", function( code, aimVector 
     net.Start( "RVR_DropCursorItem" )
     net.WriteInt( count, 8 )
     net.SendToServer()
+end )
+
+net.Receive( "RVR_OnItemPickup", function()
+    local itemData = net.ReadTable()
+    local count = net.ReadInt( 16 )
+
+    -- TODO: Show this infomation somehow
 end )
