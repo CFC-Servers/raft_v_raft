@@ -1,4 +1,6 @@
 local function processArguments( argsStr )
+    argsStr = string.Trim( argsStr )
+
     local args = {}
     local str = ""
 
