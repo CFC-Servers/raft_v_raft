@@ -281,7 +281,7 @@ end
 
 net.Receive( "RVR_Commands_runConsoleCommand", onRunConsoleCommand )
 
-commands.register( "help", {"command"}, {"string"}, RVR_USER_ALL, function( ply, command )
+commands.register( "help", { "command" }, { "string" }, RVR_USER_ALL, function( ply, command )
     if not commands.commands[command] then
         return "Help: Command \"" .. command .. "\" does not exist"
     end
