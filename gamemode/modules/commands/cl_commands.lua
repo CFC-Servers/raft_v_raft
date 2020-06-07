@@ -11,6 +11,7 @@ local function processArguments( argsStr )
 
         if char == "\"" then
             insideQuotes = not insideQuotes
+            str = str .. char
         elseif char == "\\" then
             i = i + 1
 
@@ -26,14 +27,21 @@ local function processArguments( argsStr )
         i = i + 1
     end
 
+    if str ~= "" then
+        args[#args + 1] = str
+    end
+
     return args
 end
 
 local function consoleCommandAutoComplete( cmd, stringArgs )
-    local args = processArguments( string.lower( stringArgs ) )
+    stringArgs = string.Trim( string.lower( stringArgs ) )
+    local args = processArguments( stringArgs )
     local command = table.remove( args, 1 )
 
-    if #args < 2 then return end
+    if not command or #args < 1 then return end
+
+    command = "rvr " .. command
 
     local suggestions = {}
 
@@ -48,6 +56,8 @@ local function consoleCommandAutoComplete( cmd, stringArgs )
             table.insert( suggestions, command .. " \"" .. plyNick .. "\"" )
         end
     end
+
+    return suggestions
 end
 
 local function onConsoleCommand( ply, cmd, args, argsStr )
