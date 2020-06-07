@@ -7,16 +7,15 @@ local inv = RVR.Inventory
 -- A slot number of MaxSlot + 1, 2, 3 are for the 3 equipment slots: head, body and foot
 
 --TODO:
--- Hotbar UI + item selection -> client keeps track of item slot and sends updates to server on change
---     should send time of update as well so we can guarantee the server is using the most recent
-
+-- Hotbar set swep
 -- show item pickups on UI -- need to act on net message
+-- shift clicking
+
 -- box inventory UI
 -- Change itemSlots to support a background item (like outside of hat)
--- inventory open prediction?
--- distance checking on storage open net message
--- update active weapon if setslot on hotbar
+
 -- make all hooks + net names consistent (look at other code on git)
+-- test inventory on non-local server for delay
 
 
 -- Initialize players inventory to empty
@@ -66,7 +65,8 @@ function inv.canItemsStack( item1, item2 )
 end
 
 function inv.setSlot( ent, position, itemData, plysToNotify )
-    if not ent.RVR_Inventory then return end
+    local inventory = ent.RVR_Inventory
+    if not inventory then return end
 
     local isPlayer = type( ent ) == "Player"
 
@@ -76,18 +76,23 @@ function inv.setSlot( ent, position, itemData, plysToNotify )
         else
             return
         end
-    elseif position > 0 and position <= ent.RVR_Inventory.MaxSlots then
-        ent.RVR_Inventory.Inventory[position] = itemData
-    elseif isPlayer and position > ent.RVR_Inventory.MaxSlots and position < ent.RVR_Inventory.MaxSlots + 3 then
-        if position == ent.RVR_Inventory.MaxSlots + 1 then
-            ent.RVR_Inventory.HeadGear = itemData
-        elseif position == ent.RVR_Inventory.MaxSlots + 2 then
-            ent.RVR_Inventory.BodyGear = itemData
-        elseif position == ent.RVR_Inventory.MaxSlots + 3 then
-            ent.RVR_Inventory.FootGear = itemData
+    elseif position > 0 and position <= inventory.MaxSlots then
+        inventory.Inventory[position] = itemData
+    elseif isPlayer and position > inventory.MaxSlots and position < inventory.MaxSlots + 3 then
+        if position == inventory.MaxSlots + 1 then
+            inventory.HeadGear = itemData
+        elseif position == inventory.MaxSlots + 2 then
+            inventory.BodyGear = itemData
+        elseif position == inventory.MaxSlots + 3 then
+            inventory.FootGear = itemData
         end
     else
         return
+    end
+
+    if isPlayer and position == inventory.HotbarSelected then
+        -- Refresh weapon
+        inv.setSelectedItem( ent, inventory.HotbarSelected )
     end
 
     if plysToNotify then
