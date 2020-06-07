@@ -3,6 +3,12 @@ AddCSLuaFile("shared.lua")
 
 include("shared.lua")
 
+local function getSafeRemover( ent )
+    return function()
+        if ent then ent:Remove() end
+    end
+end
+
 function ENT:Initialize()
     self:PhysicsInit( SOLID_VPHYSICS )
     self:SetMoveType( MOVETYPE_VPHYSICS )
@@ -15,6 +21,11 @@ function ENT:Initialize()
     if physObj:IsValid() then
         physObj:Wake()
         physObj:EnableMotion( true )
+    end
+
+    local despawnTime = GAMEMODE.Config.Inventory.ITEM_DESPAWN_TIME
+    if despawnTime > 0 then
+        timer.Create( "rvr_dropped_item_despawn_" .. self:EntIndex(), despawnTime, 1, getSafeRemover( self ) )
     end
 end
 
@@ -36,6 +47,16 @@ function ENT:StartTouch( other )
     other:Remove()
 
     self:SetAmount( self:GetAmount() + other:GetAmount() )
+
+    -- Reset despawn time
+    local despawnTime = GAMEMODE.Config.Inventory.ITEM_DESPAWN_TIME
+    if despawnTime > 0 then
+        timer.Adjust( "rvr_dropped_item_despawn_" .. self:EntIndex(), despawnTime, 1, getSafeRemover( self ) )
+    end
+end
+
+function ENT:OnRemove()
+    timer.Remove( "rvr_dropped_item_despawn_" .. self:EntIndex() )
 end
 
 function ENT:Use( activator, caller )

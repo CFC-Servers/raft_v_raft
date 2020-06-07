@@ -8,6 +8,7 @@ util.AddNetworkString( "RVR_CursorHoldItem" )
 util.AddNetworkString( "RVR_CursorPutItem" )
 util.AddNetworkString( "RVR_DropCursorItem" )
 util.AddNetworkString( "RVR_UpdateInventorySlot" )
+util.AddNetworkString( "RVR_OnItemPickup" )
 
 local function getSendableInventory( inventory )
     inventory = table.Copy( inventory )
@@ -23,6 +24,13 @@ local function getSendableInventory( inventory )
     end
 
     return inventory
+end
+
+function inv.notifyItemPickup( ply, item, count )
+    net.Start( "RVR_OnItemPickup" )
+    net.WriteTable( RVR.Items.getItemData( item.type ) )
+    net.WriteInt( count, 16 )
+    net.Send( ply )
 end
 
 function inv.notifyItemSlotChange( plys, ent, slotNum, slotData )

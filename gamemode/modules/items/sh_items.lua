@@ -8,7 +8,8 @@
     isHeadGear = (bool) can this be equipped in head slot
     isBodyGear = (bool) can this be equipped in body slot
     isFootGear = (bool) can this be equipped in foot slot
-    stackable = (bool) can this be stacked in inventory or as dropped item
+    stackable = (bool) can this be stacked in inventory or as dropped item,
+    swep = (string) name of custom swep to use for this item
 ]]
 
 RVR.Items = RVR.Items or {}

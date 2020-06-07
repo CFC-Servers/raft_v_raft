@@ -4,6 +4,7 @@ local backgroundMat = Material( "icons/player_inventory_background.png" )
 local function makeEquipmentSlot( frame, inventory, startX, startY, spacing, index )
     local GM = GAMEMODE
     local equipmentSlotOffset = GM.Config.Inventory.PLAYER_INVENTORY_SLOTS + GM.Config.Inventory.PLAYER_HOTBAR_SLOTS
+    local w, h = frame:GetSize()
 
     local yOffset = ( index - 1 ) * spacing
 

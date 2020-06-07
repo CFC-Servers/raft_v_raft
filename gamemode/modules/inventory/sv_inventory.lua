@@ -3,8 +3,12 @@ RVR.Inventory = RVR.Inventory or {}
 local inv = RVR.Inventory
 
 --TODO:
+-- item despawn time -- test
+-- show item pickups on UI -- need to act on net message
 -- box inventory UI
--- Hotbar UI + item selection
+-- Hotbar UI + item selection -> client keeps track of item slot and sends updates to server on change
+--     should send time of update as well so we can guarantee the server is using the most recent
+
 
 -- Initialize players inventory to empty
 function inv.setupPlayer( ply )
@@ -18,7 +22,7 @@ function inv.setupPlayer( ply )
         CursorSlot = nil,
     }
 
-    inv.attemptPickupItem( ply, RVR.Items.getItemInstance( "wood" ), 8 )
+    inv.attemptPickupItem( ply, RVR.Items.getItemInstance( "wood" ), 16 )
 end
 
 hook.Add( "PlayerInitialSpawn", "RVR_SetupInventory", inv.setupPlayer )
@@ -146,6 +150,7 @@ function inv.attemptPickupItem( ply, item, count )
                 itemSlotData.count = itemSlotData.count + count
                 inv.setSlot( ply, k, itemSlotData, { ply } )
 
+                inv.notifyItemPickup( ply, item, originalCount )
                 return true, originalCount
             else
                 itemSlotData.count = itemSlotData.count + canFit
@@ -162,6 +167,8 @@ function inv.attemptPickupItem( ply, item, count )
         if not itemSlotData then
             if count <= itemData.maxCount then
                 inv.setSlot( ply, k, { item = item, count = count }, { ply } )
+
+                inv.notifyItemPickup( ply, item, originalCount )
                 return true, originalCount
             else
                 inv.setSlot( ply, k, { item = item, count = itemData.maxCount }, { ply } )
@@ -170,7 +177,13 @@ function inv.attemptPickupItem( ply, item, count )
         end
     end
 
-    return false, originalCount - count
+    local amountPickedup = originalCount - count
+
+    if amountPickedup > 0 then
+        inv.notifyItemPickup( ply, item, amountPickedup )
+    end
+
+    return false, amountPickedup
 end
 
 -- returns item, count
@@ -187,6 +200,17 @@ function inv.setSelectedItem( ply, idx )
     idx = math.Clamp( idx, 1, GM.Config.Inventory.PLAYER_INVENTORY_SLOTS )
 
     ply.RVR_Inventory.HotbarSelected = idx
+
+    local itemSlotData = ply.RVR_Inventory.Inventory[idx]
+    local itemData = RVR.Items.getItemData( itemSlotData.item.type )
+
+    -- TODO: Finish this
+    -- Remove current selected swep
+    if itemData.swep then
+        -- Set active to itemData.swep
+    else
+        -- Set active to normalitem swep, and set model to itemData.model
+    end
 end
 
 -- returns success, error
