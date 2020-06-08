@@ -7,9 +7,8 @@ SWEP.ViewModel = "models/weapons/v_crowbar.mdl"
 SWEP.WorldModel = "models/weapons/w_crwobar.mdl"
 
 local abs = math.abs
-SWEP.ValidPlacements = {
-    raft_foundation = {
-    },
+SWEP.Placements = {
+    raft_foundation = {},
 }
 
 function SWEP:GetAimEntity()
@@ -25,7 +24,7 @@ end
 function SWEP:GetPlacementDirection()
     local ent = self:GetAimEntity()
     if not ent then return end
-    local validDirections = self.ValidPlacements[ent:GetClass()]
+    local validDirections = self.Placements[ent:GetClass()]
     if not validDirections then return end
     
     local ply = self:GetOwner()
@@ -36,7 +35,7 @@ function SWEP:GetPlacementDirection()
     
     dir.x = math.Round(dir.x)
     dir.y = math.Round(dir.y)
-    if abs(dir.y) == abs(dir.x) then return end
+    if abs(dir.y) == abs(dir.x) then return end -- no diagonal placement
 
     return dir
 end
