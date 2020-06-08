@@ -1,44 +1,6 @@
-local function processArguments( argsStr )
-    argsStr = string.Trim( argsStr )
-
-    local args = {}
-    local str = ""
-
-    local insideQuotes = false
-
-    local i = 1
-
-    while i <= string.len( argsStr ) do
-        local char = argsStr[i]
-
-        if char == "\"" then
-            insideQuotes = not insideQuotes
-            str = str .. char
-        elseif char == "\\" then
-            i = i + 1
-
-            char = argsStr[i]
-            str = str .. char
-        elseif char == " " and not insideQuotes then
-            table.insert( args, str )
-            str = ""
-        else
-            str = str .. char
-        end
-
-        i = i + 1
-    end
-
-    if str ~= "" then
-        table.insert( args, str )
-    end
-
-    return args
-end
-
 local function consoleCommandAutoComplete( cmd, stringArgs )
     stringArgs = string.Trim( string.lower( stringArgs ) )
-    local args = processArguments( stringArgs )
+    local args = RVR.Commands.processArguments( stringArgs, true )
     local command = table.remove( args, 1 )
 
     if not command or #args < 1 then return end

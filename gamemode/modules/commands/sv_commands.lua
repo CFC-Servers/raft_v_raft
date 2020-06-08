@@ -1,5 +1,7 @@
 util.AddNetworkString( "RVR_Commands_runConsoleCommand" )
 
+include( "sh_commands.lua" )
+
 RVR.Commands = RVR.Commands or {}
 local commands = RVR.Commands
 
@@ -141,43 +143,6 @@ function commands.checkArguments( argNames, argTypes, args, ply )
     return newArgs
 end
 
-local function processArguments( argsStr )
-    argsStr = string.Trim( argsStr )
-
-    local args = {}
-    local str = ""
-
-    local insideQuotes = false
-
-    local i = 1
-
-    while i <= string.len( argsStr ) do
-        local char = argsStr[i]
-
-        if char == "\"" then
-            insideQuotes = not insideQuotes
-        elseif char == "\\" then
-            i = i + 1
-
-            char = argsStr[i]
-            str = str .. char
-        elseif char == " " and not insideQuotes then
-            table.insert( args, str )
-            str = ""
-        else
-            str = str .. char
-        end
-
-        i = i + 1
-    end
-
-    if str ~= "" then
-        table.insert( args, str )
-    end
-
-    return args
-end
-
 local function processCommand( ply, command, args )
     local commandInfo = commands.commands[command]
 
@@ -244,7 +209,7 @@ local function onPlayerSay( ply, text )
 
     text = string.sub( text, 2 )
 
-    local args = processArguments( text )
+    local args = commands.processArguments( text )
     local command = table.remove( args, 1 ) or ""
 
     local msg, validCommand = processCommand( ply, command, args )
@@ -265,7 +230,7 @@ hook.Add( "PlayerSay", "RVR_Commands_onPlayerSay", onPlayerSay )
 local function onRunConsoleCommand( len, ply )
     local argsStr = net.ReadString()
 
-    local args = processArguments( argsStr )
+    local args = commands.processArguments( argsStr )
     local command = table.remove( args, 1 ) or ""
 
     local msg, validCommand = processCommand( ply, command, args )
