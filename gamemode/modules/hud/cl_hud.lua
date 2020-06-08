@@ -1,6 +1,7 @@
 local config = GM.Config.Hunger
 local stats = {
     {
+        material = Material( "icons/thirst.png" ),
         color = Color( 138, 138, 230 ),
         get  = function()
             return  LocalPlayer():GetWater()
@@ -8,6 +9,7 @@ local stats = {
         max = config.MAX_WATER,
     },
     {
+        material = Material( "icons/hunger.png" ),
         color = Color( 181, 114, 60 ),
         get = function()
             return LocalPlayer():GetFood()
@@ -24,12 +26,15 @@ local stats = {
     }
 }
 
+local iconBackground = Material( "icons/background_icon.png" )
 -- TODO widths and heights should scale with screen resolution
 function GM:HUDPaint()
     local x = 0
     local y = ScrH() - 5 - 35 * #stats
     draw.RoundedBox( 2, x, y, 320, 35 * #stats + 5, Color( 50, 50, 50, 190 ) )
-
+    surface.SetMaterial( iconBackground )
+    surface.SetDrawColor( Color( 255, 255, 255 ) )
+    surface.DrawTexturedRect( x, y, 40, 35 * #stats + 5 )
     for i, stat in ipairs( stats ) do
         local width = 272
         local height = 30
