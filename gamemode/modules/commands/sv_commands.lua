@@ -146,20 +146,20 @@ end
 local function processCommand( ply, command, args )
     local commandInfo = commands.commands[command]
 
-    if commandInfo then
-        if not RVR.isUserGroup( ply, commandInfo.userGroup ) then
-            return "You need to be " .. RVR.getGroupName( commandInfo.userGroup ) .. " to use this command"
-        end
+    if not commandInfo then return end
 
-        local newArgs, errorMsg = commands.checkArguments( commandInfo.argNames, commandInfo.argTypes, args, ply )
-
-        if errorMsg then
-            return errorMsg, true
-        end
-
-        local msg = commandInfo.func( ply, unpack( newArgs ) )
-        return msg, true
+    if not RVR.isUserGroup( ply, commandInfo.userGroup ) then
+        return "You need to be " .. RVR.getGroupName( commandInfo.userGroup ) .. " to use this command"
     end
+
+    local newArgs, errorMsg = commands.checkArguments( commandInfo.argNames, commandInfo.argTypes, args, ply )
+
+    if errorMsg then
+        return errorMsg, true
+    end
+
+    local msg = commandInfo.func( ply, unpack( newArgs ) )
+    return msg, true
 end
 
 function commands.register( names, argNames, argTypes, userGroup, func, desc )
