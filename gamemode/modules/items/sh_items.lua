@@ -39,15 +39,15 @@ items.items = {
         displayName = "Wood",
         maxCount = 10,
         model = "models/Gibs/wood_gib01b.mdl",
-        icon = "materials/icons/wood.png",
+        icon = "materials/icons/items/wood.png",
         stackable = true,
     },
     {
         type = "nail",
         displayName = "Nail",
         maxCount = 25,
-        model = "models/Gibs/HGIBS_spine.mdl",
-        icon = "materials/icons/wood.png",
+        model = "models/items/item_nail.mdl",
+        icon = "materials/icons/items/nail.png",
         stackable = true,
     }
 }

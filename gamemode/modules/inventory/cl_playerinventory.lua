@@ -1,20 +1,6 @@
 local inv = RVR.Inventory
 local backgroundMat = Material( "icons/player_inventory_background.png" )
 
-local function formatScrollbar( bar )
-    bar:SetHideButtons( true )
-
-    function bar:Paint( w, h )
-        local offsetX = math.Round( w * 0.25 )
-        local offsetY = 10
-        draw.RoundedBox( 4, offsetX, offsetY, w - offsetX * 2, h - offsetY * 2, Color( 89, 55, 30 ) )
-    end
-
-    function bar.btnGrip:Paint( w, h )
-        draw.RoundedBox( 10, 0, 0, w, h, Color( 188, 162, 105 ) )
-    end
-end
-
 function inv.openPlayerInventory( inventory )
     local GM = GAMEMODE
     local w, h = ScrH() * 0.7 * 1.3, ScrH() * 0.7
@@ -47,49 +33,21 @@ function inv.openPlayerInventory( inventory )
         frame:Close()
     end
 
-    local scrollWidth = w * 0.435
-    local scrollPanel = vgui.Create( "DScrollPanel", frame )
-    scrollPanel:SetPos( w * 0.533, h * 0.481 )
-    scrollPanel:SetSize( scrollWidth, h * 0.397 )
-    formatScrollbar( scrollPanel:GetVBar() )
-
-    local slotsPerRow = 4
-    local rows = math.ceil( GM.Config.Inventory.PLAYER_INVENTORY_SLOTS / slotsPerRow )
-    local slotSize = ( scrollWidth * 0.94 ) / slotsPerRow
-    local spacing = slotSize * 0.2
-
-    local canvasPanel = vgui.Create( "DPanel", scrollPanel )
-    canvasPanel:SetSize( slotSize * slotsPerRow, slotSize * rows )
-    canvasPanel.Paint = nil
-
-    for y = 0, rows - 1 do
-        for x = 0, slotsPerRow - 1 do
-            local index = y * slotsPerRow + x + 1
-            if index > GM.Config.Inventory.PLAYER_INVENTORY_SLOTS then break end
-
-            index = index + GM.Config.Inventory.PLAYER_HOTBAR_SLOTS
-
-            local slot = vgui.Create( "RVR_ItemSlot", canvasPanel )
-            slot:SetSize( slotSize - spacing, slotSize - spacing )
-            slot:SetPos( ( x * slotSize ) + spacing * 0.5, ( y * slotSize ) + spacing * 0.5 )
-
-            slot:SetLocationData( LocalPlayer(), index )
-            local itemInfo = inventory.Inventory[index]
-            if itemInfo then
-                slot:SetItemData( itemInfo.item, itemInfo.count )
-            end
-        end
-    end
+    local invScroller = vgui.Create( "RVR_InventoryScroller", frame )
+    invScroller:SetSize( w * 0.435, h * 0.397 )
+    invScroller:SetPos( w * 0.533, h * 0.481 )
+    invScroller:SetSlotsPerRow( 4 )
+    invScroller:SetInventory( LocalPlayer(), inventory, GM.Config.Inventory.PLAYER_HOTBAR_SLOTS + 1, inventory.MaxSlots )
 
     local eSlotXMult = 0.38
     local eSlotYMult = 0.19
     local eSlotYSpacing = 0.25
 
     local iconNames = { "hat", "shirt", "pants" }
+    local slotSize = invScroller:GetSlotSize()
 
     local equipmentSlotOffset = GM.Config.Inventory.PLAYER_INVENTORY_SLOTS + GM.Config.Inventory.PLAYER_HOTBAR_SLOTS
     for index = 1, 3 do
-
         local yOffset = ( index - 1 ) * eSlotYSpacing
 
         local slot = vgui.Create( "RVR_ItemSlot", frame )
@@ -103,6 +61,20 @@ function inv.openPlayerInventory( inventory )
             slot:SetItemData( itemInfo.item, itemInfo.count )
         end
     end
+
+    local icon = vgui.Create( "DModelPanel", frame )
+    icon:SetPos( w * 0.1, h * 0.15 )
+    icon:SetSize( w * 0.24, h * 0.74 )
+    icon:SetModel( LocalPlayer():GetModel() )
+    icon:SetCamPos( Vector( 100, 0, 35 ) )
+    icon:SetLookAng( Angle( 0, 180, 0 ) )
+    icon:SetFOV( 20 )
+    icon:SetCursor( "none" )
+
+    icon.Entity:SetMaterial( "models/debug/debugwhite" )
+    icon:SetColor( Color( 0, 0, 0 ) )
+
+    function icon:LayoutEntity( entity ) end
 
     return frame
 end

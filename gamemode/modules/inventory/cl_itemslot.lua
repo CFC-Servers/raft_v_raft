@@ -50,7 +50,7 @@ function PANEL:OnMousePressed( code )
         if code == MOUSE_RIGHT then
             count = 1
         end
-        net.Start( "RVR_CursorPutItem" )
+        net.Start( "RVR_Inventory_CursorPut" )
         net.WriteEntity( self.parentEnt )
         net.WriteInt( self.slotPosition, 8 )
         net.WriteInt( count, 8 )
@@ -62,7 +62,7 @@ function PANEL:OnMousePressed( code )
         if code == MOUSE_RIGHT then
             count = math.ceil( count / 2 )
         end
-        net.Start( "RVR_CursorHoldItem" )
+        net.Start( "RVR_Inventory_CursorHold" )
         net.WriteEntity( self.parentEnt )
         net.WriteInt( self.slotPosition, 8 )
         net.WriteInt( count, 8 )

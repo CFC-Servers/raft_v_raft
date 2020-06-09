@@ -7,7 +7,7 @@ include( "cl_boxinventory.lua" )
 
 local cursorSlotSize = 60
 
-net.Receive( "RVR_OpenInventory", function()
+net.Receive( "RVR_Inventory_Open", function()
     local inventory = net.ReadTable()
     local isSelf = net.ReadBool()
 
@@ -42,7 +42,7 @@ net.Receive( "RVR_OpenInventory", function()
     end
 end )
 
-net.Receive( "RVR_UpdateInventorySlot", function()
+net.Receive( "RVR_Inventory_UpdateSlot", function()
     local ent = net.ReadEntity()
     local position = net.ReadInt( 8 )
     local hasSlotData = net.ReadBool()
@@ -80,7 +80,7 @@ hook.Add( "PlayerBindPress", "RVR_Inventory", function( _, bind, pressed )
 
     if bind == "+menu" then
         inv.openInventoryKey = input.GetKeyCode( input.LookupBinding( "+menu" ) )
-        net.Start( "RVR_OpenInventory" )
+        net.Start( "RVR_Inventory_Open" )
         net.SendToServer()
 
         return true
@@ -103,7 +103,7 @@ function inv.closeInventory()
     end
 
     inv.disableCursorSlot()
-    net.Start( "RVR_CloseInventory" )
+    net.Start( "RVR_Inventory_Close" )
     net.SendToServer()
 end
 
@@ -133,7 +133,7 @@ function inv.getCursorItemData()
     return inv.cursorItem, inv.cursorItemCount
 end
 
-hook.Add( "PostRenderVGUI", "RVR_DrawCursorItem", function()
+hook.Add( "PostRenderVGUI", "RVR_Inventory_DrawCursorItem", function()
     if not inv.showCursorItem or not inv.cursorItemMaterial then return end
 
     local mx, my = gui.MousePos()
@@ -156,7 +156,7 @@ hook.Add( "PostRenderVGUI", "RVR_DrawCursorItem", function()
     surface.DrawText( countText )
 end )
 
-hook.Add( "GUIMousePressed", "RVR_InventoryDropItem", function( code, aimVector )
+hook.Add( "GUIMousePressed", "RVR_Inventory_DropItem", function( code, aimVector )
     if not inv.openInventory then return end
     local mx, my = gui.MousePos()
 
@@ -174,7 +174,7 @@ hook.Add( "GUIMousePressed", "RVR_InventoryDropItem", function( code, aimVector 
 
     if code == MOUSE_RIGHT then count = 1 end
 
-    net.Start( "RVR_DropCursorItem" )
+    net.Start( "RVR_Inventory_CursorDrop" )
     net.WriteInt( count, 8 )
     net.SendToServer()
 end )
@@ -234,7 +234,7 @@ function inv.makeHotbar()
 
     inv.setHotbarSlot( 1 )
 
-    net.Start( "RVR_RequestPlayerUpdate" )
+    net.Start( "RVR_Inventory_RequestPlayerUpdate" )
     net.SendToServer()
 end
 
@@ -254,7 +254,7 @@ function inv.setHotbarSlot( newIndex )
     hotbar.selectedSlot = newIndex
     hotbar.slots[hotbar.selectedSlot]:SetImageColor( Color( 255, 150, 150 ) )
 
-    net.Start( "RVR_SetHotbarSelected" )
+    net.Start( "RVR_Inventory_SetHotbarSelected" )
     net.WriteInt( newIndex, 5 )
     net.WriteFloat( RealTime() )
     net.SendToServer()
@@ -262,7 +262,7 @@ function inv.setHotbarSlot( newIndex )
     -- TODO: play a sound?
 end
 
-hook.Add( "InitPostEntity", "RVR_Inventory_hotbarSetup", inv.makeHotbar )
+hook.Add( "InitPostEntity", "RVR_Inventory_HotbarSetup", inv.makeHotbar )
 
 if GAMEMODE then
     inv.makeHotbar()
@@ -272,7 +272,7 @@ local prevSlotChange = 0
 
 -- I can't find any other way to trigger a hook on scroll
 -- This hook is sometimes called more than once per frame, therefore we ignore any duplicate calls
-hook.Add( "CreateMove", "RVR_Inventory_hotbarSelect", function()
+hook.Add( "CreateMove", "RVR_Inventory_HotbarSelect", function()
     if prevSlotChange == RealTime() then return end
 
     local slotCount = GAMEMODE.Config.Inventory.PLAYER_HOTBAR_SLOTS
@@ -294,14 +294,14 @@ hook.Add( "CreateMove", "RVR_Inventory_hotbarSelect", function()
     prevSlotChange = RealTime()
 end )
 
-net.Receive( "RVR_OnItemPickup", function()
+net.Receive( "RVR_Inventory_OnPickup", function()
     local itemData = net.ReadTable()
     local count = net.ReadInt( 16 )
 
     -- TODO: Show this infomation somehow
 end )
 
-hook.Add( "HUDShouldDraw", "RVR_HideWeapons", function( name )
+hook.Add( "HUDShouldDraw", "RVR_Inventory_HideWeapons", function( name )
     if name == "CHudWeaponSelection" then
         return false
     end

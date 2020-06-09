@@ -7,15 +7,7 @@ local inv = RVR.Inventory
 -- A slot number of MaxSlot + 1, 2, 3 are for the 3 equipment slots: head, body and foot
 
 --TODO:
--- Hotbar set swep -- need hands
--- show item pickups on UI -- need to act on net message
--- shift clicking
-
 -- box inventory UI
--- Change itemSlots to support a background item (like outside of hat)
-
--- make all hooks + net names consistent (look at other code on git)
--- test inventory on non-local server for delay
 
 
 -- Initialize players inventory to empty
@@ -28,6 +20,9 @@ function inv.setupPlayer( ply )
         HotbarSelected = 1,
         InventoryType = "Player",
         CursorSlot = nil,
+        HeadGear = nil,
+        BodyGear = nil,
+        FootGear = nil,
     }
 
     inv.attemptPickupItem( ply, RVR.Items.getItemInstance( "wood" ), 16 )
@@ -218,7 +213,6 @@ function inv.setSelectedItem( ply, idx )
 
     ply.RVR_Inventory.HotbarSelected = idx
 
-    -- TODO: Remove current selected swep
     ply:StripWeapons()
 
     local itemSlotData = ply.RVR_Inventory.Inventory[idx]
@@ -234,7 +228,8 @@ function inv.setSelectedItem( ply, idx )
             wep:SetItemData( itemData )
         end
     else
-        -- TODO: Set active to hands
+        -- TODO: remove before merge
+        do return end
         wep = ply:Give( "rvr_hands" )
     end
 
@@ -342,7 +337,7 @@ function inv.dropItem( ply, position, count )
     end
 
     local droppedItem = ents.Create( "rvr_dropped_item" )
-    if not IsValid( droppedItem ) then return end -- Check whether we successfully made an entity, if not - bail
+    if not IsValid( droppedItem ) then return end
     droppedItem:SetPos( ply:GetShootPos() + Angle( 0, ply:EyeAngles().yaw, 0 ):Forward() * 20 )
     droppedItem:Setup( RVR.Items.getItemData( itemData.item.type ), count )
     droppedItem:Spawn()

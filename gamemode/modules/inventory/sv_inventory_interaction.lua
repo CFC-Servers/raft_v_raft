@@ -2,15 +2,15 @@ RVR.Inventory = RVR.Inventory or {}
 
 local inv = RVR.Inventory
 
-util.AddNetworkString( "RVR_OpenInventory" )
-util.AddNetworkString( "RVR_CloseInventory" )
-util.AddNetworkString( "RVR_CursorHoldItem" )
-util.AddNetworkString( "RVR_CursorPutItem" )
-util.AddNetworkString( "RVR_DropCursorItem" )
-util.AddNetworkString( "RVR_UpdateInventorySlot" )
-util.AddNetworkString( "RVR_OnItemPickup" )
-util.AddNetworkString( "RVR_RequestPlayerUpdate" )
-util.AddNetworkString( "RVR_SetHotbarSelected" )
+util.AddNetworkString( "RVR_Inventory_Open" )
+util.AddNetworkString( "RVR_Inventory_Close" )
+util.AddNetworkString( "RVR_Inventory_CursorHold" )
+util.AddNetworkString( "RVR_Inventory_CursorPut" )
+util.AddNetworkString( "RVR_Inventory_CursorDrop" )
+util.AddNetworkString( "RVR_Inventory_UpdateSlot" )
+util.AddNetworkString( "RVR_Inventory_OnPickup" )
+util.AddNetworkString( "RVR_Inventory_RequestPlayerUpdate" )
+util.AddNetworkString( "RVR_Inventory_SetHotbarSelected" )
 
 local function getSendableInventory( inventory, isPlayerUpdate )
     local GM = GAMEMODE
@@ -36,7 +36,7 @@ local function getSendableInventory( inventory, isPlayerUpdate )
 end
 
 function inv.notifyItemPickup( ply, item, count )
-    net.Start( "RVR_OnItemPickup" )
+    net.Start( "RVR_Inventory_OnPickup" )
     net.WriteTable( RVR.Items.getItemData( item.type ) )
     net.WriteInt( count, 16 )
     net.Send( ply )
@@ -45,7 +45,7 @@ end
 function inv.notifyItemSlotChange( plys, ent, slotNum, slotData )
     if #plys == 0 then return end
 
-    net.Start( "RVR_UpdateInventorySlot" )
+    net.Start( "RVR_Inventory_UpdateSlot" )
     net.WriteEntity( ent )
     net.WriteInt( slotNum, 8 )
     net.WriteBool( tobool( slotData ) )
@@ -58,7 +58,7 @@ function inv.notifyItemSlotChange( plys, ent, slotNum, slotData )
 end
 
 function inv.playerOpenInventory( ply, invEnt )
-    if ply.RVR_OpenInventory then
+    if ply.RVR_Inventory_Open then
         return
     end
     invEnt = invEnt or ply
@@ -70,13 +70,13 @@ function inv.playerOpenInventory( ply, invEnt )
 
     if hook.Run( "RVR_PreventInventory", ply, invEnt ) then return end
 
-    ply.RVR_OpenInventory = invEnt
+    ply.RVR_Inventory_Open = invEnt
 
     inventoryData.ActivePlayer = ply
 
     local isPlayer = invEnt == ply
 
-    net.Start( "RVR_OpenInventory" )
+    net.Start( "RVR_Inventory_Open" )
     net.WriteTable( getSendableInventory( inventoryData ) )
     net.WriteBool( isPlayer )
     if not isPlayer then
@@ -85,11 +85,11 @@ function inv.playerOpenInventory( ply, invEnt )
     net.Send( ply )
 end
 
-net.Receive( "RVR_CloseInventory", function( len, ply )
-    local invEnt = ply.RVR_OpenInventory
+net.Receive( "RVR_Inventory_Close", function( len, ply )
+    local invEnt = ply.RVR_Inventory_Open
     invEnt.RVR_Inventory.ActivePlayer = nil
 
-    ply.RVR_OpenInventory = nil
+    ply.RVR_Inventory_Open = nil
 
     if not ply.RVR_Inventory.CursorSlot then return end
     local cursorItemData = ply.RVR_Inventory.CursorSlot
@@ -103,26 +103,26 @@ net.Receive( "RVR_CloseInventory", function( len, ply )
     ply.RVR_Inventory.CursorSlot = nil
 end )
 
-net.Receive( "RVR_CursorHoldItem", function( len, ply )
+net.Receive( "RVR_Inventory_CursorHold", function( len, ply )
     if not ply.RVR_Inventory then return end
     -- Already holding something
     if ply.RVR_Inventory.CursorSlot then return end
 
     -- Not in an inventory
-    if not ply.RVR_OpenInventory then return end
+    if not ply.RVR_Inventory_Open then return end
     local ent = net.ReadEntity()
     local position = net.ReadInt( 8 )
     local count = net.ReadInt( 8 )
 
     -- Can't affect an inventory you're not in
-    if ent ~= ply and ent ~= ply.RVR_OpenInventory then
+    if ent ~= ply and ent ~= ply.RVR_Inventory_Open then
         return
     end
 
     inv.moveItem( ent, ply, position, -1, count )
 end )
 
-net.Receive( "RVR_CursorPutItem", function( len, ply )
+net.Receive( "RVR_Inventory_CursorPut", function( len, ply )
     if not ply.RVR_Inventory then return end
 
     local ent = net.ReadEntity()
@@ -130,14 +130,14 @@ net.Receive( "RVR_CursorPutItem", function( len, ply )
     local count = net.ReadInt( 8 )
 
     -- Can't affect an inventory you're not in
-    if ent ~= ply and ent ~= ply.RVR_OpenInventory then
+    if ent ~= ply and ent ~= ply.RVR_Inventory_Open then
         return
     end
 
     inv.moveItem( ply, ent, -1, position, count )
 end )
 
-net.Receive( "RVR_DropCursorItem", function( len, ply )
+net.Receive( "RVR_Inventory_CursorDrop", function( len, ply )
     if not ply.RVR_Inventory then return end
 
     local count = net.ReadInt( 8 )
@@ -145,21 +145,21 @@ net.Receive( "RVR_DropCursorItem", function( len, ply )
     inv.dropItem( ply, -1, count )
 end )
 
-net.Receive( "RVR_OpenInventory", function( len, ply )
+net.Receive( "RVR_Inventory_Open", function( len, ply )
     inv.playerOpenInventory( ply, ply )
 end )
 
-net.Receive( "RVR_RequestPlayerUpdate", function( len, ply )
+net.Receive( "RVR_Inventory_RequestPlayerUpdate", function( len, ply )
     local inventoryData = ply.RVR_Inventory
     if not inventoryData then return end
 
-    net.Start( "RVR_OpenInventory" )
+    net.Start( "RVR_Inventory_Open" )
     net.WriteTable( getSendableInventory( inventoryData, true ) )
     net.WriteBool( true )
     net.Send( ply )
 end )
 
-net.Receive( "RVR_SetHotbarSelected", function( len, ply )
+net.Receive( "RVR_Inventory_SetHotbarSelected", function( len, ply )
     if not ply.RVR_Inventory then return end
 
     local newIndex = net.ReadInt( 5 )
