@@ -218,6 +218,7 @@ function inv.setSelectedItem( ply, idx )
     ply.RVR_Inventory.HotbarSelected = idx
 
     -- TODO: Remove current selected swep
+    ply:StripWeapons()
 
     local itemSlotData = ply.RVR_Inventory.Inventory[idx]
 
@@ -226,8 +227,13 @@ function inv.setSelectedItem( ply, idx )
 
         if itemData.swep then
             -- TODO: Set active to itemData.swep
+            local wep = ply:Give( itemData.swep )
+            ply:SetActiveWeapon( wep )
         else
             -- TODO: Set active to normalitem swep, and set model to itemData.model
+            local wep = ply:Give( "rvr_held_item" )
+            wep:SetItemData( itemData )
+            ply:SetActiveWeapon( wep )
         end
     else
         -- TODO: Set active to hands

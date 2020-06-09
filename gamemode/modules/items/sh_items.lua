@@ -10,6 +10,8 @@
     isFootGear = (bool) can this be equipped in foot slot
     stackable = (bool) can this be stacked in inventory or as dropped item,
     swep = (string) name of custom swep to use for this item
+    viewModelOffset = (vector) clientside viewmodel offset
+    viewModelAng = (ang) clientside viewmodel angle
 ]]
 
 RVR.Items = RVR.Items or {}
@@ -37,7 +39,7 @@ items.items = {
         displayName = "Wood",
         maxCount = 10,
         model = "models/Gibs/wood_gib01b.mdl",
-        icon = "materials/icons/wood-tmp.png",
+        icon = "materials/icons/wood.png",
         stackable = true,
     }
 }

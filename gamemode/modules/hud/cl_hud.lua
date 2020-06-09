@@ -1,6 +1,7 @@
 local config = GM.Config.Hunger
 local stats = {
     {
+        material = Material( "icons/water.png" ),
         color = Color( 138, 138, 230 ),
         get  = function()
             return  LocalPlayer():GetWater()
@@ -8,6 +9,7 @@ local stats = {
         max = config.MAX_WATER,
     },
     {
+        material = Material( "icons/food.png" ),
         color = Color( 181, 114, 60 ),
         get = function()
             return LocalPlayer():GetFood()

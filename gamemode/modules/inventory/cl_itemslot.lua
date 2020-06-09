@@ -12,7 +12,7 @@ function PANEL:Init()
 
     self.itemImage = vgui.Create( "DImage", self )
     self.itemImage:Dock( FILL )
-    self.itemImage:DockMargin( 7, 7, 7, 7 )
+    self.itemImage:DockMargin( 14, 14, 14, 14 )
 
     self.itemCountLabel = vgui.Create( "DLabel", self )
     self.itemCountLabel:SetText( "" )
@@ -25,7 +25,7 @@ function PANEL:Init()
 
         local w, h = self:GetSize()
 
-        self:SetPos( pw - w - 7, ph - h )
+        self:SetPos( pw - w - 13, ph - h - 5 )
     end
 end
 

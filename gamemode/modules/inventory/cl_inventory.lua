@@ -179,6 +179,8 @@ hook.Add( "GUIMousePressed", "RVR_InventoryDropItem", function( code, aimVector 
     net.SendToServer()
 end )
 
+local hotbarBackgroundMat = Material( "icons/player_hotbar_background.png" )
+
 function inv.makeHotbar()
     local GM = GAMEMODE
 
@@ -189,11 +191,17 @@ function inv.makeHotbar()
     local w, h = ScrW(), ScrH()
 
     local slotCount = GM.Config.Inventory.PLAYER_HOTBAR_SLOTS
-    local hotbarWidth = w * 0.5
-    local slotSpacing = 0.1 -- as percent of slotWidth
+    local innerHotbarWidth = w * 0.5
+    local slotSpacing = 0 -- as percent of slotWidth
 
-    local slotSize = hotbarWidth / slotCount
-    local hotbarHeight = slotSize
+    local horizontalPadding = 0.05
+    local verticalPadding = 0.1
+
+    local slotSize = innerHotbarWidth / slotCount
+    local innerHotbarHeight = slotSize
+
+    local hotbarHeight = innerHotbarHeight * ( 1 + verticalPadding * 2 )
+    local hotbarWidth = innerHotbarWidth + ( innerHotbarHeight * horizontalPadding * 2 )
 
     hotbar.frame = vgui.Create( "DFrame" )
     hotbar.frame:SetPos( ( w - hotbarWidth ) * 0.5, h - hotbarHeight )
@@ -202,20 +210,23 @@ function inv.makeHotbar()
     hotbar.frame:ShowCloseButton( false )
     hotbar.frame.bgColor = Color( 100, 100, 100 )
     function hotbar.frame:Paint( _w, _h )
-        surface.SetDrawColor( self.bgColor )
-        surface.DrawRect( 0, 0, _w, _h )
+        surface.SetMaterial( hotbarBackgroundMat )
+        surface.SetDrawColor( Color( 255, 255, 255 ) )
+        surface.DrawTexturedRect( 0, 0, _w, _h )
     end
 
     hotbar.slots = {}
     hotbar.selectedSlot = 0
 
+    local offsetY = ( hotbarHeight - innerHotbarHeight ) * 0.5
+    local offsetX = ( hotbarWidth - innerHotbarWidth ) * 0.5
+
     for k = 1, slotCount do
         local imageSizeMult = 1 - slotSpacing
-        local padding = slotSize * slotSpacing * 0.5
 
         local slot = vgui.Create( "RVR_ItemSlot", hotbar.frame )
         slot:SetSize( slotSize * imageSizeMult, slotSize * imageSizeMult )
-        slot:SetPos( padding + ( k - 1 ) * slotSize, padding )
+        slot:SetPos( offsetX + ( k - 1 ) * slotSize, offsetY )
         slot:SetLocationData( LocalPlayer(), k )
 
         hotbar.slots[k] = slot
@@ -228,6 +239,8 @@ function inv.makeHotbar()
 end
 
 function inv.setHotbarSlot( newIndex )
+    if inv.openInventory then return end
+
     local hotbar = inv.hotbar
 
     if newIndex == hotbar.selectedSlot then return end
@@ -239,17 +252,17 @@ function inv.setHotbarSlot( newIndex )
         prevSlot:SetImageColor( Color( 255, 255, 255 ) )
     end
     hotbar.selectedSlot = newIndex
-    hotbar.slots[hotbar.selectedSlot]:SetImageColor( Color( 150, 150, 255 ) )
+    hotbar.slots[hotbar.selectedSlot]:SetImageColor( Color( 255, 150, 150 ) )
 
     net.Start( "RVR_SetHotbarSelected" )
-    net.WriteInt( newIndex, 4 )
+    net.WriteInt( newIndex, 5 )
     net.WriteFloat( RealTime() )
     net.SendToServer()
 
     -- TODO: play a sound?
 end
 
-hook.Add( "Initialize", "RVR_Inventory_hotbarSetup", inv.makeHotbar )
+hook.Add( "InitPostEntity", "RVR_Inventory_hotbarSetup", inv.makeHotbar )
 
 if GAMEMODE then
     inv.makeHotbar()

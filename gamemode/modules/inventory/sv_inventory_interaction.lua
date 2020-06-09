@@ -16,9 +16,6 @@ local function getSendableInventory( inventory, isPlayerUpdate )
     local GM = GAMEMODE
 
     inventory = table.Copy( inventory )
-    for k, v in pairs( inventory.Inventory ) do
-        v.item = table.Merge( v.item, RVR.Items.getItemData( v.item.type ) )
-    end
 
     if inventory.InventoryType == "Player" then
         local equipmentSlotOffset = GM.Config.Inventory.PLAYER_INVENTORY_SLOTS + GM.Config.Inventory.PLAYER_HOTBAR_SLOTS
@@ -29,6 +26,10 @@ local function getSendableInventory( inventory, isPlayerUpdate )
         if isPlayerUpdate then
             inventory.InventoryType = "PlayerUpdate"
         end
+    end
+
+    for k, v in pairs( inventory.Inventory ) do
+        v.item = table.Merge( v.item, RVR.Items.getItemData( v.item.type ) )
     end
 
     return inventory
@@ -161,7 +162,7 @@ end )
 net.Receive( "RVR_SetHotbarSelected", function( len, ply )
     if not ply.RVR_Inventory then return end
 
-    local newIndex = net.ReadInt( 4 )
+    local newIndex = net.ReadInt( 5 )
     local clientTime = net.ReadFloat()
 
     local lastChange = ply.RVR_Inventory.LastHotbarUpdate or 0
