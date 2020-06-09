@@ -12,7 +12,7 @@ util.AddNetworkString( "RVR_Inventory_OnPickup" )
 util.AddNetworkString( "RVR_Inventory_RequestPlayerUpdate" )
 util.AddNetworkString( "RVR_Inventory_SetHotbarSelected" )
 
-local function getSendableInventory( inventory, isPlayerUpdate )
+local function getSendableInventory( ent, inventory, isPlayerUpdate )
     local GM = GAMEMODE
 
     inventory = table.Copy( inventory )
@@ -31,6 +31,8 @@ local function getSendableInventory( inventory, isPlayerUpdate )
     for k, v in pairs( inventory.Inventory ) do
         v.item = table.Merge( v.item, RVR.Items.getItemData( v.item.type ) )
     end
+
+    inventory.Ent = ent
 
     return inventory
 end
@@ -77,10 +79,10 @@ function inv.playerOpenInventory( ply, invEnt )
     local isPlayer = invEnt == ply
 
     net.Start( "RVR_Inventory_Open" )
-    net.WriteTable( getSendableInventory( inventoryData ) )
+    net.WriteTable( getSendableInventory( invEnt, inventoryData ) )
     net.WriteBool( isPlayer )
     if not isPlayer then
-        net.WriteTable( getSendableInventory( ply.RVR_Inventory ) )
+        net.WriteTable( getSendableInventory( ply, ply.RVR_Inventory ) )
     end
     net.Send( ply )
 end
@@ -154,7 +156,7 @@ net.Receive( "RVR_Inventory_RequestPlayerUpdate", function( len, ply )
     if not inventoryData then return end
 
     net.Start( "RVR_Inventory_Open" )
-    net.WriteTable( getSendableInventory( inventoryData, true ) )
+    net.WriteTable( getSendableInventory( ply, inventoryData, true ) )
     net.WriteBool( true )
     net.Send( ply )
 end )

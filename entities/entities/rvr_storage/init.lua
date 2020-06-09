@@ -20,8 +20,9 @@ function ENT:Initialize()
     self.RVR_Inventory = {
         Inventory = {
         },
-        MaxSlots = 30,
-        InventoryType = "Box"
+        MaxSlots = 50,
+        InventoryType = "Box",
+        Name = "Medium Storage",
     }
 end
 

@@ -3,6 +3,13 @@ local inv = RVR.Inventory
 
 local backgroundMat = Material( "icons/generic_menu_background.png" )
 
+surface.CreateFont( "RVR_BoxInventoryHeader", {
+    font = "Bungee Regular",
+    size = ScrH() * 0.08,
+    weight = 700,
+
+} )
+
 function inv.openBoxInventory( boxInventory, playerInventory )
     local GM = GAMEMODE
     local w, h = ScrH() * 0.7 * 1.3, ScrH() * 0.7
@@ -28,18 +35,40 @@ function inv.openBoxInventory( boxInventory, playerInventory )
     end
 
     local closeButton = vgui.Create( "DImageButton", frame )
-    closeButton:SetPos( w * 0.91, h * 0.05 )
-    closeButton:SetSize( 50, 50 )
+    closeButton:SetPos( w * 0.94, h * 0.03 )
+    closeButton:SetSize( 30, 30 )
     closeButton:SetImage( "materials/icons/player_inventory_close.png" )
     function closeButton:DoClick()
         frame:Close()
     end
 
-    local invScroller = vgui.Create( "RVR_InventoryScroller", frame )
-    invScroller:SetSize( w * 0.435, h * 0.397 )
-    invScroller:SetPos( w * 0.533, h * 0.481 )
-    invScroller:SetSlotsPerRow( 4 )
-    invScroller:SetInventory( LocalPlayer(), playerInventory, GM.Config.Inventory.PLAYER_HOTBAR_SLOTS + 1, playerInventory.MaxSlots )
+    local label = vgui.Create( "DLabel", frame )
+    label:SetText( string.upper( boxInventory.Name or "STORAGE" ) )
+    label:SetTextColor( Color( 188, 162, 105 ) )
+    label:SetFont( "RVR_BoxInventoryHeader" )
+    label:SizeToContents()
+    label:SetPos( 0, h * 0.03 )
+    label:CenterHorizontal()
+
+    local underline = vgui.Create( "DShape", frame )
+    underline:SetType( "Rect" )
+    underline:SetPos( w * 0.097, h * 0.12 )
+    underline:SetSize( w * 0.8, 3 )
+    underline:SetColor( Color( 188, 162, 105 ) )
+
+    local ownInvScroller = vgui.Create( "RVR_InventoryScroller", frame )
+    ownInvScroller:SetSize( w * 0.4, h * 0.38 )
+    ownInvScroller:SetPos( w * 0.31, h * 0.56 )
+    ownInvScroller:SetSlotsPerRow( 4 )
+    ownInvScroller:SetInventory( playerInventory, GM.Config.Inventory.PLAYER_HOTBAR_SLOTS + 1, playerInventory.MaxSlots )
+
+    local boxInvScroller = vgui.Create( "RVR_InventoryScroller", frame )
+    boxInvScroller:SetSize( w * 0.853, h * 0.4 )
+    boxInvScroller:SetPos( w * 0.097, h * 0.14 )
+    boxInvScroller:SetSlotsPerRow( 8 )
+    boxInvScroller:SetSlotImage( "materials/icons/dark_slot_background.png" )
+    boxInvScroller:SetBackgroundImage( "icons/dark_inventory_scroller_background.png" )
+    boxInvScroller:SetInventory( boxInventory )
 
     return frame
 end

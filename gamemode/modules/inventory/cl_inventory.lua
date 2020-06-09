@@ -36,7 +36,7 @@ net.Receive( "RVR_Inventory_Open", function()
     inv.enableCursorSlot()
 
     function inv.openInventory:OnKeyCodePressed( key )
-        if key == inv.openInventoryKey then
+        if key == inv.openInventoryKey or key == input.GetKeyCode( input.LookupBinding( "+use" ) ) then
             inv.closeInventory()
         end
     end

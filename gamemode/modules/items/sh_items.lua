@@ -12,6 +12,7 @@
     swep = (string) name of custom swep to use for this item
     viewModelOffset = (vector) clientside viewmodel offset
     viewModelAng = (ang) clientside viewmodel angle
+}
 ]]
 
 RVR.Items = RVR.Items or {}

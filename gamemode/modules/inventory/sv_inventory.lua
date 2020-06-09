@@ -6,10 +6,6 @@ local inv = RVR.Inventory
 -- A slot number of -1 indicates the players cursor slot, this is remove when an inventory is closed
 -- A slot number of MaxSlot + 1, 2, 3 are for the 3 equipment slots: head, body and foot
 
---TODO:
--- box inventory UI
-
-
 -- Initialize players inventory to empty
 function inv.setupPlayer( ply )
     local GM = GAMEMODE

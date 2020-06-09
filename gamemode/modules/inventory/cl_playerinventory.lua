@@ -37,7 +37,7 @@ function inv.openPlayerInventory( inventory )
     invScroller:SetSize( w * 0.435, h * 0.397 )
     invScroller:SetPos( w * 0.533, h * 0.481 )
     invScroller:SetSlotsPerRow( 4 )
-    invScroller:SetInventory( LocalPlayer(), inventory, GM.Config.Inventory.PLAYER_HOTBAR_SLOTS + 1, inventory.MaxSlots )
+    invScroller:SetInventory( inventory, GM.Config.Inventory.PLAYER_HOTBAR_SLOTS + 1, inventory.MaxSlots )
 
     local eSlotXMult = 0.38
     local eSlotYMult = 0.19

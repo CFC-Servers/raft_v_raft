@@ -10,6 +10,7 @@ resource.AddFile( "materials/icons/equip_slot_pants.png" )
 resource.AddFile( "materials/icons/equip_slot_shirt.png" )
 resource.AddFile( "materials/icons/player_inventory_background.png" )
 resource.AddFile( "materials/icons/slot_background.png" )
+resource.AddFile( "materials/icons/dark_slot_background.png" )
 resource.AddFile( "materials/icons/player_inventory_close.png" )
 resource.AddFile( "materials/icons/player_hotbar_background.png" )
 resource.AddFile( "materials/icons/generic_menu_background.png" )
@@ -19,6 +20,8 @@ resource.AddFile( "models/items/item_nail.mdl" )
 
 resource.AddFile( "materials/icons/items/wood.png" )
 resource.AddFile( "materials/icons/items/nail.png" )
+
+resource.AddFile( "resource/fonts/bungee_regular.ttf" )
 
 function GM:PlayerSetModel( ply )
     ply:SetModel( "models/player/odessa.mdl" )

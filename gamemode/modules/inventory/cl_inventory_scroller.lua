@@ -50,8 +50,11 @@ function PANEL:SetupContent()
             local slot = vgui.Create( "RVR_ItemSlot", canvasPanel )
             slot:SetSize( slotSize - spacing, slotSize - spacing )
             slot:SetPos( ( x * slotSize ) + spacing * 0.5, ( y * slotSize ) + spacing * 0.5 )
+            if self.slotImage then
+                slot:SetImage( self.slotImage )
+            end
 
-            slot:SetLocationData( LocalPlayer(), index )
+            slot:SetLocationData( self.ent, index )
             local itemInfo = self.inventory.Inventory[index]
             if itemInfo then
                 slot:SetItemData( itemInfo.item, itemInfo.count )
@@ -68,17 +71,25 @@ function PANEL:GetSlotSize()
     return self.slotSize
 end
 
-function PANEL:SetInventory( ent, inventory, startSlot, endSlot )
+function PANEL:SetSlotImage( img )
+    self.slotImage = img
+end
+
+function PANEL:SetInventory( inventory, startSlot, endSlot )
     self.startSlot = startSlot or 1
     self.endSlot = endSlot or inventory.MaxSlots
     self.inventory = inventory
-    self.ent = ent
+    self.ent = inventory.Ent
 
     self:SetupContent()
 end
 
+function PANEL:SetBackgroundImage( img )
+    self.backgroundMat = Material( img )
+end
+
 function PANEL:Paint( w, h )
-    surface.SetMaterial( backgroundMat )
+    surface.SetMaterial( self.backgroundMat or backgroundMat )
     surface.SetDrawColor( Color( 255, 255, 255 ) )
     surface.DrawTexturedRect( 0, 0, 0.94 * w, h )
 end
