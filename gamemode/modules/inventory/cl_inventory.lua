@@ -300,3 +300,9 @@ net.Receive( "RVR_OnItemPickup", function()
 
     -- TODO: Show this infomation somehow
 end )
+
+hook.Add( "HUDShouldDraw", "RVR_HideWeapons", function( name )
+    if name == "CHudWeaponSelection" then
+        return false
+    end
+end )

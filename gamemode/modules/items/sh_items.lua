@@ -41,5 +41,13 @@ items.items = {
         model = "models/Gibs/wood_gib01b.mdl",
         icon = "materials/icons/wood.png",
         stackable = true,
+    },
+    {
+        type = "nail",
+        displayName = "Nail",
+        maxCount = 25,
+        model = "models/Gibs/HGIBS_spine.mdl",
+        icon = "materials/icons/wood.png",
+        stackable = true,
     }
 }

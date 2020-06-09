@@ -7,7 +7,7 @@ local inv = RVR.Inventory
 -- A slot number of MaxSlot + 1, 2, 3 are for the 3 equipment slots: head, body and foot
 
 --TODO:
--- Hotbar set swep
+-- Hotbar set swep -- need hands
 -- show item pickups on UI -- need to act on net message
 -- shift clicking
 
@@ -31,6 +31,7 @@ function inv.setupPlayer( ply )
     }
 
     inv.attemptPickupItem( ply, RVR.Items.getItemInstance( "wood" ), 16 )
+    inv.attemptPickupItem( ply, RVR.Items.getItemInstance( "nail" ), 30 )
 end
 
 hook.Add( "PlayerInitialSpawn", "RVR_SetupInventory", inv.setupPlayer )
@@ -222,22 +223,22 @@ function inv.setSelectedItem( ply, idx )
 
     local itemSlotData = ply.RVR_Inventory.Inventory[idx]
 
+    local wep
     if itemSlotData then
         local itemData = RVR.Items.getItemData( itemSlotData.item.type )
 
         if itemData.swep then
-            -- TODO: Set active to itemData.swep
-            local wep = ply:Give( itemData.swep )
-            ply:SetActiveWeapon( wep )
+            wep = ply:Give( itemData.swep )
         else
-            -- TODO: Set active to normalitem swep, and set model to itemData.model
-            local wep = ply:Give( "rvr_held_item" )
+            wep = ply:Give( "rvr_held_item" )
             wep:SetItemData( itemData )
-            ply:SetActiveWeapon( wep )
         end
     else
         -- TODO: Set active to hands
+        wep = ply:Give( "rvr_hands" )
     end
+
+    ply:SetActiveWeapon( wep )
 end
 
 -- returns success, error

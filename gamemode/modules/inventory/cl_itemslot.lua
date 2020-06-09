@@ -27,6 +27,10 @@ function PANEL:Init()
 
         self:SetPos( pw - w - 13, ph - h - 5 )
     end
+
+    self.toolTipText = vgui.Create( "DLabel" )
+    self.toolTipText:SetText( "" )
+    self.toolTipText:SetTextColor( Color( 0, 0, 0 ) )
 end
 
 function PANEL:SetLocationData( ent, position )
@@ -82,6 +86,10 @@ function PANEL:SetItemData( item, count )
         self.itemCountLabel:SetText( "" )
     end
     self.itemCountLabel:SizeToContents()
+
+    self:SetTooltipPanel( self.toolTipText )
+    self.toolTipText:SetText( item.displayName )
+    self.toolTipText:SizeToContents()
 end
 
 function PANEL:GetItemData()
@@ -93,6 +101,7 @@ function PANEL:ClearItemData()
     self.itemCount = nil
     self.itemImage:SetImageColor( Color( 255, 255, 255, 0 ) )
     self.itemCountLabel:SetText( "" )
+    self:SetTooltipPanel( false )
 end
 
 vgui.Register( "RVR_ItemSlot", PANEL, "DImage" )
