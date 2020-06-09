@@ -1,8 +1,3 @@
--- https:--wiki.facepunch.com/gmod/ENTITY:GravGunPickupAllowed
--- https:--wiki.facepunch.com/gmod/ENTITY:OnRemove
---  ENTITY:PhysicsCollide( table colData, PhysObj collider )
--- https:--wiki.facepunch.com/gmod/ENTITY:PhysicsSimulate
--- https:--wiki.facepunch.com/gmod/ENTITY:Touch
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
@@ -13,24 +8,33 @@ function ENT:Initialize()
     self:SetSolid( SOLID_VPHYSICS )
   
     self:StartMotionController() 
-    self.shadowParams = {}
-    self.shadowPos = self:GetPos()
-    self.shadowPos.z = 1000
-    self.shadowAngle =  Angle(0,0,0)
+    
+    local shadowPos = self:GetPos()
+    shadowPos.z = 100
+    shadowAngle =  Angle(0,0,0)
+    
+    self.shadowParams = {
+        secondstoarrive = 1,
+        pos = shadowPos,
+        angle = Angle(0,0,0),
+        maxangular = 5000,
+        maxangulardamp = 10000,
+        maxspeed = 1000000,
+        maxspeeddamp = 10000,
+        dampfactor = 0.8,
+        teleportdistance = 200,
+        deltatime = 0,
+    }
+
+    local phys = self:GetPhysicsObject()
+    phys:Wake()
 end
 
 function ENT:PhysicsSimulate( phys, deltaTime ) 
     phys:Wake()
- 
-	self.shadowParams.secondstoarrive = 5 
+	
 	self.shadowParams.pos = self.shadowPos 
 	self.shadowParams.angle = self.shadowAngle
-	self.shadowParams.maxangular = 5000 
-	self.shadowParams.maxangulardamp = 10000
-	self.shadowParams.maxspeed = 1000000
-	self.shadowParams.maxspeeddamp = 10000
-	self.shadowParams.dampfactor = 0.8
-	self.shadowParams.teleportdistance = 200
 	self.shadowParams.deltatime = deltatime
  
 	phys:ComputeShadowControl(self.shadowParams) 
