@@ -12,6 +12,7 @@ resource.AddFile( "materials/icons/player_inventory_background.png" )
 resource.AddFile( "materials/icons/slot_background.png" )
 resource.AddFile( "materials/icons/player_inventory_close.png" )
 resource.AddFile( "materials/icons/player_hotbar_background.png" )
+resource.AddFile( "materials/icons/generic_menu_background.png" )
 resource.AddFile( "materials/icons/inventory_scroller_background.png" )
 
 resource.AddFile( "models/items/item_nail.mdl" )
