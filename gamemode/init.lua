@@ -16,8 +16,6 @@ resource.AddFile( "materials/icons/player_hotbar_background.png" )
 resource.AddFile( "materials/icons/generic_menu_background.png" )
 resource.AddFile( "materials/icons/inventory_scroller_background.png" )
 
-resource.AddFile( "models/items/item_nail.mdl" )
-
 resource.AddFile( "materials/icons/items/wood.png" )
 resource.AddFile( "materials/icons/items/nail.png" )
 
@@ -26,3 +24,5 @@ resource.AddFile( "resource/fonts/bungee_regular.ttf" )
 function GM:PlayerSetModel( ply )
     ply:SetModel( "models/player/odessa.mdl" )
 end
+
+include( "load_models.lua" )
