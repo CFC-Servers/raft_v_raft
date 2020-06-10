@@ -52,7 +52,7 @@ All item transactions are done by specifing actions to do on slots, rather than 
 - `RVR.Inventory.setSelectedItem( ply, idx )`
      - `ply` - Player to affect
      - `idx` - Hotbar position between `1` and `GAMEMODE.Config.Inventory.PLAYER_HOTBAR_SLOTS`
-- `RVR.Inventory.moveItem( fromEnt, toEnt, fromPosition, toPosition, count )`
+- `RVR.Inventory.moveItem( fromEnt, toEnt, fromPosition, toPosition, count )`  
 Attempts to move an item from one ent + position to another.  
 Note, fromEnt can be the same as toEnt, allowing moving items within an inventory.  
 This function will check validity for you.  
@@ -75,28 +75,28 @@ This function will check validity for you.
 
 ## Client-side
 ### SWEPS
-- `rvr_held_item`
+- `rvr_held_item`  
   - Dynamically sets it's models based on net messages, used to show any model that doesnt have actions
-- `rvr_hands`
+- `rvr_hands`  
     - Not currently implemented, gotta grab from another branch.
 
 ### SENTS
-- `rvr_dropped_item`
+- `rvr_dropped_item`  
     - Automatically despawns after some time (in config)
     - Automatically merges with other items on touch if same item type
 
-- `rvr_storage`
+- `rvr_storage`  
     - Base storage box
     - `ent:SetStorageName( name )` - Default: `"Medium Storage"`
     - `ent:SetMaxSlots( slotCount )` - Default: `50`
 
 ### Vgui elements
-- `RVR_ItemSlot`
+- `RVR_ItemSlot`  
     Specify entity, slot index, and initial item (optional), and this element will handle all item movement
     - `itemSlot:SetLocationData( ent, position )`
     - `itemSlot:SetItemData( item, count )` - Note, item here must be the full item data
     - `itemSlot:ClearItemData()`
-- `RVR_InventoryScroller`
+- `RVR_InventoryScroller`  
     Specify an inventory, and optional start + end slot index, and this will build a scrolling inventory panel with all slots pre-setup.  
     **NOTE**: This panel will not setup until an inventory is set, be sure to set the inventory **LAST.**
     - `inventoryScroller:SetInventory( inventory, startSlot = 1, endSlot = inventory.MaxSlots )`

@@ -1,8 +1,8 @@
 # Items
 ## Functions
-- `RVR.Items.getItemData( itemType )`
+- `RVR.Items.getItemData( itemType )`  
 Gets the full item data for a given item type
-- `RVR.Items.getItemInstance( itemType )`
+- `RVR.Items.getItemInstance( itemType )`  
 Creates a simple table for an item instance, currently just `{ type = itemType }`, intended to be extended with item metadata like durability in the future.
 
 ## Item structure
