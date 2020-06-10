@@ -18,12 +18,19 @@ function ENT:Initialize()
     end
 
     self.RVR_Inventory = {
-        Inventory = {
-        },
+        Inventory = {},
         MaxSlots = 50,
         InventoryType = "Box",
         Name = "Medium Storage",
     }
+end
+
+function ENT:SetStorageName( name )
+    self.RVR_Inventory.Name = name
+end
+
+function ENT:SetMaxSlots( slotCount )
+    self.RVR_Inventory.MaxSlots = slotCount
 end
 
 function ENT:Use( activator, caller )
