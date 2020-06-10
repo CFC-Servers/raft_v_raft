@@ -1,20 +1,3 @@
---[[ item structure:
-{
-    type = (string) unique name for item
-    displayName = (string) Name used in menus
-    maxCount = (int) max stack size in inventories
-    model = (string) dropped item + held item model
-    icon = (string) inventory icon
-    isHeadGear = (bool) can this be equipped in head slot
-    isBodyGear = (bool) can this be equipped in body slot
-    isFootGear = (bool) can this be equipped in foot slot
-    stackable = (bool) can this be stacked in inventory or as dropped item,
-    swep = (string) name of custom swep to use for this item
-    viewModelOffset = (vector) clientside viewmodel offset
-    viewModelAng = (ang) clientside viewmodel angle
-}
-]]
-
 RVR.Items = RVR.Items or {}
 local items = RVR.Items
 
