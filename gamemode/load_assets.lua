@@ -9,7 +9,7 @@ local function addDirectory( dir )
     if not files then return end
 
     for _, fileName in pairs( files ) do
-        local ext = string.match( v, "^.+%.(%a+)$" )
+        local ext = string.match( fileName, "^.+%.(%a+)$" )
         local addFunc = addFunctions[ext]
         if addFunc then
             addFunc( dir .. "/" .. fileName )
