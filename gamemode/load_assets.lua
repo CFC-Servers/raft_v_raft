@@ -1,16 +1,26 @@
-local function runRecurse( dir, ext, f )
+local addFunctions = {
+    vmt = resource.AddFile,
+    mdl = resource.AddFile,
+    png = resource.AddSingleFile,
+}
+
+local function addDirectory( dir )
     local files, dirs = file.Find( dir .. "/*", "GAME" )
     if not files then return end
-    for k, v in pairs( files ) do
-        if string.match( v, "^.+%." .. ext .. "$" ) then
-            f( dir .. "/" .. v )
+
+    for _, fileName in pairs( files ) do
+        local ext = string.match( v, "^.+%.(%a+)$" )
+        local addFunc = addFunctions[ext]
+        if addFunc then
+            addFunc( dir .. "/" .. fileName )
         end
     end
-    for k, v in pairs( dirs ) do
-        runRecurse( dir .. "/" .. v, ext, f )
+
+    for _, dirName in pairs( dirs ) do
+        addDirectory( dir .. "/" .. dirName )
     end
 end
 
-runRecurse( "materials/models/rvr", "vmt", resource.AddFile )
-runRecurse( "materials/rvr", "png", resource.AddSingleFile )
-runRecurse( "models/rvr", "mdl", resource.AddFile )
+addDirectory( "materials/models/rvr" )
+addDirectory( "materials/rvr" )
+addDirectory( "models/rvr" )
