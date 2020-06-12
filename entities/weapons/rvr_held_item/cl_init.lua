@@ -33,28 +33,28 @@ end
 
 function SWEP:DrawWorldModel()
     if not IsValid( self.WorldModelEnt ) then return end
-    local _Owner = self:GetOwner()
+    local owner = self:GetOwner()
 
-    if (IsValid(_Owner)) then
+    if IsValid( owner ) then
         -- Specify a good position
-        local offsetVec = Vector(5, -2.7, -3.4)
-        local offsetAng = Angle(180, 90, 0)
+        local offsetVec = Vector( 5, -2.7, -3.4 )
+        local offsetAng = Angle( 180, 90, 0 )
 
-        local boneid = _Owner:LookupBone("ValveBiped.Bip01_R_Hand") -- Right Hand
-        if !boneid then return end
+        local boneid = owner:LookupBone( "ValveBiped.Bip01_R_Hand" ) -- Right Hand
+        if not boneid then return end
 
-        local matrix = _Owner:GetBoneMatrix(boneid)
-        if !matrix then return end
+        local matrix = owner:GetBoneMatrix( boneid )
+        if not matrix then return end
 
-        local newPos, newAng = LocalToWorld(offsetVec, offsetAng, matrix:GetTranslation(), matrix:GetAngles())
+        local newPos, newAng = LocalToWorld( offsetVec, offsetAng, matrix:GetTranslation(), matrix:GetAngles() )
 
-        self.WorldModelEnt:SetPos(newPos)
-        self.WorldModelEnt:SetAngles(newAng)
+        self.WorldModelEnt:SetPos( newPos )
+        self.WorldModelEnt:SetAngles( newAng )
 
         self.WorldModelEnt:SetupBones()
     else
-        self.WorldModelEnt:SetPos(self:GetPos())
-        self.WorldModelEnt:SetAngles(self:GetAngles())
+        self.WorldModelEnt:SetPos( self:GetPos() )
+        self.WorldModelEnt:SetAngles( self:GetAngles() )
     end
 
     self.WorldModelEnt:DrawModel()
