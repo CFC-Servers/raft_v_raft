@@ -1,4 +1,4 @@
 "VertexLitGeneric"
 {
-	"$basetexture" "models/items/item_plank"
+	"$basetexture" "models/rvr/items/item_plank"
 }

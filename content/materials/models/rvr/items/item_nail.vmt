@@ -1,4 +1,4 @@
 "VertexLitGeneric"
 {
-	"$basetexture" "models/items/item_nail"
+	"$basetexture" "models/rvr/items/item_nail"
 }
