@@ -17,7 +17,7 @@ local stats = {
         max = config.MAX_FOOD,
     },
     {
-        material = Material( "icons/health.png" ),
+        material = Material( "rvr/icons/health.png" ),
         color = Color( 227, 100, 100 ),
         get = function()
             return LocalPlayer():Health()
