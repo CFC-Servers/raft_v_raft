@@ -73,6 +73,12 @@ This function will check validity for you.
     - `ply` - Player to open inventory for
     - `inventoryEntity` - Entity with inventory to open (can be self)
 
+### Extra
+The `RVR_PreventInventory` hook allows you to prevent a player from accessing an inventory.  
+It's syntax is as follows:
+`boolean GM:RVR_PreventInventory( Player ply, Entity inventoryEnt )`  
+Return true to prevent access
+
 ## Client-side
 ### SWEPS
 - `rvr_held_item`  

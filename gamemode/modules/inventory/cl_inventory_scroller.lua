@@ -16,9 +16,6 @@ local function formatScrollbar( bar )
     end
 end
 
-function PANEL:Init()
-end
-
 function PANEL:SetupContent()
     self.scroller = vgui.Create( "DScrollPanel", self )
     self.scroller:Dock( FILL )

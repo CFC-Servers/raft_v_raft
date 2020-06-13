@@ -16,6 +16,7 @@ net.Receive( "RVR_Inventory_Open", function()
         plyInventory = net.ReadTable()
     end
 
+    -- Update hotbar slots for any inventory open
     for k = 1, GAMEMODE.Config.Inventory.PLAYER_HOTBAR_SLOTS do
         local data = plyInventory.Inventory[k]
         if data then
@@ -26,6 +27,7 @@ net.Receive( "RVR_Inventory_Open", function()
     local invType = inventory.InventoryType
 
     if invType == "PlayerUpdate" then
+        -- Inventory open of type "PlayerUpdate" should not trigger a UI element, it is simply a full hotbar update
         return
     elseif invType == "Player" then
         inv.openInventory = inv.openPlayerInventory( inventory )
@@ -93,8 +95,6 @@ hook.Add( "PlayerBindPress", "RVR_Inventory", function( _, bind, pressed )
         return true
     end
 end )
-
-concommand.Add( "RVR_closeInv", inv.closeInventory )
 
 function inv.closeInventory()
     if inv.openInventory then
@@ -239,8 +239,6 @@ function inv.makeHotbar()
 end
 
 function inv.setHotbarSlot( newIndex )
-    if inv.openInventory then return end
-
     local hotbar = inv.hotbar
 
     if newIndex == hotbar.selectedSlot then return end
@@ -272,6 +270,7 @@ local prevSlotChange = 0
 
 -- I can't find any other way to trigger a hook on scroll
 -- This hook is sometimes called more than once per frame, therefore we ignore any duplicate calls
+-- This hook is also called when UI elements are on screen, so have to ignore those calls
 hook.Add( "CreateMove", "RVR_Inventory_HotbarSelect", function()
     if prevSlotChange == RealTime() then return end
 
@@ -285,6 +284,8 @@ hook.Add( "CreateMove", "RVR_Inventory_HotbarSelect", function()
     else
         return
     end
+
+    if inv.openInventory or gui.IsGameUIVisible() then return end
 
     -- Loop around
     if nextSlot < 1 then nextSlot = slotCount end
@@ -301,6 +302,7 @@ net.Receive( "RVR_Inventory_OnPickup", function()
     -- TODO: Show this infomation somehow
 end )
 
+-- Hide default weapon selection
 hook.Add( "HUDShouldDraw", "RVR_Inventory_HideWeapons", function( name )
     if name == "CHudWeaponSelection" then
         return false

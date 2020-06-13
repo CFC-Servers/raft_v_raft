@@ -2,8 +2,8 @@ RVR.Items = RVR.Items or {}
 local items = RVR.Items
 
 function items.getItemData( itemType )
-    for k, v in pairs( items.items ) do
-        if v.type == itemType then return v end
+    for _, itemData in pairs( items.items ) do
+        if itemData.type == itemType then return itemData end
     end
 end
 
@@ -12,6 +12,7 @@ function items.getItemInstance( itemType )
     if not items.getItemData( itemType ) then
         error( "Item type " .. itemType .. " does not exist" )
     end
+
     return {
         type = itemType
     }

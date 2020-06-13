@@ -7,13 +7,11 @@ surface.CreateFont( "RVR_BoxInventoryHeader", {
     font = "Bungee Regular",
     size = ScrH() * 0.08,
     weight = 700,
-
 } )
 
 function inv.openBoxInventory( boxInventory, playerInventory )
     local GM = GAMEMODE
     local w, h = ScrH() * 0.7 * 1.3, ScrH() * 0.7
-    local yMult = 0.3 -- 0.5 means center Y
 
     local frame = vgui.Create( "DFrame" )
     frame:SetTitle( "" )
@@ -21,7 +19,8 @@ function inv.openBoxInventory( boxInventory, playerInventory )
     frame:SetSize( w, h )
     frame:SetDraggable( false )
     frame:ShowCloseButton( false )
-    frame:SetPos( ( ScrW() - w ) / 2, ( ScrH() - h ) * yMult )
+    frame:CenterHorizontal()
+    frame:CenterVertical( 0.3 )
     frame:MakePopup()
 
     function frame:Paint( _w, _h )

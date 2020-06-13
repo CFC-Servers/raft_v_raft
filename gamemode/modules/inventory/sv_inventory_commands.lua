@@ -1,6 +1,6 @@
 local function giveItem( caller, target, item, count )
     if count < 1 then
-        return "Cannot give less than 1 item, are you insane?"
+        return "Cannot give less than 1 item, what are you expecting to happen?"
     end
 
     local success, amount = RVR.Inventory.attemptPickupItem( target, item, count )

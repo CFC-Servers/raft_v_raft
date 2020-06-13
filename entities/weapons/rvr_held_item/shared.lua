@@ -19,9 +19,11 @@ end
 
 function SWEP:Initialize()
     self:SetWeaponHoldType( "melee" )
+
     if CLIENT then
         self:NetworkVarNotify( "ItemModel", function( this, _, _, mdl )
             this.WorldModel = mdl
+
             if not IsValid( self.WorldModelEnt ) then
                 self.WorldModelEnt = ClientsideModel( self.WorldModel )
                 self.WorldModelEnt:SetNoDraw( true )

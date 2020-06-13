@@ -4,7 +4,6 @@ local backgroundMat = Material( "rvr/backgrounds/player_inventory_background.png
 function inv.openPlayerInventory( inventory )
     local GM = GAMEMODE
     local w, h = ScrH() * 0.7 * 1.3, ScrH() * 0.7
-    local yMult = 0.3 -- 0.5 means center Y
 
     local frame = vgui.Create( "DFrame" )
     frame:SetTitle( "" )
@@ -12,7 +11,8 @@ function inv.openPlayerInventory( inventory )
     frame:SetSize( w, h )
     frame:SetDraggable( false )
     frame:ShowCloseButton( false )
-    frame:SetPos( ( ScrW() - w ) / 2, ( ScrH() - h ) * yMult )
+    frame:CenterHorizontal()
+    frame:CenterVertical( 0.3 )
     frame:MakePopup()
 
     function frame:Paint( _w, _h )
@@ -66,6 +66,8 @@ function inv.openPlayerInventory( inventory )
     icon:SetPos( w * 0.1, h * 0.15 )
     icon:SetSize( w * 0.24, h * 0.74 )
     icon:SetModel( LocalPlayer():GetModel() )
+
+    -- Go far away and zoom in, to give less of a "fish-eye" effect
     icon:SetCamPos( Vector( 100, 0, 35 ) )
     icon:SetLookAng( Angle( 0, 180, 0 ) )
     icon:SetFOV( 20 )
@@ -74,6 +76,7 @@ function inv.openPlayerInventory( inventory )
     icon.Entity:SetMaterial( "models/debug/debugwhite" )
     icon:SetColor( Color( 0, 0, 0 ) )
 
+    -- Disable default behaviour
     function icon:LayoutEntity( entity ) end
 
     return frame

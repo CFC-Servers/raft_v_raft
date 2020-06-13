@@ -224,7 +224,7 @@ function inv.setSelectedItem( ply, idx )
             wep:SetItemData( itemData )
         end
     else
-        -- TODO: remove before merge
+        -- TODO: remove when rvr_hands implemented
         do return end
         wep = ply:Give( "rvr_hands" )
     end

@@ -31,6 +31,7 @@ function PANEL:Init()
     self.toolTipText = vgui.Create( "DLabel" )
     self.toolTipText:SetText( "" )
     self.toolTipText:SetTextColor( Color( 0, 0, 0 ) )
+    self.toolTipText:Hide()
 end
 
 function PANEL:SetLocationData( ent, position )
@@ -87,6 +88,7 @@ function PANEL:SetItemData( item, count )
     end
     self.itemCountLabel:SizeToContents()
 
+    self.toolTipText:Show()
     self:SetTooltipPanel( self.toolTipText )
     self.toolTipText:SetText( item.displayName )
     self.toolTipText:SizeToContents()
@@ -101,6 +103,8 @@ function PANEL:ClearItemData()
     self.itemCount = nil
     self.itemImage:SetImageColor( Color( 255, 255, 255, 0 ) )
     self.itemCountLabel:SetText( "" )
+
+    self.toolTipText:Hide()
     self:SetTooltipPanel( false )
 end
 

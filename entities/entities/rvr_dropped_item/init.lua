@@ -1,7 +1,7 @@
-AddCSLuaFile("cl_init.lua")
-AddCSLuaFile("shared.lua")
+AddCSLuaFile( "cl_init.lua" )
+AddCSLuaFile( "shared.lua" )
 
-include("shared.lua")
+include( "shared.lua" )
 
 local function getSafeRemover( ent )
     return function()
@@ -39,10 +39,10 @@ function ENT:Setup( item, count )
 end
 
 function ENT:StartTouch( other )
-    if other:GetClass() ~= "rvr_dropped_item" or self.USED or other.USED or self.MERGED or other.MERGED then return end
+    if other:GetClass() ~= "rvr_dropped_item" or self.DELETING or other.DELETING then return end
     if not RVR.Inventory.canItemsStack( self.item, other.item ) then return end
 
-    other.MERGED = true
+    other.DELETING = true
 
     other:Remove()
 
@@ -60,11 +60,11 @@ function ENT:OnRemove()
 end
 
 function ENT:Use( activator, caller )
-    if self.USED or self.MERGED then return end
+    if self.DELETING then return end
 
     local success, amount = RVR.Inventory.attemptPickupItem( caller, self.item, self:GetAmount() )
     if success then
-        self.USED = true
+        self.DELETING = true
         self:Remove()
         return
     end
