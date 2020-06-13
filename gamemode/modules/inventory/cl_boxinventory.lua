@@ -1,7 +1,7 @@
 RVR.Inventory = RVR.Inventory or {}
 local inv = RVR.Inventory
 
-local backgroundMat = Material( "icons/generic_menu_background.png" )
+local backgroundMat = Material( "rvr/backgrounds/generic_menu_background.png" )
 
 surface.CreateFont( "RVR_BoxInventoryHeader", {
     font = "Bungee Regular",
@@ -37,7 +37,7 @@ function inv.openBoxInventory( boxInventory, playerInventory )
     local closeButton = vgui.Create( "DImageButton", frame )
     closeButton:SetPos( w * 0.94, h * 0.03 )
     closeButton:SetSize( 30, 30 )
-    closeButton:SetImage( "materials/icons/player_inventory_close.png" )
+    closeButton:SetImage( "materials/rvr/icons/player_inventory_close.png" )
     function closeButton:DoClick()
         frame:Close()
     end
@@ -66,8 +66,8 @@ function inv.openBoxInventory( boxInventory, playerInventory )
     boxInvScroller:SetSize( w * 0.853, h * 0.4 )
     boxInvScroller:SetPos( w * 0.097, h * 0.14 )
     boxInvScroller:SetSlotsPerRow( 8 )
-    boxInvScroller:SetSlotImage( "materials/icons/dark_slot_background.png" )
-    boxInvScroller:SetBackgroundImage( "icons/dark_inventory_scroller_background.png" )
+    boxInvScroller:SetSlotImage( "materials/rvr/backgrounds/dark_slot_background.png" )
+    boxInvScroller:SetBackgroundImage( "materials/rvr/backgrounds/dark_inventory_scroller_background.png" )
     boxInvScroller:SetInventory( boxInventory )
 
     return frame

@@ -179,7 +179,7 @@ hook.Add( "GUIMousePressed", "RVR_Inventory_DropItem", function( code, aimVector
     net.SendToServer()
 end )
 
-local hotbarBackgroundMat = Material( "icons/player_hotbar_background.png" )
+local hotbarBackgroundMat = Material( "rvr/backgrounds/player_hotbar_background.png" )
 
 function inv.makeHotbar()
     local GM = GAMEMODE

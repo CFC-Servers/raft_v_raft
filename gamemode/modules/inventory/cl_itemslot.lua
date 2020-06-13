@@ -7,7 +7,7 @@ inv.ItemSlots = inv.ItemSlots or {}
 
 function PANEL:Init()
     table.insert( inv.ItemSlots, self )
-    self:SetImage( "materials/icons/slot_background.png" )
+    self:SetImage( "materials/rvr/backgrounds/slot_background.png" )
     self:SetMouseInputEnabled( true )
 
     self.itemImage = vgui.Create( "DImage", self )

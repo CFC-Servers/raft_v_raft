@@ -1,5 +1,5 @@
 local inv = RVR.Inventory
-local backgroundMat = Material( "icons/player_inventory_background.png" )
+local backgroundMat = Material( "rvr/backgrounds/player_inventory_background.png" )
 
 function inv.openPlayerInventory( inventory )
     local GM = GAMEMODE
@@ -51,7 +51,7 @@ function inv.openPlayerInventory( inventory )
         local yOffset = ( index - 1 ) * eSlotYSpacing
 
         local slot = vgui.Create( "RVR_ItemSlot", frame )
-        slot:SetImage( "materials/icons/equip_slot_" .. iconNames[index] .. ".png" )
+        slot:SetImage( "materials/backgrounds/equip_slot_" .. iconNames[index] .. ".png" )
         slot:SetSize( slotSize * 1.2, slotSize * 1.2 )
         slot:SetPos( w * eSlotXMult, h * ( eSlotYMult + yOffset ) )
         slot:SetLocationData( LocalPlayer(), equipmentSlotOffset + index )

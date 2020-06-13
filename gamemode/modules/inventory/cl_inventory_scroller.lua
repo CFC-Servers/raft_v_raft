@@ -1,6 +1,6 @@
 local PANEL = {}
 
-local backgroundMat = Material( "icons/inventory_scroller_background.png" )
+local backgroundMat = Material( "rvr/backgrounds/inventory_scroller_background.png" )
 
 local function formatScrollbar( bar )
     bar:SetHideButtons( true )
@@ -85,7 +85,7 @@ function PANEL:SetInventory( inventory, startSlot, endSlot )
 end
 
 function PANEL:SetBackgroundImage( img )
-    self.backgroundMat = Material( img )
+    self.backgroundMat = Material( string.sub( img, 11 ) ) -- To remove materials/, keep consistent with setSlotImage
 end
 
 function PANEL:Paint( w, h )

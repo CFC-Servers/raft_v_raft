@@ -23,15 +23,15 @@ items.items = {
         displayName = "Wood",
         maxCount = 10,
         model = "models/Gibs/wood_gib01b.mdl",
-        icon = "materials/icons/items/wood.png",
+        icon = "materials/rvr/items/wood.png",
         stackable = true,
     },
     {
         type = "nail",
         displayName = "Nail",
         maxCount = 25,
-        model = "models/items/item_nail.mdl",
-        icon = "materials/icons/items/nail.png",
+        model = "models/rvr/items/item_nail.mdl",
+        icon = "materials/rvr/items/nail.png",
         stackable = true,
     }
 }
