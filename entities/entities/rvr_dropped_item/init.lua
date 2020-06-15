@@ -51,15 +51,15 @@ end
 
 -- On contact, merge if same item
 -- Also, restart despawn timer
-function ENT:StartTouch( other )
-    if other:GetClass() ~= "rvr_dropped_item" or self.DELETING or other.DELETING then return end
-    if not RVR.Inventory.canItemsStack( self.item, other.item ) then return end
+function ENT:StartTouch( collider )
+    if collider:GetClass() ~= "rvr_dropped_item" or self.DELETING or collider.DELETING then return end
+    if not RVR.Inventory.canItemsStack( self.item, collider.item ) then return end
 
-    other.DELETING = true
+    collider.DELETING = true
 
-    other:Remove()
+    collider:Remove()
 
-    self:SetAmount( self:GetAmount() + other:GetAmount() )
+    self:SetAmount( self:GetAmount() + collider:GetAmount() )
 
     self:RestartDespawnTimer()
 end

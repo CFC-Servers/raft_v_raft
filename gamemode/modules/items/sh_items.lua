@@ -35,5 +35,5 @@ items.items = {
         model = "models/rvr/items/item_nail.mdl",
         icon = "materials/rvr/items/nail.png",
         stackable = true,
-    }
+    },
 }

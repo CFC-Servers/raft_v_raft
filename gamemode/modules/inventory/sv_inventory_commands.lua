@@ -50,7 +50,8 @@ hook.Add( "RVR_ModulesLoaded", "RVR_Inventory_AddCommands", function()
 
     RVR.Commands.register(
         { "givesingle", "give1", "giveone" },
-        { "Target", "Item" }, { "player", "item" },
+        { "Target", "Item" },
+        { "player", "item" },
         RVR_USER_ADMIN,
         giveSingle,
         "Gives a player an item"

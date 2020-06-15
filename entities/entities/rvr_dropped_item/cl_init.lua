@@ -1,17 +1,17 @@
 include( "shared.lua" )
 
+-- Item label with count
+local minDist = 120
+local fadeDist = 40
+local labelScale = 0.5
+
 function ENT:Draw()
     self:DrawModel()
 
-    -- Item label with count
-    local minDist = 120
-    local fadeDist = 40
-    local labelScale = 0.5
-
     -- Calculate opacity based on distance, keep at full opacity for 'minDist', then fade over 'fadeDist'
-    local offset = LocalPlayer():GetPos() - self:GetPos()
-    local ang = offset:Angle().yaw
-    local dist = offset:Length()
+    local difference = LocalPlayer():GetPos() - self:GetPos()
+    local ang = difference:Angle().yaw
+    local dist = difference:Length()
 
     local progress = math.Clamp( ( dist - minDist ) / fadeDist, 0, 1 )
     local opacity = ( 1 - progress ) * 255

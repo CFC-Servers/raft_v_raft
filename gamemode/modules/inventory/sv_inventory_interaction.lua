@@ -60,9 +60,7 @@ function inv.notifyItemSlotChange( plys, ent, slotNum, slotData )
 end
 
 function inv.playerOpenInventory( ply, invEnt )
-    if ply.RVR_Inventory_Open then
-        return
-    end
+    if ply.RVR_Inventory_Open then return end
     invEnt = invEnt or ply
 
     local inventoryData = invEnt.RVR_Inventory
@@ -117,9 +115,7 @@ net.Receive( "RVR_Inventory_CursorHold", function( len, ply )
     local count = net.ReadInt( 8 )
 
     -- Can't affect an inventory you're not in
-    if ent ~= ply and ent ~= ply.RVR_Inventory_Open then
-        return
-    end
+    if ent ~= ply and ent ~= ply.RVR_Inventory_Open then return end
 
     inv.moveItem( ent, ply, position, -1, count )
 end )
@@ -132,9 +128,7 @@ net.Receive( "RVR_Inventory_CursorPut", function( len, ply )
     local count = net.ReadInt( 8 )
 
     -- Can't affect an inventory you're not in
-    if ent ~= ply and ent ~= ply.RVR_Inventory_Open then
-        return
-    end
+    if ent ~= ply and ent ~= ply.RVR_Inventory_Open then return end
 
     inv.moveItem( ply, ent, -1, position, count )
 end )

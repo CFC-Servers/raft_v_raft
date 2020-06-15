@@ -1,4 +1,4 @@
-SWEP.Printname = "<held_item>"
+SWEP.PrintName = "<held_item>"
 SWEP.Primary.ClipSize = -1
 SWEP.Primary.DefaultClip = -1
 SWEP.Primary.Automatic = true
