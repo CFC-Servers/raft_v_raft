@@ -37,13 +37,17 @@ net.Receive( "RVR_Inventory_Open", function()
 
     inv.enableCursorSlot()
 
+    -- Add key bind hook to close inventory via Use or Menu
     function inv.openInventory:OnKeyCodePressed( key )
-        if key == inv.openInventoryKey or key == input.GetKeyCode( input.LookupBinding( "+use" ) ) then
+        local menuKey = input.GetKeyCode( input.LookupBinding( "+menu" ) )
+        local useKey = input.GetKeyCode( input.LookupBinding( "+use" ) )
+        if key == menuKey or key == useKey then
             inv.closeInventory()
         end
     end
 end )
 
+-- Updates an existing RVR_ItemSlot element with new data
 net.Receive( "RVR_Inventory_UpdateSlot", function()
     local ent = net.ReadEntity()
     local position = net.ReadInt( 8 )
@@ -53,6 +57,8 @@ net.Receive( "RVR_Inventory_UpdateSlot", function()
         slotData = net.ReadTable()
     end
 
+    -- Update to the LocalPlayers cursor slot
+    -- Since this is rendered directly to HUD, and not a VGUI element, it must be handled differently
     if ent == LocalPlayer() and position == -1 then
         if hasSlotData then
             inv.setCursorItemData( slotData.item, slotData.count )
@@ -81,12 +87,13 @@ hook.Add( "PlayerBindPress", "RVR_Inventory", function( _, bind, pressed )
     if not pressed then return end
 
     if bind == "+menu" then
-        inv.openInventoryKey = input.GetKeyCode( input.LookupBinding( "+menu" ) )
+        -- Open own inventory
         net.Start( "RVR_Inventory_Open" )
         net.SendToServer()
 
         return true
     elseif string.StartWith( bind, "slot" ) then
+        -- Set selected slot
         local slotNum = tonumber( string.sub( bind, 5 ) )
         if not slotNum then return end
 
@@ -133,18 +140,21 @@ function inv.getCursorItemData()
     return inv.cursorItem, inv.cursorItemCount
 end
 
+-- Render the cursor slot
 hook.Add( "PostRenderVGUI", "RVR_Inventory_DrawCursorItem", function()
     if not inv.showCursorItem or not inv.cursorItemMaterial then return end
 
     local mx, my = gui.MousePos()
     local x, y = mx - cursorSlotSize / 2, my - cursorSlotSize / 2
 
+    -- Item icon
     surface.SetDrawColor( 255, 255, 255, 255 )
     surface.SetMaterial( inv.cursorItemMaterial )
     surface.DrawTexturedRect( x, y, cursorSlotSize, cursorSlotSize )
 
     if inv.cursorItemCount <= 1 then return end
 
+    -- Item count
     local countText = tostring( inv.cursorItemCount )
     surface.SetFont( "DermaLarge" )
     local tw, th = surface.GetTextSize( countText )
@@ -156,6 +166,7 @@ hook.Add( "PostRenderVGUI", "RVR_Inventory_DrawCursorItem", function()
     surface.DrawText( countText )
 end )
 
+-- Handle dropping items by clickout outside of openInventory frame
 hook.Add( "GUIMousePressed", "RVR_Inventory_DropItem", function( code, aimVector )
     if not inv.openInventory then return end
     local mx, my = gui.MousePos()
@@ -169,9 +180,10 @@ hook.Add( "GUIMousePressed", "RVR_Inventory_DropItem", function( code, aimVector
     if not onBorderX and not onBorderY then return end
 
     local item, count = inv.getCursorItemData()
-
+    -- Don't drop if no item
     if not item then return end
 
+    -- Right clicking only drops one item
     if code == MOUSE_RIGHT then count = 1 end
 
     net.Start( "RVR_Inventory_CursorDrop" )
@@ -181,6 +193,7 @@ end )
 
 local hotbarBackgroundMat = Material( "rvr/backgrounds/player_hotbar_background.png" )
 
+-- Just builds the frame then makes some RVR_ItemSlots, nothing special
 function inv.makeHotbar()
     local GM = GAMEMODE
 
@@ -192,7 +205,6 @@ function inv.makeHotbar()
 
     local slotCount = GM.Config.Inventory.PLAYER_HOTBAR_SLOTS
     local innerHotbarWidth = w * 0.5
-    local slotSpacing = 0 -- as percent of slotWidth
 
     local horizontalPadding = 0.05
     local verticalPadding = 0.1
@@ -222,10 +234,9 @@ function inv.makeHotbar()
     local offsetX = ( hotbarWidth - innerHotbarWidth ) * 0.5
 
     for k = 1, slotCount do
-        local imageSizeMult = 1 - slotSpacing
 
         local slot = vgui.Create( "RVR_ItemSlot", hotbar.frame )
-        slot:SetSize( slotSize * imageSizeMult, slotSize * imageSizeMult )
+        slot:SetSize( slotSize, slotSize )
         slot:SetPos( offsetX + ( k - 1 ) * slotSize, offsetY )
         slot:SetLocationData( LocalPlayer(), k )
 
@@ -238,6 +249,7 @@ function inv.makeHotbar()
     net.SendToServer()
 end
 
+-- Set slot local
 function inv.setHotbarSlot( newIndex )
     local hotbar = inv.hotbar
 

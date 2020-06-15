@@ -3,6 +3,7 @@ local inv = RVR.Inventory
 
 local PANEL = {}
 
+-- List of all visible slots for updating
 inv.ItemSlots = inv.ItemSlots or {}
 
 function PANEL:Init()
@@ -47,6 +48,7 @@ function PANEL:OnMousePressed( code )
     local cursorItem, cursorItemCount = inv.getCursorItemData()
 
     if cursorItem then
+        -- putting item into slot
         local count = cursorItemCount
         if code == MOUSE_RIGHT then
             count = 1
@@ -58,6 +60,7 @@ function PANEL:OnMousePressed( code )
         net.SendToServer()
     else
         if not self.item then return end
+        -- taking item from slot
 
         local count = self.itemCount
         if code == MOUSE_RIGHT then

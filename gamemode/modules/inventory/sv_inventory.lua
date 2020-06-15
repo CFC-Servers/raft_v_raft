@@ -20,9 +20,6 @@ function inv.setupPlayer( ply )
         BodyGear = nil,
         FootGear = nil,
     }
-
-    inv.attemptPickupItem( ply, RVR.Items.getItemInstance( "wood" ), 16 )
-    inv.attemptPickupItem( ply, RVR.Items.getItemInstance( "nail" ), 30 )
 end
 
 hook.Add( "PlayerInitialSpawn", "RVR_SetupInventory", inv.setupPlayer )

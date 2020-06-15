@@ -59,12 +59,14 @@ function inv.openBoxInventory( boxInventory, playerInventory )
     ownInvScroller:SetSize( w * 0.4, h * 0.38 )
     ownInvScroller:SetPos( w * 0.31, h * 0.56 )
     ownInvScroller:SetSlotsPerRow( 4 )
+    -- First GM.Config.Inventory.PLAYER_HOTBAR_SLOTS slots of player inventory are hotbar, skip these
     ownInvScroller:SetInventory( playerInventory, GM.Config.Inventory.PLAYER_HOTBAR_SLOTS + 1, playerInventory.MaxSlots )
 
     local boxInvScroller = vgui.Create( "RVR_InventoryScroller", frame )
     boxInvScroller:SetSize( w * 0.853, h * 0.4 )
     boxInvScroller:SetPos( w * 0.097, h * 0.14 )
     boxInvScroller:SetSlotsPerRow( 8 )
+    -- Make the box inventory look different
     boxInvScroller:SetSlotImage( "materials/rvr/backgrounds/dark_slot_background.png" )
     boxInvScroller:SetBackgroundImage( "materials/rvr/backgrounds/dark_inventory_scroller_background.png" )
     boxInvScroller:SetInventory( boxInventory )

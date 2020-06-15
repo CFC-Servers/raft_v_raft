@@ -39,6 +39,7 @@ function inv.openPlayerInventory( inventory )
     invScroller:SetSlotsPerRow( 4 )
     invScroller:SetInventory( inventory, GM.Config.Inventory.PLAYER_HOTBAR_SLOTS + 1, inventory.MaxSlots )
 
+    -- equipment slots
     local eSlotXMult = 0.38
     local eSlotYMult = 0.19
     local eSlotYSpacing = 0.25
@@ -46,6 +47,7 @@ function inv.openPlayerInventory( inventory )
     local iconNames = { "hat", "shirt", "pants" }
     local slotSize = invScroller:GetSlotSize()
 
+    -- equipment slots indexes start at #hotbar + #inventory
     local equipmentSlotOffset = GM.Config.Inventory.PLAYER_INVENTORY_SLOTS + GM.Config.Inventory.PLAYER_HOTBAR_SLOTS
     for index = 1, 3 do
         local yOffset = ( index - 1 ) * eSlotYSpacing

@@ -2,6 +2,7 @@ local PANEL = {}
 
 local backgroundMat = Material( "rvr/backgrounds/inventory_scroller_background.png" )
 
+-- Makes the scrollbar look pretty
 local function formatScrollbar( bar )
     bar:SetHideButtons( true )
 
@@ -16,6 +17,7 @@ local function formatScrollbar( bar )
     end
 end
 
+-- Creates the slots, called last (by setinventory)
 function PANEL:SetupContent()
     self.scroller = vgui.Create( "DScrollPanel", self )
     self.scroller:Dock( FILL )
@@ -33,10 +35,12 @@ function PANEL:SetupContent()
     self.slotSize = slotSize
     local spacing = slotSize * 0.2
 
+    -- Panel placed within the scroller canvas to force the height to be what we want
     local canvasPanel = vgui.Create( "DPanel", self.scroller )
     canvasPanel:SetSize( slotSize * slotsPerRow, slotSize * rows )
     canvasPanel.Paint = nil
 
+    -- Create and position slots
     for y = 0, rows - 1 do
         for x = 0, slotsPerRow - 1 do
             local index = y * slotsPerRow + x + 1
@@ -72,6 +76,7 @@ function PANEL:SetSlotImage( img )
     self.slotImage = img
 end
 
+-- Set inventory with optional startSlot and endSlot, should be called last
 function PANEL:SetInventory( inventory, startSlot, endSlot )
     self.startSlot = startSlot or 1
     self.endSlot = endSlot or inventory.MaxSlots

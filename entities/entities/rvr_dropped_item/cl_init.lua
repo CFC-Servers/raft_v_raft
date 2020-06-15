@@ -2,10 +2,13 @@ include( "shared.lua" )
 
 function ENT:Draw()
     self:DrawModel()
+
+    -- Item label with count
     local minDist = 120
     local fadeDist = 40
     local labelScale = 0.5
 
+    -- Calculate opacity based on distance, keep at full opacity for 'minDist', then fade over 'fadeDist'
     local offset = LocalPlayer():GetPos() - self:GetPos()
     local ang = offset:Angle().yaw
     local dist = offset:Length()
@@ -23,6 +26,7 @@ function ENT:Draw()
     local text = self:GetItemDisplayName()
     local amount = self:GetAmount()
 
+    -- Add count
     if amount > 1 then
         text = text .. " (" .. amount .. ")"
     end
@@ -31,6 +35,7 @@ function ENT:Draw()
     -- Add bobbing animation
     textY = textY + math.sin( CurTime() * 2 ) * 2
 
+    -- TODO: Perhaps decide on different font
     cam.Start3D2D( pos + Vector( 0, 0, textY ), Angle( 0, ang + 90, 90 ), labelScale )
         draw.Text( {
             text = text,

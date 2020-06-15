@@ -5,11 +5,13 @@ function SWEP:ShouldDrawViewModel()
 end
 
 function SWEP:PreDrawViewModel( vm, weapon, ply )
+    -- Update view model when needed
     if self:GetItemModel() ~= "" and self:GetItemModel() ~= vm:GetModel() then
         vm:SetModel( self:GetItemModel() )
     end
 end
 
+-- Position view model based on ViewModelAng and ViewModelOffset
 function SWEP:GetViewModelPosition( eyePos, eyeAng )
     local viewModelAng = self:GetViewModelAng()
     local viewModelOffset = self:GetViewModelOffset()
@@ -25,18 +27,20 @@ function SWEP:GetViewModelPosition( eyePos, eyeAng )
     return eyePos, eyeAng
 end
 
+-- Delete client side model (required)
 function SWEP:OnRemove()
     if IsValid( self.WorldModelEnt ) then
         self.WorldModelEnt:Remove()
     end
 end
 
+-- Taken from wiki, might not all be needed, but idk
 function SWEP:DrawWorldModel()
     if not IsValid( self.WorldModelEnt ) then return end
     local owner = self:GetOwner()
 
     if IsValid( owner ) then
-        -- Specify a good position
+        -- TODO: Pull out into network vars
         local offsetVec = Vector( 5, -2.7, -3.4 )
         local offsetAng = Angle( 180, 90, 0 )
 

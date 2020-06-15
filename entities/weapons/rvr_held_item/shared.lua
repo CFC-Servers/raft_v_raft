@@ -20,6 +20,7 @@ end
 function SWEP:Initialize()
     self:SetWeaponHoldType( "melee" )
 
+    -- Set up network var listener to update model when ItemModel set
     if CLIENT then
         self:NetworkVarNotify( "ItemModel", function( this, _, _, mdl )
             this.WorldModel = mdl
@@ -34,5 +35,6 @@ function SWEP:Initialize()
     end
 end
 
+-- Empty to remove default behaviour, don't remove >:(
 function SWEP:PrimaryAttack()
 end
