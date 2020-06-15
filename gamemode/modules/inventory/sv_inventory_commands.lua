@@ -20,6 +20,7 @@ end
 hook.Add( "RVR_ModulesLoaded", "RVR_Inventory_AddCommands", function()
     RVR.Commands.addType( "item", function( str, caller )
         -- Gets currently held item
+        str = str:lower()
         if str == "^" then
             local itemInstance = RVR.Inventory.getSelectedItem( caller )
             if not itemInstance then

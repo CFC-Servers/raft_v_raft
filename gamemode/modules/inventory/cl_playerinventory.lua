@@ -53,7 +53,7 @@ function inv.openPlayerInventory( inventory )
         local yOffset = ( index - 1 ) * eSlotYSpacing
 
         local slot = vgui.Create( "RVR_ItemSlot", frame )
-        slot:SetImage( "materials/backgrounds/equip_slot_" .. iconNames[index] .. ".png" )
+        slot:SetImage( "materials/rvr/backgrounds/equip_slot_" .. iconNames[index] .. ".png" )
         slot:SetSize( slotSize * 1.2, slotSize * 1.2 )
         slot:SetPos( w * eSlotXMult, h * ( eSlotYMult + yOffset ) )
         slot:SetLocationData( LocalPlayer(), equipmentSlotOffset + index )
