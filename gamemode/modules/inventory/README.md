@@ -16,7 +16,7 @@ Player inventories have special slots numbers:
 - `MaxSlots + 2` - BodyGear slot
 - `MaxSlots + 3` - FootGear slot
 ## Server-side
-All item transactions are done by specifing actions to do on slots, rather than having the client specify any information about the items themselves.  This reduces possibility of people cheating.
+All item transactions are done by specifying actions to do on slots, rather than having the client specify any information about the items themselves.  This reduces possibility of people cheating.
 ### Config
 - `PLAYER_HOTBAR_SLOTS` - Number of slots on hotbar (probably shouldn't change)
 - `PLAYER_INVENTORY_SLOTS` - Number of slots in inventory, good to keep this as a multiple of 4
@@ -82,7 +82,7 @@ Return true to prevent access
 ## Client-side
 ### SWEPS
 - `rvr_held_item`  
-  - Dynamically sets it's models based on net messages, used to show any model that doesnt have actions
+  - Dynamically sets its models based on net messages, used to show any model that doesn't have actions
 - `rvr_hands`  
     - Not currently implemented, gotta grab from another branch.
 
@@ -107,5 +107,5 @@ Return true to prevent access
     **NOTE**: This panel will not setup until an inventory is set, be sure to set the inventory **LAST.**
     - `inventoryScroller:SetInventory( inventory, startSlot = 1, endSlot = inventory.MaxSlots )`
     - `inventoryScroller:SetSlotImage( img )` - For custom slot images
-    - `inventoryScroller:SetBackgroundImage( img )` - For custom backgrounf image
+    - `inventoryScroller:SetBackgroundImage( img )` - For custom backgroung image
     - `inventoryScroller:SetSlotsPerRow( slotsPerRow )` - For grid layout, default: `4`
