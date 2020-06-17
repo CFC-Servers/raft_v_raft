@@ -50,14 +50,14 @@ function ENT:Setup( item, count )
 end
 
 function ENT:Remove()
-    self.Deleting = true
+    self.deleting = true
     self.BaseClass.Remove( self )
 end
 
 -- On contact, merge if same item
 -- Also, restart despawn timer
 function ENT:StartTouch( collider )
-    if collider:GetClass() ~= "rvr_dropped_item" or self.Deleting or collider.Deleting then return end
+    if collider:GetClass() ~= "rvr_dropped_item" or self.deleting or collider.deleting then return end
     if not RVR.Inventory.canItemsStack( self.item, collider.item ) then return end
 
     collider:Remove()
@@ -72,7 +72,7 @@ function ENT:OnRemove()
 end
 
 function ENT:Use( activator, caller )
-    if self.Deleting then return end
+    if self.deleting then return end
 
     -- Try pick up
     local success, amount = RVR.Inventory.attemptPickupItem( caller, self.item, self:GetAmount() )
