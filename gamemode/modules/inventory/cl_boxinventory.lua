@@ -11,7 +11,7 @@ surface.CreateFont( "RVR_BoxInventoryHeader", {
 
 function inv.openBoxInventory( boxInventory, playerInventory )
     local config = GAMEMODE.Config.Inventory
-    local w, h = ScrH() * 0.7 * 1.3, ScrH() * 0.7
+    local w, h = ScrH() * 0.91, ScrH() * 0.7
 
     local frame = vgui.Create( "DFrame" )
     frame:SetTitle( "" )
