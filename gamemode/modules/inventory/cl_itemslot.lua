@@ -56,7 +56,7 @@ function PANEL:OnMousePressed( code )
         net.Start( "RVR_Inventory_CursorPut" )
         net.WriteEntity( self.parentEnt )
         net.WriteInt( self.slotPosition, 8 )
-        net.WriteInt( count, 8 )
+        net.WriteUInt( count, 8 )
         net.SendToServer()
     else
         if not self.item then return end
@@ -69,7 +69,7 @@ function PANEL:OnMousePressed( code )
         net.Start( "RVR_Inventory_CursorHold" )
         net.WriteEntity( self.parentEnt )
         net.WriteInt( self.slotPosition, 8 )
-        net.WriteInt( count, 8 )
+        net.WriteUInt( count, 8 )
         net.SendToServer()
     end
 end

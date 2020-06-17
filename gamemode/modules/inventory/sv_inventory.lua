@@ -8,11 +8,11 @@ local inv = RVR.Inventory
 
 -- Initialize players inventory to empty
 function inv.setupPlayer( ply )
-    local GM = GAMEMODE
+    local config = GAMEMODE.Config.Inventory
 
     ply.RVR_Inventory = {
         Inventory = {},
-        MaxSlots = GM.Config.Inventory.PLAYER_HOTBAR_SLOTS + GM.Config.Inventory.PLAYER_INVENTORY_SLOTS,
+        MaxSlots = config.PLAYER_HOTBAR_SLOTS + config.PLAYER_INVENTORY_SLOTS,
         HotbarSelected = 1,
         InventoryType = "Player",
         CursorSlot = nil,
@@ -200,9 +200,9 @@ function inv.getSelectedItem( ply )
 end
 
 function inv.setSelectedItem( ply, idx )
-    local GM = GAMEMODE
+    local config = GAMEMODE.Config.Inventory
     if not ply.RVR_Inventory then return end
-    idx = math.Clamp( idx, 1, GM.Config.Inventory.PLAYER_INVENTORY_SLOTS )
+    idx = math.Clamp( idx, 1, config.PLAYER_INVENTORY_SLOTS )
 
     ply.RVR_Inventory.HotbarSelected = idx
 

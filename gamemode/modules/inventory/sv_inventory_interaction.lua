@@ -13,12 +13,12 @@ util.AddNetworkString( "RVR_Inventory_RequestPlayerUpdate" )
 util.AddNetworkString( "RVR_Inventory_SetHotbarSelected" )
 
 local function getSendableInventory( ent, inventory, isPlayerUpdate )
-    local GM = GAMEMODE
+    local config = GAMEMODE.Config.Inventory
 
     inventory = table.Copy( inventory )
 
     if inventory.InventoryType == "Player" then
-        local equipmentSlotOffset = GM.Config.Inventory.PLAYER_INVENTORY_SLOTS + GM.Config.Inventory.PLAYER_HOTBAR_SLOTS
+        local equipmentSlotOffset = config.PLAYER_INVENTORY_SLOTS + config.PLAYER_HOTBAR_SLOTS
         inventory.Inventory[equipmentSlotOffset + 1] = inventory.HeadGear
         inventory.Inventory[equipmentSlotOffset + 2] = inventory.BodyGear
         inventory.Inventory[equipmentSlotOffset + 3] = inventory.FootGear
@@ -40,7 +40,7 @@ end
 function inv.notifyItemPickup( ply, item, count )
     net.Start( "RVR_Inventory_OnPickup" )
     net.WriteTable( RVR.Items.getItemData( item.type ) )
-    net.WriteInt( count, 16 )
+    net.WriteUInt( count, 16 )
     net.Send( ply )
 end
 
@@ -112,7 +112,7 @@ net.Receive( "RVR_Inventory_CursorHold", function( len, ply )
     if not ply.RVR_Inventory_Open then return end
     local ent = net.ReadEntity()
     local position = net.ReadInt( 8 )
-    local count = net.ReadInt( 8 )
+    local count = net.ReadUInt( 8 )
 
     -- Can't affect an inventory you're not in
     if ent ~= ply and ent ~= ply.RVR_Inventory_Open then return end
@@ -125,7 +125,7 @@ net.Receive( "RVR_Inventory_CursorPut", function( len, ply )
 
     local ent = net.ReadEntity()
     local position = net.ReadInt( 8 )
-    local count = net.ReadInt( 8 )
+    local count = net.ReadUInt( 8 )
 
     -- Can't affect an inventory you're not in
     if ent ~= ply and ent ~= ply.RVR_Inventory_Open then return end
@@ -136,7 +136,7 @@ end )
 net.Receive( "RVR_Inventory_CursorDrop", function( len, ply )
     if not ply.RVR_Inventory then return end
 
-    local count = net.ReadInt( 8 )
+    local count = net.ReadUInt( 8 )
 
     inv.dropItem( ply, -1, count )
 end )
@@ -158,7 +158,7 @@ end )
 net.Receive( "RVR_Inventory_SetHotbarSelected", function( len, ply )
     if not ply.RVR_Inventory then return end
 
-    local newIndex = net.ReadInt( 5 )
+    local newIndex = net.ReadUInt( 4 )
     local clientTime = net.ReadFloat()
 
     local lastChange = ply.RVR_Inventory.LastHotbarUpdate or 0

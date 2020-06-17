@@ -2,7 +2,7 @@ local inv = RVR.Inventory
 local backgroundMat = Material( "rvr/backgrounds/player_inventory_background.png" )
 
 function inv.openPlayerInventory( inventory )
-    local GM = GAMEMODE
+    local config = GAMEMODE.Config.Inventory
     local w, h = ScrH() * 0.91, ScrH() * 0.7
 
     local frame = vgui.Create( "DFrame" )
@@ -37,7 +37,7 @@ function inv.openPlayerInventory( inventory )
     invScroller:SetSize( w * 0.435, h * 0.397 )
     invScroller:SetPos( w * 0.533, h * 0.481 )
     invScroller:SetSlotsPerRow( 4 )
-    invScroller:SetInventory( inventory, GM.Config.Inventory.PLAYER_HOTBAR_SLOTS + 1, inventory.MaxSlots )
+    invScroller:SetInventory( inventory, config.PLAYER_HOTBAR_SLOTS + 1, inventory.MaxSlots )
 
     -- equipment slots
     local eSlotXMult = 0.38
@@ -48,7 +48,7 @@ function inv.openPlayerInventory( inventory )
     local slotSize = invScroller:GetSlotSize()
 
     -- equipment slots indexes start at #hotbar + #inventory
-    local equipmentSlotOffset = GM.Config.Inventory.PLAYER_INVENTORY_SLOTS + GM.Config.Inventory.PLAYER_HOTBAR_SLOTS
+    local equipmentSlotOffset = config.PLAYER_INVENTORY_SLOTS + config.PLAYER_HOTBAR_SLOTS
     for index = 1, 3 do
         local yOffset = ( index - 1 ) * eSlotYSpacing
 

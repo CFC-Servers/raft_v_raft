@@ -10,7 +10,7 @@ surface.CreateFont( "RVR_BoxInventoryHeader", {
 } )
 
 function inv.openBoxInventory( boxInventory, playerInventory )
-    local GM = GAMEMODE
+    local config = GAMEMODE.Config.Inventory
     local w, h = ScrH() * 0.7 * 1.3, ScrH() * 0.7
 
     local frame = vgui.Create( "DFrame" )
@@ -59,8 +59,8 @@ function inv.openBoxInventory( boxInventory, playerInventory )
     ownInvScroller:SetSize( w * 0.4, h * 0.38 )
     ownInvScroller:SetPos( w * 0.31, h * 0.56 )
     ownInvScroller:SetSlotsPerRow( 4 )
-    -- First GM.Config.Inventory.PLAYER_HOTBAR_SLOTS slots of player inventory are hotbar, skip these
-    ownInvScroller:SetInventory( playerInventory, GM.Config.Inventory.PLAYER_HOTBAR_SLOTS + 1, playerInventory.MaxSlots )
+    -- First config.PLAYER_HOTBAR_SLOTS slots of player inventory are hotbar, skip these
+    ownInvScroller:SetInventory( playerInventory, config.PLAYER_HOTBAR_SLOTS + 1, playerInventory.MaxSlots )
 
     local boxInvScroller = vgui.Create( "RVR_InventoryScroller", frame )
     boxInvScroller:SetSize( w * 0.853, h * 0.4 )

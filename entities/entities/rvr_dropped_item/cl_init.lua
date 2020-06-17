@@ -35,7 +35,6 @@ function ENT:Draw()
     -- Add bobbing animation
     textY = textY + math.sin( CurTime() * 2 ) * 2
 
-    -- TODO: Perhaps decide on different font
     cam.Start3D2D( pos + Vector( 0, 0, textY ), Angle( 0, ang + 90, 90 ), labelScale )
         draw.Text( {
             text = text,

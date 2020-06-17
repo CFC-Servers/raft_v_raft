@@ -187,7 +187,7 @@ hook.Add( "GUIMousePressed", "RVR_Inventory_DropItem", function( code, aimVector
     if code == MOUSE_RIGHT then count = 1 end
 
     net.Start( "RVR_Inventory_CursorDrop" )
-    net.WriteInt( count, 8 )
+    net.WriteUInt( count, 8 )
     net.SendToServer()
 end )
 
@@ -195,7 +195,7 @@ local hotbarBackgroundMat = Material( "rvr/backgrounds/player_hotbar_background.
 
 -- Just builds the frame then makes some RVR_ItemSlots, nothing special
 function inv.makeHotbar()
-    local GM = GAMEMODE
+    local config = GAMEMODE.Config.Inventory
 
     inv.hotbar = inv.hotbar or {}
     local hotbar = inv.hotbar
@@ -203,7 +203,7 @@ function inv.makeHotbar()
     if hotbar.frame then hotbar.frame:Remove() end
     local w, h = ScrW(), ScrH()
 
-    local slotCount = GM.Config.Inventory.PLAYER_HOTBAR_SLOTS
+    local slotCount = config.PLAYER_HOTBAR_SLOTS
     local innerHotbarWidth = w * 0.5
 
     local horizontalPadding = 0.05
@@ -265,11 +265,11 @@ function inv.setHotbarSlot( newIndex )
     hotbar.slots[hotbar.selectedSlot]:SetImageColor( Color( 255, 150, 150 ) )
 
     net.Start( "RVR_Inventory_SetHotbarSelected" )
-    net.WriteInt( newIndex, 5 )
+    net.WriteUInt( newIndex, 4 )
     net.WriteFloat( RealTime() )
     net.SendToServer()
 
-    -- TODO: play a sound?
+    chat.PlaySound()
 end
 
 hook.Add( "InitPostEntity", "RVR_Inventory_HotbarSetup", inv.makeHotbar )
@@ -309,9 +309,9 @@ end )
 
 net.Receive( "RVR_Inventory_OnPickup", function()
     local itemData = net.ReadTable()
-    local count = net.ReadInt( 16 )
+    local count = net.ReadUInt( 16 )
 
-    -- TODO: Show this infomation somehow
+    -- TODO: Show this infomation somehow - Separate card
 end )
 
 -- Hide default weapon selection

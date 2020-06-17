@@ -5,7 +5,7 @@ include( "shared.lua" )
 
 function ENT:Initialize()
     -- Default model, expected to be changed by derived classes
-    self:SetModel( "models/props_junk/wood_crate001a.mdl" )
+    self:SetModel( self.Model )
     -- Make it move
     self:PhysicsInit( SOLID_VPHYSICS )
     self:SetMoveType( MOVETYPE_VPHYSICS )
@@ -23,21 +23,12 @@ function ENT:Initialize()
     -- Give entity an inventory
     self.RVR_Inventory = {
         Inventory = {},
-        MaxSlots = 50,
+        MaxSlots = self.InventorySize,
         InventoryType = "Box",
-        Name = "Medium Storage",
+        Name = self.InventoryName,
     }
 end
 
-function ENT:SetStorageName( name )
-    self.RVR_Inventory.Name = name
-end
-
-function ENT:SetMaxSlots( slotCount )
-    self.RVR_Inventory.MaxSlots = slotCount
-end
-
--- TODO: Perhaps check distance, unsure if gmod already has something for this
 function ENT:Use( activator, caller )
     RVR.Inventory.playerOpenInventory( caller, self )
 end

@@ -18,3 +18,5 @@ Creates a simple table for an item instance, currently just `{ type = itemType }
 - `swep` - (string) Name of custom swep to use for this item
 - `viewModelOffset` - (vector) Clientside viewmodel offset
 - `viewModelAng` - (ang) clientside viewmodel angle
+- `worldModelOffset` - (vector) Clientside worldmodel offset
+- `worldModelAng` - (ang) clientside worldmodel angle

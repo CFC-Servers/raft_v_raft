@@ -44,7 +44,7 @@ function PANEL:SetupContent()
     for y = 0, rows - 1 do
         for x = 0, slotsPerRow - 1 do
             local index = y * slotsPerRow + x + 1
-            if index > slotCount then break end
+            if index > slotCount then return end
 
             index = index + slotOffset
 

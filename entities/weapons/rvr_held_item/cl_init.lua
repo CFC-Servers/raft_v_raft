@@ -41,8 +41,8 @@ function SWEP:DrawWorldModel()
 
     if IsValid( owner ) then
         -- TODO: Pull out into network vars
-        local offsetVec = Vector( 5, -2.7, -3.4 )
-        local offsetAng = Angle( 180, 90, 0 )
+        local offsetVec = self:GetWorldModelOffset()
+        local offsetAng = self:GetWorldModelAng()
 
         local boneid = owner:LookupBone( "ValveBiped.Bip01_R_Hand" ) -- Right Hand
         if not boneid then return end
