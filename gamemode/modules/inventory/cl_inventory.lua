@@ -187,7 +187,7 @@ hook.Add( "GUIMousePressed", "RVR_Inventory_DropItem", function( code, aimVector
     if code == MOUSE_RIGHT then count = 1 end
 
     net.Start( "RVR_Inventory_CursorDrop" )
-    net.WriteUInt( count, 8 )
+        net.WriteUInt( count, 8 )
     net.SendToServer()
 end )
 
@@ -265,8 +265,8 @@ function inv.setHotbarSlot( newIndex )
     hotbar.slots[hotbar.selectedSlot]:SetImageColor( Color( 255, 150, 150 ) )
 
     net.Start( "RVR_Inventory_SetHotbarSelected" )
-    net.WriteUInt( newIndex, 4 )
-    net.WriteFloat( RealTime() )
+        net.WriteUInt( newIndex, 4 )
+        net.WriteFloat( RealTime() )
     net.SendToServer()
 
     chat.PlaySound()

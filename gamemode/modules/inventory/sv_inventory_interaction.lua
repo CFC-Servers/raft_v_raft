@@ -39,8 +39,8 @@ end
 
 function inv.notifyItemPickup( ply, item, count )
     net.Start( "RVR_Inventory_OnPickup" )
-    net.WriteTable( RVR.Items.getItemData( item.type ) )
-    net.WriteUInt( count, 16 )
+        net.WriteTable( RVR.Items.getItemData( item.type ) )
+        net.WriteUInt( count, 16 )
     net.Send( ply )
 end
 
@@ -48,14 +48,14 @@ function inv.notifyItemSlotChange( plys, ent, slotNum, slotData )
     if #plys == 0 then return end
 
     net.Start( "RVR_Inventory_UpdateSlot" )
-    net.WriteEntity( ent )
-    net.WriteInt( slotNum, 8 )
-    net.WriteBool( tobool( slotData ) )
-    if slotData then
-        local data = table.Copy( slotData )
-        table.Merge( data.item, RVR.Items.getItemData( data.item.type ) )
-        net.WriteTable( data )
-    end
+        net.WriteEntity( ent )
+        net.WriteInt( slotNum, 8 )
+        net.WriteBool( tobool( slotData ) )
+        if slotData then
+            local data = table.Copy( slotData )
+            table.Merge( data.item, RVR.Items.getItemData( data.item.type ) )
+            net.WriteTable( data )
+        end
     net.Send( plys )
 end
 
@@ -77,11 +77,11 @@ function inv.playerOpenInventory( ply, invEnt )
     local isPlayer = invEnt == ply
 
     net.Start( "RVR_Inventory_Open" )
-    net.WriteTable( getSendableInventory( invEnt, inventoryData ) )
-    net.WriteBool( isPlayer )
-    if not isPlayer then
-        net.WriteTable( getSendableInventory( ply, ply.RVR_Inventory ) )
-    end
+        net.WriteTable( getSendableInventory( invEnt, inventoryData ) )
+        net.WriteBool( isPlayer )
+        if not isPlayer then
+            net.WriteTable( getSendableInventory( ply, ply.RVR_Inventory ) )
+        end
     net.Send( ply )
 end
 
@@ -150,8 +150,8 @@ net.Receive( "RVR_Inventory_RequestPlayerUpdate", function( len, ply )
     if not inventoryData then return end
 
     net.Start( "RVR_Inventory_Open" )
-    net.WriteTable( getSendableInventory( ply, inventoryData, true ) )
-    net.WriteBool( true )
+        net.WriteTable( getSendableInventory( ply, inventoryData, true ) )
+        net.WriteBool( true )
     net.Send( ply )
 end )
 
