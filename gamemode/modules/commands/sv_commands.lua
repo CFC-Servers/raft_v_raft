@@ -218,7 +218,11 @@ local function onPlayerSay( ply, text )
         ply:ChatPrint( msg )
     end
     
-    return ""
+    if validCommand then
+    	return ""
+    end
+
+    return
 end
 
 hook.Add( "PlayerSay", "RVR_Commands_onPlayerSay", onPlayerSay )
