@@ -1,13 +1,3 @@
-ENT.Base = "base_anim"
-ENT.Type = "anim"
-ENT.Author = "CFC"
+ENT.Base = "raft_base"
 ENT.PrintName = "Raft Foundation"
-ENT.IsRaft = true
-
-function ENT:SetRaft( raft )
-    self.raft = raft
-end
-
-function ENT:GetRaft( raft )
-    self.raft = raft
-end
+ENT.Model = "models/rvr/raft/raft_base.mdl"
