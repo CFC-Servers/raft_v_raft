@@ -252,24 +252,28 @@ end
 
 net.Receive( "RVR_Commands_runConsoleCommand", onRunConsoleCommand )
 
-commands.register( "usage", { "command" }, { "string" }, RVR_USER_ALL, function( ply, command )
-    if not commands.commands[command] then
-        return "Help: Command \"" .. command .. "\" does not exist"
-    end
+local function initializeBaseCommands()
+    commands.register( "usage", { "command" }, { "string" }, RVR_USER_ALL, function( ply, command )
+        if not commands.commands[command] then
+            return "Help: Command \"" .. command .. "\" does not exist"
+        end
 
-    return commands.commands[command].description
-end, "Prints the usage and description of a command" )
+        return commands.commands[command].description
+    end, "Prints the usage and description of a command" )
 
-commands.register( "help", {}, {}, RVR_USER_ALL, function( ply )
-    ply:PrintMessage( HUD_PRINTCONSOLE, "----- RaftVRaft Commands -----" )
+    commands.register( "help", {}, {}, RVR_USER_ALL, function( ply )
+        ply:PrintMessage( HUD_PRINTCONSOLE, "----- RaftVRaft Commands -----" )
 
-    for commandName, commandData in pairs( commands.commands ) do
-        local description = commandName .. ":\n" ..  commandData.description .. "\n "
+        for commandName, commandData in pairs( commands.commands ) do
+            local description = commandName .. ":\n" ..  commandData.description .. "\n "
 
-        ply:PrintMessage( HUD_PRINTCONSOLE, description )
-    end
+            ply:PrintMessage( HUD_PRINTCONSOLE, description )
+        end
 
-    ply:PrintMessage( HUD_PRINTCONSOLE, "------------------------------" )
+        ply:PrintMessage( HUD_PRINTCONSOLE, "------------------------------" )
 
-    ply:ChatPrint( "Look in console for a list of commands." )
-end, "Prints a list of all available commands in console" )
+        ply:ChatPrint( "Look in console for a list of commands." )
+    end, "Prints a list of all available commands in console" )
+end
+
+hook.Add( "RVR_ModulesLoaded", "RVR_Commands_initializeBaseCommands", initializeBaseCommands )
