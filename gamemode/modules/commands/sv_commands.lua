@@ -252,7 +252,7 @@ end
 
 net.Receive( "RVR_Commands_runConsoleCommand", onRunConsoleCommand )
 
-commands.register( "help", { "command" }, { "string" }, RVR_USER_ALL, function( ply, command )
+commands.register( "usage", { "command" }, { "string" }, RVR_USER_ALL, function( ply, command )
     if not commands.commands[command] then
         return "Help: Command \"" .. command .. "\" does not exist"
     end
@@ -260,10 +260,16 @@ commands.register( "help", { "command" }, { "string" }, RVR_USER_ALL, function( 
     return commands.commands[command].description
 end, "Prints the usage and description of a command" )
 
-commands.register( "commands", {}, {}, RVR_USER_ALL, function( ply )
+commands.register( "help", {}, {}, RVR_USER_ALL, function( ply )
+    ply:PrintMessage( HUD_PRINTCONSOLE, "----- RaftVRaft Commands -----" )
+
     for commandName, commandData in pairs( commands.commands ) do
-        ply:PrintMessage( HUD_PRINTCONSOLE, commandData.description )
+        local description = commandName .. ":\n" ..  commandData.description .. "\n "
+
+        ply:PrintMessage( HUD_PRINTCONSOLE, description )
     end
+
+    ply:PrintMessage( HUD_PRINTCONSOLE, "------------------------------" )
 
     ply:ChatPrint( "Look in console for a list of commands." )
 end, "Prints a list of all available commands in console" )
