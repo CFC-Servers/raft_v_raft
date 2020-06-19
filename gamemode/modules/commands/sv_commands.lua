@@ -225,7 +225,7 @@ local function onPlayerSay( ply, text )
     end
     
     if validCommand then
-    	return ""
+        return ""
     end
 
     return
