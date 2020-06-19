@@ -217,10 +217,6 @@ local function onPlayerSay( ply, text )
     if msg then
         ply:ChatPrint( msg )
     end
-
-    if not validCommand then
-        ply:ChatPrint( "Command \"" .. command .. "\" does not exist" )
-    end
     
     return ""
 end
