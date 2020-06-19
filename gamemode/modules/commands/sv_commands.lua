@@ -262,9 +262,13 @@ local function initializeBaseCommands()
     end, "Prints the usage and description of a command" )
 
     commands.register( "help", {}, {}, RVR_USER_ALL, function( ply )
+        local plyUserGroup = RVR.getUserGroup( ply )
+
         ply:PrintMessage( HUD_PRINTCONSOLE, "----- RaftVRaft Commands -----" )
 
         for commandName, commandData in pairs( commands.commands ) do
+            if plyUserGroup < commandData.userGroup then continue end
+
             local description = commandName .. ":\n" ..  commandData.description .. "\n "
 
             ply:PrintMessage( HUD_PRINTCONSOLE, description )
