@@ -24,16 +24,28 @@ end
 
 hook.Add( "PlayerInitialSpawn", "RVR_SetupInventory", inv.setupPlayer )
 
--- Takes a player and table of { item = item, count = count } tables
-function inv.playerHasItems( ply, items )
-    if not ply.RVR_Inventory then return false end
+function inv.tryTakeItems( ent, items )
+    local inventory = ent.RVR_Inventory
 
-    for _, invItem in pairs( ply.RVR_Inventory.Inventory ) do
+    local invCopy = table.Copy( inventory.Inventory )
+    items = table.Copy( items )
+
+    for invPos, invItem in pairs( invCopy ) do
         for k, craftItem in pairs( items ) do
-            if inv.canItemsStack( invItem.item, craftItem.item ) then
-                craftItem.count = craftItem.count - invItem.count
+            if invItem.item.type == craftItem.item.type then
+                local used = math.Min( invItem.count, craftItem.count )
+                craftItem.count = craftItem.count - used
 
-                if craftItem.count <= 0 then
+                invItem.count = invItem.count - used
+                if invItem.count == 0 then
+                    inventory[invPos] = nil
+                end
+
+                if type( ent ) == "Player" then
+                    inv.notifyItemSlotChange( ent, ent, invPos, inventory[invPos] )
+                end
+
+                if craftItem.count == 0 then
                     table.remove( items, k )
                     break
                 end
@@ -41,11 +53,12 @@ function inv.playerHasItems( ply, items )
         end
 
         if #items == 0 then
+            inventory.Inventory = invCopy
             return true
         end
     end
 
-    return false
+    return false, items
 end
 
 -- Allows for modifying stack checking later - used for checking crafting as well.

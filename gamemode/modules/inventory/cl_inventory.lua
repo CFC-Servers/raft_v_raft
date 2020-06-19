@@ -24,6 +24,8 @@ net.Receive( "RVR_Inventory_Open", function()
         end
     end
 
+    inv.plyInventoryCache = plyInventory
+
     local invType = inventory.InventoryType
 
     if invType == "PlayerUpdate" then
@@ -138,6 +140,10 @@ end
 
 function inv.getCursorItemData()
     return inv.cursorItem, inv.cursorItemCount
+end
+
+function inv.selfHasItems( items )
+    return inv.checkItems( inv.plyInventoryCache, items, false )
 end
 
 -- Render the cursor slot
@@ -298,6 +304,8 @@ hook.Add( "CreateMove", "RVR_Inventory_HotbarSelect", function()
     end
 
     if inv.openInventory or gui.IsGameUIVisible() then return end
+
+    if hook.Run( "RVR_Inventory_HotbarCanScroll" ) == false then return end
 
     -- Loop around
     if nextSlot < 1 then nextSlot = slotCount end

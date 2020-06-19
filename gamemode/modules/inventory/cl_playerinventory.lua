@@ -28,7 +28,7 @@ function inv.openPlayerInventory( inventory )
     local closeButton = vgui.Create( "DImageButton", frame )
     closeButton:SetPos( w * 0.91, h * 0.05 )
     closeButton:SetSize( 50, 50 )
-    closeButton:SetImage( "materials/icons/player_inventory_close.png" )
+    closeButton:SetImage( "materials/rvr/icons/player_inventory_close.png" )
     function closeButton:DoClick()
         frame:Close()
     end

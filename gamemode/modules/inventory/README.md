@@ -4,7 +4,7 @@ Inventories are stored on the entity they belong to, under `RVR_Inventory` and a
 ```
     {
         Inventory = {},
-        MaxSlots = 10
+        MaxSlots = 10,
         InventoryType = "Box",
     }
 ```
@@ -23,16 +23,11 @@ All item transactions are done by specifying actions to do on slots, rather than
 - `ITEM_DESPAWN_TIME` - In seconds
 
 ### Functions
-- `RVR.Inventory.playerHasItems( ply, items )`
-    - `ply` - Player to check
-    - `items` - List of `{ item = item, count = count }`
-    - Example:
-        ```
-        RVR.Inventory.playerHasItems( player.GetAll()[1], {
-            { item = RVR.items.getItemData( "wood" ), count = 10 },
-            { item = RVR.items.getItemData( "nails" ), count = 20 }
-        } )
-        ```
+- `RVR.Inventory.tryTakeItems( ent, items )`
+    Will take all items if it can, else none.
+     - `ent` - Entity with inventory
+     - `items` - Same structure as `RVR.Inventory.checkItems()`
+     - Return: `success`, `itemsMissing`
 - `RVR.Inventory.setSlot( ent, position, itemData, plysToNotify )`
      - `ent` - Entity with the inventory
      - `position` - Slot index, see above for special cases
@@ -78,6 +73,20 @@ The `RVR_PreventInventory` hook allows you to prevent a player from accessing an
 It's syntax is as follows:
 `boolean GM:RVR_PreventInventory( Player ply, Entity inventoryEnt )`  
 Return true to prevent access
+
+## Shared
+### Functions
+- `RVR.Inventory.checkItems( inventory, items )`
+    - `inventory` - Inventory to check, for example `ply.RVR_Inventory`
+    - `items` - List of `{ item = item, count = count }`
+    - Returns: `success`, `itemsMissing`
+    - Example:
+        ```
+        RVR.Inventory.checkItems( player.GetAll()[1].RVR_Inventory, {
+            { item = RVR.items.getItemData( "wood" ), count = 10 },
+            { item = RVR.items.getItemData( "nails" ), count = 20 }
+        } )
+        ```
 
 ## Client-side
 ### SWEPS
