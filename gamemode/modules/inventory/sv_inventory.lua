@@ -30,6 +30,8 @@ function inv.tryTakeItems( ent, items )
     local invCopy = table.Copy( inventory.Inventory )
     items = table.Copy( items )
 
+    local changes = {}
+
     for invPos, invItem in pairs( invCopy ) do
         for k, craftItem in pairs( items ) do
             if invItem.item.type == craftItem.item.type then
@@ -38,12 +40,9 @@ function inv.tryTakeItems( ent, items )
 
                 invItem.count = invItem.count - used
                 if invItem.count == 0 then
-                    inventory[invPos] = nil
+                    invCopy[invPos] = nil
                 end
-
-                if type( ent ) == "Player" then
-                    inv.notifyItemSlotChange( ent, ent, invPos, inventory[invPos] )
-                end
+                table.insert( changes, { pos = invPos, itemData = invCopy[invPos] } )
 
                 if craftItem.count == 0 then
                     table.remove( items, k )
@@ -53,7 +52,9 @@ function inv.tryTakeItems( ent, items )
         end
 
         if #items == 0 then
-            inventory.Inventory = invCopy
+            for k, change in pairs( changes ) do
+                inv.setSlot( ent, change.pos, change.itemData, type( ent ) == "Player" and { ent } )
+            end
             return true
         end
     end
@@ -261,11 +262,11 @@ function inv.moveItem( fromEnt, toEnt, fromPosition, toPosition, count )
 
     local fromItem = inv.getSlot( fromEnt, fromPosition )
 
+    if not fromItem then return false, "No item to move" end
+
     if not inv.slotCanContain( toEnt, toPosition, fromItem.item ) then
         return false, "Item cannot be placed here"
     end
-
-    if not fromItem then return false, "No item to move" end
 
     if count > fromItem.count then
         count = fromItem.count

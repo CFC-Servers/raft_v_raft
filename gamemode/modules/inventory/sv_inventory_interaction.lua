@@ -85,6 +85,13 @@ function inv.playerOpenInventory( ply, invEnt )
     net.Send( ply )
 end
 
+function inv.fullPlayerUpdate( ply )
+    net.Start( "RVR_Inventory_Open" )
+        net.WriteTable( getSendableInventory( ply, ply.RVR_Inventory, true ) )
+        net.WriteBool( true )
+    net.Send( ply )
+end
+
 net.Receive( "RVR_Inventory_Close", function( len, ply )
     local invEnt = ply.RVR_Inventory_Open
     invEnt.RVR_Inventory.ActivePlayer = nil
@@ -149,10 +156,7 @@ net.Receive( "RVR_Inventory_RequestPlayerUpdate", function( len, ply )
     local inventoryData = ply.RVR_Inventory
     if not inventoryData then return end
 
-    net.Start( "RVR_Inventory_Open" )
-        net.WriteTable( getSendableInventory( ply, inventoryData, true ) )
-        net.WriteBool( true )
-    net.Send( ply )
+    inv.fullPlayerUpdate( ply )
 end )
 
 net.Receive( "RVR_Inventory_SetHotbarSelected", function( len, ply )
