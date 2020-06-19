@@ -162,6 +162,18 @@ local function processCommand( ply, command, args )
     return msg, true
 end
 
+local function getUsage( argNames, argTypes )
+    local usage = "Usage: " .. name
+
+    for i, argName in ipairs( argNames ) do
+        local argType = argTypes[i]
+
+        usage = usage .. " " .. argName .. ":" .. argType
+    end
+
+    return usage
+end
+
 function commands.register( names, argNames, argTypes, userGroup, func, desc )
     if #argNames ~= #argTypes then
         error( "There must be the same amount of argument names and types" )
@@ -182,13 +194,7 @@ function commands.register( names, argNames, argTypes, userGroup, func, desc )
             end
         end
 
-        local description = "Usage: " .. name
-
-        for i, argName in ipairs( argNames ) do
-            local argType = argTypes[i]
-
-            description = description .. " " .. argName .. ":" .. argType
-        end
+        local description = getUsage( argNames, argTypes )
 
         if desc then
             description = description .. "\nDescription: " .. desc
