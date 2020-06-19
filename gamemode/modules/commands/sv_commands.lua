@@ -162,7 +162,7 @@ local function processCommand( ply, command, args )
     return msg, true
 end
 
-local function getUsage( argNames, argTypes )
+local function getUsage( name, argNames, argTypes )
     local usage = "Usage: " .. name
 
     for i, argName in ipairs( argNames ) do
@@ -194,7 +194,7 @@ function commands.register( names, argNames, argTypes, userGroup, func, desc )
             end
         end
 
-        local description = getUsage( argNames, argTypes )
+        local description = getUsage( name, argNames, argTypes )
 
         if desc then
             description = description .. "\nDescription: " .. desc
@@ -260,15 +260,9 @@ commands.register( "help", { "command" }, { "string" }, RVR_USER_ALL, function( 
     return commands.commands[command].description
 end, "Prints the usage and description of a command" )
 
-command.register( "commands", {}, {}, RVR_USER_ALL, function( ply )
+commands.register( "commands", {}, {}, RVR_USER_ALL, function( ply )
     for commandName, commandData in pairs( commands.commands ) do
-        local description = commandName .. " " .. getUsage( commandData.argNames, commandData.argTypes )
-
-        if commandData.description then
-            description = description .. commandData.description
-        end
-
-        ply:PrintMessage( HUD_PRINTCONSOLE, description )
+        ply:PrintMessage( HUD_PRINTCONSOLE, commandData.description )
     end
 
     ply:ChatPrint( "Look in console for a list of commands." )
