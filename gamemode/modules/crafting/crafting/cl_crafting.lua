@@ -1,6 +1,6 @@
 local cft = RVR.Crafting
-local backgroundMat = Material( "crafting_background.png" )
-local iconBackgroundMat = Material( "icons/crafting_icon_background.png" )
+local backgroundMat = Material( "rvr/backgrounds/crafting_background.png" )
+local iconBackgroundMat = Material( "rvr/backgrounds/crafting_icon_background.png" )
 local categoryMats = {}
 
 -- Pre-loading category materials
