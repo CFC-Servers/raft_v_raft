@@ -13,9 +13,9 @@ SWEP.Placements = {
 
 function SWEP:GetAimEntity()
     local owner = self:GetOwner()
-    local trace = owner:GetEyeTraceNoCursor()
+    local trace = owner:GetEyeTrace()
     local ent = trace.Entity
-    
+
     if not IsValid( ent ) then return nil end
 
     return ent

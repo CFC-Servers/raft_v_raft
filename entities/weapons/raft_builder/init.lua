@@ -1,7 +1,8 @@
 include("shared.lua")
+
 function SWEP:PrimaryAttack()
     local ent = self:GetAimEntity()
-    local dir =  self:GetPlacementDirection()
+    local dir = self:GetPlacementDirection()
     if not (dir and ent) then return end
     
     local size = ent:OBBMaxs() - ent:OBBMins()

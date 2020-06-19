@@ -1,7 +1,7 @@
 include("shared.lua") 
 
 function SWEP:Initialize()
-    self.ghost = ClientsideModel("models/hunter/plates/plate8x32.mdl")
+    self.ghost = ClientsideModel("models/rvr/raft/raft_base.mdl")
 end
 
 function SWEP:OnRemove()
