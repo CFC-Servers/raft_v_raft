@@ -259,3 +259,17 @@ commands.register( "help", { "command" }, { "string" }, RVR_USER_ALL, function( 
 
     return commands.commands[command].description
 end, "Prints the usage and description of a command" )
+
+command.register( "commands", {}, {}, RVR_USER_ALL, function( ply )
+    for commandName, commandData in pairs( commands.commands ) do
+        local description = commandName .. " " .. getUsage( commandData.argNames, commandData.argTypes )
+
+        if commandData.description then
+            description = description .. commandData.description
+        end
+
+        ply:PrintMessage( HUD_PRINTCONSOLE, description )
+    end
+
+    ply:ChatPrint( "Look in console for a list of commands." )
+end, "Prints a list of all available commands in console" )
