@@ -21,6 +21,8 @@ net.Receive( "RVR_Inventory_Open", function()
         local data = plyInventory.Inventory[k]
         if data then
             inv.hotbar.slots[k]:SetItemData( data.item, data.count )
+        else
+            inv.hotbar.slots[k]:ClearItemData()
         end
     end
 
@@ -82,6 +84,10 @@ net.Receive( "RVR_Inventory_UpdateSlot", function()
 
             break
         end
+    end
+
+    if ent == LocalPlayer() and inv.plyInventoryCache then
+        inv.plyInventoryCache.Inventory[position] = slotData
     end
 end )
 
