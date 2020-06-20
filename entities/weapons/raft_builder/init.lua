@@ -5,13 +5,10 @@ function SWEP:PrimaryAttack()
     local dir = self:GetPlacementDirection()
     if not (dir and ent) then return end
     
-    local size = ent:OBBMaxs() - ent:OBBMins()
-    
-    local newEnt = ents.Create(ent:GetClass())
-    newEnt:Spawn()
-    newEnt:SetAngles(ent:GetAngles())
-    newEnt:SetPos(ent:LocalToWorld(dir*size[1]))
-    newEnt:SetParent( ent )
+    RVR.expandRaft( ent, {
+        dir = dir,
+        class = "raft_foundation",
+    })
 end
 
 function SWEP:SecondaryAttack()
