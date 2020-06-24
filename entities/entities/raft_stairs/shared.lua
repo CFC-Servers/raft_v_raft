@@ -9,17 +9,3 @@ function ENT.IsValidPlacement(piece, dir)
 
     return dir == Vector(0, 0, 1)
 end
-
-function ENT.GetOffsetDir( piece, dir ) 
-    if piece:GetClass() ~= "raft_foundation" then
-        dir.z = dir.z * 0.82
-        return dir
-    end
-
-    if dir.z == 1 then
-        dir.z = 0
-        return dir
-    end
-    return dir
-end
-

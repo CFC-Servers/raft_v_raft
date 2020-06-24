@@ -1,4 +1,4 @@
-ENT.Base = "raft_base"
+ENT.Base = "raft_platform"
 ENT.PrintName = "Raft Platform"
 ENT.Model = "models/rvr/raft/raft_platform.mdl"
 

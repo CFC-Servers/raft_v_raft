@@ -4,7 +4,7 @@ local function getFirstNonZero( tbl )
     end
 end
 
-function RVR.summonRaft( position )
+function RVR.createRaft( position )
     local raft = RVR.newRaft()
 
     local ent = ents.Create( "raft_foundation")
@@ -17,8 +17,6 @@ function RVR.summonRaft( position )
 end
 
 
--- dir is relative to the piece not the raft 
--- TODO should it be relative to the raft
 -- returns an error
 function RVR.expandRaft( piece, class, dir, rotation )
     if not piece.IsRaft then return end
@@ -29,7 +27,7 @@ function RVR.expandRaft( piece, class, dir, rotation )
     local targetPosition = raft:GetPosition( piece ) + raftDir
     
     if raft:GetPiece( targetPosition ) then 
-        return "Target position contains an a raft piece"
+        return nil, "Target position contains an a raft piece"
     end
  
     local size = piece:OBBMaxs() - piece:OBBMins()
@@ -40,7 +38,7 @@ function RVR.expandRaft( piece, class, dir, rotation )
     local ClassTable = baseclass.Get( class )
 
     if not ClassTable.IsValidPlacement( piece, raftDir ) then
-        return "This placement direction is not valid"
+        return nil, "This placement direction is not valid"
     end
     
     local adjustedDir = ClassTable.GetOffsetDir( piece, dir ) 
@@ -52,4 +50,6 @@ function RVR.expandRaft( piece, class, dir, rotation )
     newEnt.raftRotationOffset = rotation
     newEnt:SetRaft( piece:GetRaft() ) 
     raft:AddPiece( raft:GetPosition( piece ) + raftDir, newEnt )
+
+    return newEnt, nil
 end
