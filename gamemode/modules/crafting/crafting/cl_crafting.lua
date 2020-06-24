@@ -35,10 +35,25 @@ function cft.openCraftingMenu()
     hScroll:SetOverlap( -5 )
 
     local categoryTitle = vgui.Create( "DLabel", frame )
-    categoryTitle:SetFont( "HL2MPTypeDeath" )
+    categoryTitle:SetFont( "RVR_BoxInventoryHeader" )
     categoryTitle:SetText( "Crafting" )
     categoryTitle:SizeToContents()
     categoryTitle:Dock( TOP )
+    categoryTitle:DockMargin( 5, -10, 0, 0 )
+
+    local separator = vgui.Create( "DPanel", frame )
+    separator:Dock( TOP )
+    separator:DockMargin( 5, -20, 5, 0 )
+    separator:SetTall( 2 )
+
+    local itemsDisplay = vgui.Create( "DPanel", frame )
+    itemsDisplay:Dock( FILL )
+    itemsDisplay:DockMargin( 5, 5, 5, 5 )
+
+    function itemsDisplay:Paint( _w, _h )
+        surface.SetDrawColor( Color( 70,43,25 ) )
+        surface.DrawRect( 0, 0, _w, _h )
+    end
 
     for _, category in pairs( cft.Recipes ) do
         local categoryButton = vgui.Create( "DButton", hScroll )

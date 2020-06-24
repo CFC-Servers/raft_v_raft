@@ -2,7 +2,7 @@ RVR.Crafting = RVR.Crafting or {}
 RVR.Crafting.Recipes = {
     {
         categoryName = "Weapons",
-        icon = "",
+        icon = "rvr/icons/food.png",
         recipes = {
             -- {
             --     item = "spear",
@@ -17,37 +17,37 @@ RVR.Crafting.Recipes = {
     },
     {
         categoryName = "Tools",
-        icon = "",
+        icon = "rvr/icons/food.png",
         recipes = {
         }
     },
     {
         categoryName = "Other",
-        icon = "",
+        icon = "rvr/icons/food.png",
         recipes = {
         }
     },
     {
         categoryName = "Equipment",
-        icon = "",
+        icon = "rvr/icons/food.png",
         recipes = {
         }
     },
     {
         categoryName = "Resources",
-        icon = "",
+        icon = "rvr/icons/food.png",
         recipes = {
         }
     },
     {
         categoryName = "Navigation",
-        icon = "",
+        icon = "rvr/icons/food.png",
         recipes = {
         }
     },
     {
         categoryName = "Furniture",
-        icon = "",
+        icon = "rvr/icons/food.png",
         recipes = {
         }
     }
