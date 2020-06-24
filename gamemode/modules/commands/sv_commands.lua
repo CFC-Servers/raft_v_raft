@@ -62,6 +62,26 @@ commands.addType( "string", function( arg )
     return arg
 end )
 
+commands.addType( "entity", function( arg, ply ) 
+    local n, err = commands.types[argType]( arg, ply )
+    if err == nil then
+        return Entity( n ), nil
+    end
+
+    if arg == "@" then
+        local ent = ply:GetEyeTrace().Entity
+        
+        local err = nil 
+        if not IsValid( ent ) then
+            err = "You aren't aiming at a valid entity"
+        end
+        
+        return ent, err
+    end
+
+    return nil, "Not an entity"
+end )
+
 commands.addType( "player", function( arg, ply )
     if arg == "^" then
         return ply
