@@ -19,17 +19,21 @@ local function expandCallback( ply, piece, class, x, y ,z, yaw )
     end
 end
 
+local function deleteCallback( ply, piece )
+    piece:Remove()
+end
 hook.Add("RVR_ModulesLoaded", "RvR_MakeRaftCommands", function()    
 
     RVR.Commands.register( "summon_raft", {}, {}, RVR_USER_SUPERADMIN, summonCommandCallback, "summon a raft" ) 
 
     RVR.Commands.register( 
-        "expand_raft",}
+        "expand_raft",
         {"piece", "class", "x", "y", "z", "yaw"},
         {"entity", "string", "int", "int", "int", "int"},
         RVR_USER_SUPERADMIN,
         expandCallback,
-        "expand a raft"
+        "expand a raft",
     )
 
+    RVR.Commands.register( "rvr_delete_piece", {"piece"}, {"entity"}, RVR_USER_SUPERADMIN, deleteCallback, "delete a raft piece" )
 end)
