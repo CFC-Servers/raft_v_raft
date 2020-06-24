@@ -30,3 +30,23 @@ end
 function ENT:GetOffsetDir( dir )
     return dir
 end
+
+function ENT:ToRaftDir( originalDir )
+    local dir = Vector( originalDir.x, originalDir.y, originalDir.z )
+
+    self.raftRotationOffset = self.raftRotationOffset or Angle(0, 0, 0)
+
+    dir:Rotate(self.raftRotationOffset)
+    
+    return dir
+end
+
+function ENT:ToPieceDir( raftDir )
+    local dir = Vector( raftDir.x, raftDir.y, raftDir.z )
+    self.raftRotationOffset = self.raftRotationOffset or Angle(0, 0, 0)
+
+    dir:Rotate(-self.raftRotationOffset)
+
+    return dir
+end
+

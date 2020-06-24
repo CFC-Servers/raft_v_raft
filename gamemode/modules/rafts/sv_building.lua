@@ -16,28 +16,40 @@ function RVR.summonRaft( position )
     return raft
 end
 
-function RVR.expandRaft( piece, data )
-    if not piece.IsRaft then return end
-    local raft = piece:GetRaft()
-    if raft:GetPieceInGrid( piece.RaftGridPosition + data.dir ) then return end
 
-    local size = piece:OBBMaxs() - piece:OBBMins()
+-- dir is relative to the piece not the raft 
+-- TODO should it be relative to the raft
+-- returns an error
+function RVR.expandRaft( piece, class, dir, rotation )
+    if not piece.IsRaft then return end
+    rotation = rotation or Angle(0, 0, 0)
     
-    _, size = getFirstNonZero( ( size * data.dir ):ToTable() )
+    local raft = piece:GetRaft()
+    local raftDir = piece:ToRaftDir( dir )
+    local targetPosition = raft:GetPosition( piece ) + raftDir
+    
+    if raft:GetPiece( targetPosition ) then 
+        return "Target position contains an a raft piece"
+    end
+ 
+    local size = piece:OBBMaxs() - piece:OBBMins()
+
+    _, size = getFirstNonZero( ( size * dir ):ToTable() )
     size = math.abs( size ) 
 
-    local Class = baseclass.Get( data.class )
+    local ClassTable = baseclass.Get( class )
 
-    if not Class.IsValidPlacement( piece, data.dir ) then
-        return
+    if not ClassTable.IsValidPlacement( piece, raftDir ) then
+        return "This placement direction is not valid"
     end
-    local adjustedDir = Class.GetOffsetDir( piece, data.dir ) 
-
-    local newEnt = ents.Create( data.class )
-    newEnt:Spawn()
-    newEnt:SetAngles( piece:GetAngles() )
-    newEnt:SetPos( piece:LocalToWorld( adjustedDir * size ) )
     
+    local adjustedDir = ClassTable.GetOffsetDir( piece, dir ) 
+
+    local newEnt = ents.Create( class )
+    newEnt:Spawn()
+    newEnt:SetAngles( piece:GetAngles() - piece.raftRotationOffset + rotation )
+    newEnt:SetPos( piece:LocalToWorld( adjustedDir * size ) )
+    newEnt.raftRotationOffset = rotation
     newEnt:SetRaft( piece:GetRaft() ) 
-    raft:AddPiece( piece.RaftGridPosition + data.dir, newEnt )
+    raft:AddPiece( raft:GetPosition( piece ) + raftDir, newEnt )
 end

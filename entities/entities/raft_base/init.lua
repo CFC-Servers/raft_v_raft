@@ -13,6 +13,21 @@ function ENT:Initialize()
     end
 end
 
+function ENT:OnRemove()
+    -- TODO implement GetNeighbors and ShouldExist
+    local neighbors = self.raft:GetNeighbors( self )
+    for k, v in pairs( neighbors ) do
+        if self.raft:ShouldExist( v ) then
+            v:Remove()
+        end
+    end
+end
+
+-- should the raft piece still exist e.g. a platform must have a foundation bellow it
+function ENT:ShouldExist()
+    return true
+end
+
 function ENT:PhysicsSimulate( phys, deltaTime ) 
 end
 
