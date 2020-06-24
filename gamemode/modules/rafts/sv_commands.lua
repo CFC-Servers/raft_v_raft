@@ -32,7 +32,7 @@ hook.Add("RVR_ModulesLoaded", "RvR_MakeRaftCommands", function()
         {"entity", "string", "int", "int", "int", "int"},
         RVR_USER_SUPERADMIN,
         expandCallback,
-        "expand a raft",
+        "expand a raft"
     )
 
     RVR.Commands.register( "rvr_delete_piece", {"piece"}, {"entity"}, RVR_USER_SUPERADMIN, deleteCallback, "delete a raft piece" )
