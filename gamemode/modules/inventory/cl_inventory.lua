@@ -26,7 +26,7 @@ net.Receive( "RVR_Inventory_Open", function()
         end
     end
 
-    inv.plyInventoryCache = plyInventory
+    inv.plyInventoryCache = table.Copy( plyInventory )
 
     local invType = inventory.InventoryType
 
