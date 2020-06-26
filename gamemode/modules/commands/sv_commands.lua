@@ -182,6 +182,18 @@ local function processCommand( ply, command, args )
     return msg, true
 end
 
+local function getUsage( name, argNames, argTypes )
+    local usage = "Usage: " .. name
+
+    for i, argName in ipairs( argNames ) do
+        local argType = argTypes[i]
+
+        usage = usage .. " " .. argName .. ":" .. argType
+    end
+
+    return usage
+end
+
 function commands.register( names, argNames, argTypes, userGroup, func, desc )
     if #argNames ~= #argTypes then
         error( "There must be the same amount of argument names and types" )
@@ -202,13 +214,7 @@ function commands.register( names, argNames, argTypes, userGroup, func, desc )
             end
         end
 
-        local description = "Usage: " .. name
-
-        for i, argName in ipairs( argNames ) do
-            local argType = argTypes[i]
-
-            description = description .. " " .. argName .. ":" .. argType
-        end
+        local description = getUsage( name, argNames, argTypes )
 
         if desc then
             description = description .. "\nDescription: " .. desc
@@ -237,12 +243,12 @@ local function onPlayerSay( ply, text )
     if msg then
         ply:ChatPrint( msg )
     end
-
-    if not validCommand then
-        ply:ChatPrint( "Command \"" .. command .. "\" does not exist" )
-    end
     
-    return ""
+    if validCommand then
+        return ""
+    end
+
+    return
 end
 
 hook.Add( "PlayerSay", "RVR_Commands_onPlayerSay", onPlayerSay )
@@ -266,10 +272,32 @@ end
 
 net.Receive( "RVR_Commands_runConsoleCommand", onRunConsoleCommand )
 
-commands.register( "help", { "command" }, { "string" }, RVR_USER_ALL, function( ply, command )
-    if not commands.commands[command] then
-        return "Help: Command \"" .. command .. "\" does not exist"
-    end
+local function initializeBaseCommands()
+    commands.register( "usage", { "command" }, { "string" }, RVR_USER_ALL, function( ply, command )
+        if not commands.commands[command] then
+            return "Help: Command \"" .. command .. "\" does not exist"
+        end
 
-    return commands.commands[command].description
-end, "Prints the usage and description of a command" )
+        return commands.commands[command].description
+    end, "Prints the usage and description of a command" )
+
+    commands.register( "help", {}, {}, RVR_USER_ALL, function( ply )
+        local plyUserGroup = RVR.getUserGroup( ply )
+
+        ply:PrintMessage( HUD_PRINTCONSOLE, "----- RaftVRaft Commands -----" )
+
+        for commandName, commandData in pairs( commands.commands ) do
+            if plyUserGroup < commandData.userGroup then continue end
+
+            local description = commandName .. ":\n" ..  commandData.description .. "\n "
+
+            ply:PrintMessage( HUD_PRINTCONSOLE, description )
+        end
+
+        ply:PrintMessage( HUD_PRINTCONSOLE, "------------------------------" )
+
+        ply:ChatPrint( "Look in console for a list of commands." )
+    end, "Prints a list of all available commands in console" )
+end
+
+hook.Add( "RVR_ModulesLoaded", "RVR_Commands_initializeBaseCommands", initializeBaseCommands )
