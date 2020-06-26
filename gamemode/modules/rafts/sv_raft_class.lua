@@ -45,15 +45,31 @@ end
 
 -- ownership
 function raftMeta:AddOwnerID( steamid )
-    self.owners[ply:SteamID()] = true
+    self.owners[steamid] = true
+end
+
+function raftMeta:AddOwner( ply )
+    self:AddOwnerID( ply:SteamID() )
 end
 
 function raftMeta:RemoveOwnerID( steamid )
     self.owners[steamid] = nil
 end
 
+function raftMeta:RemoveOwner( ply )
+    self:RemoveOwnerID( ply:SteamID() )
+end
+
 function raftMeta:IsOwner( ply )
     return self.owners[ply:SteamID()] == true
+end
+
+function raftMeta:CanBuild( ply )
+    print(ply)
+    if self:IsOwner( ply ) then return true end
+    if ply:IsSuperAdmin() then return true end
+
+    return false
 end
 
 -- util

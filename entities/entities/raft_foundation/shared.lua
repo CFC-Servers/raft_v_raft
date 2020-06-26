@@ -8,3 +8,10 @@ function ENT.IsValidPlacement(piece, dir)
     if piece:GetClass() ~= "raft_foundation" then return false end
     return BaseClass.IsValidPlacement(piece, dir)
 end
+
+function ENT:GetRequiredItems()
+    return {
+        { item = RVR.Items.getItemData( "wood" ), count = 5 },
+        { item = RVR.Items.getItemData( "nail" ), count = 5 },
+    }
+end

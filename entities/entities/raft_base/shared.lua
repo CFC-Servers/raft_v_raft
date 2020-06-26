@@ -51,3 +51,10 @@ function ENT:ToPieceDir( raftDir )
 
     return dir
 end
+
+function ENT:GetRequiredItems()
+    return {
+        { item = RVR.items.getItemData( "wood" ), count = 5 },
+        { item = RVR.items.getItemData( "nails" ), count = 5 },
+    }
+end
