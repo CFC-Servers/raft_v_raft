@@ -4,54 +4,59 @@ RVR.Crafting.Recipes = {
         categoryName = "Weapons",
         icon = "rvr/icons/food.png",
         recipes = {
-            -- {
-            --     item = "spear",
-            --     description = "",
-            --     ingredients = {
-            --         rvr_plank = 8,
-            --         rvr_rope = 3
-            --     },
-            --     timeToCraft = 10
-            -- }
+            {
+                item = "wood",
+                ingredients = {
+                    nail = 5
+                },
+                timeToCraft = 3,
+            }
         }
     },
     {
         categoryName = "Tools",
         icon = "rvr/icons/food.png",
-        recipes = {
-        }
+        recipes = {}
     },
     {
         categoryName = "Other",
         icon = "rvr/icons/food.png",
-        recipes = {
-        }
+        recipes = {}
     },
     {
         categoryName = "Equipment",
         icon = "rvr/icons/food.png",
-        recipes = {
-        }
+        recipes = {}
     },
     {
         categoryName = "Resources",
         icon = "rvr/icons/food.png",
-        recipes = {
-        }
+        recipes = {}
     },
     {
         categoryName = "Navigation",
         icon = "rvr/icons/food.png",
-        recipes = {
-        }
+        recipes = {}
     },
     {
         categoryName = "Furniture",
         icon = "rvr/icons/food.png",
-        recipes = {
-        }
+        recipes = {}
     }
 }
+
+
+for _, category in ipairs( RVR.Crafting.Recipes ) do
+    local categoryTier = 1000
+    for _, recipe in pairs( category.recipes ) do
+        recipe.tier = recipe.tier or 1
+        if recipe.tier < categoryTier then
+            categoryTier = recipe.tier
+        end
+    end
+
+    category.minTier = categoryTier == 1000 and 1 or categoryTier
+end
 
 if SERVER then
     include( "crafting/sv_crafting.lua" )

@@ -8,16 +8,25 @@ for _, category in pairs( cft.Recipes ) do
     categoryMats[category.categoryName] = Material( category.icon )
 end
 
-function cft.openCraftingMenu()
-    local w = ScrW() * 0.3
-    local h = ScrH() * 0.6
+function cft.openCraftingMenu( tier )
+    if cft.openMenu then
+        cft.closeCraftingMenu()
+    end
+
+    tier = tier or 1
+
+    local w, h = ScrH() * 0.91, ScrH() * 0.7
 
     local frame = vgui.Create( "DFrame" )
     frame:SetTitle( "" )
+    frame:ShowCloseButton( false )
     frame:SetSize( w, h )
-    frame:SetPos( 10, 10 )
+    frame:Center()
     frame:SetDraggable( false )
     frame:MakePopup()
+    frame:SetDeleteOnClose( false )
+
+    cft.openMenu = frame
 
     function frame:Paint( _w, _h )
         surface.SetMaterial( backgroundMat )
@@ -26,44 +35,39 @@ function cft.openCraftingMenu()
     end
 
     function frame:OnClose()
-        --cft.closeCraftingMenu()
+        cft.closeCraftingMenu()
     end
 
-    local hScroll = vgui.Create( "DHorizontalScroller", frame )
-    hScroll:Dock( TOP )
-    hScroll:SetTall( 100 )
-    hScroll:SetOverlap( -5 )
-
-    local categoryTitle = vgui.Create( "DLabel", frame )
-    categoryTitle:SetFont( "RVR_BoxInventoryHeader" )
-    categoryTitle:SetText( "Crafting" )
-    categoryTitle:SizeToContents()
-    categoryTitle:Dock( TOP )
-    categoryTitle:DockMargin( 5, -10, 0, 0 )
-
-    local separator = vgui.Create( "DPanel", frame )
-    separator:Dock( TOP )
-    separator:DockMargin( 5, -20, 5, 0 )
-    separator:SetTall( 2 )
-
-    local itemsDisplay = vgui.Create( "DPanel", frame )
-    itemsDisplay:Dock( FILL )
-    itemsDisplay:DockMargin( 5, 5, 5, 5 )
-
-    function itemsDisplay:Paint( _w, _h )
-        surface.SetDrawColor( Color( 70,43,25 ) )
-        surface.DrawRect( 0, 0, _w, _h )
+    local closeButton = vgui.Create( "DImageButton", frame )
+    closeButton:SetPos( w * 0.94, h * 0.03 )
+    closeButton:SetSize( 30, 30 )
+    closeButton:SetImage( "materials/rvr/icons/player_inventory_close.png" )
+    function closeButton:DoClick()
+        frame:Close()
     end
 
-    for _, category in pairs( cft.Recipes ) do
-        local categoryButton = vgui.Create( "DButton", hScroll )
-        categoryButton:SetText( "" )
+    local categoryScroller = vgui.Create( "DScrollPanel", frame )
+    categoryScroller:GetVBar():SetWide( 0 )
+
+    local padding = w * 0.01
+    categoryScroller:SetPos( padding, padding )
+    categoryScroller:SetSize( w * 0.15 - padding * 2, h - padding * 2 )
+    categoryScroller:GetCanvas():InvalidateLayout( true )
+
+    function categoryScroller:Paint( w, h )
+        draw.RoundedBox( 0, 0, 0, w, h, Color( 255, 0, 0 ) )
+    end
+
+    for _, category in ipairs( cft.Recipes ) do
+        if category.minTier > tier then continue end
+
+        local categoryButton = vgui.Create( "DImageButton", categoryScroller )
+        categoryButton:Dock( TOP )
+        categoryButton:DockMargin( 10, 10, 10, 10 )
         categoryButton:InvalidateParent( true )
+        categoryButton:SetTall( categoryButton:GetWide() )
 
-        hScroll:AddPanel( categoryButton )
-
-        categoryButton:SetWide( categoryButton:GetTall() )
-        categoryButton.DoClick = function()
+        function categoryButton:DoClick()
             categoryTitle:SetText( category.categoryName )
         end
 
@@ -80,6 +84,24 @@ function cft.openCraftingMenu()
             surface.DrawTexturedRect( margin, margin, _w - ( margin * 2 ), _h - ( margin * 2 ) )
         end
     end
+
+    -- local categoryTitle = vgui.Create( "DLabel", frame )
+    -- categoryTitle:SetFont( "RVR_BoxInventoryHeader" )
+    -- categoryTitle:SetText( "Crafting" )
+
+
+
+    -- local itemsDisplay = vgui.Create( "DPanel", frame )
+
+    -- function itemsDisplay:Paint( _w, _h )
+    -- end
+
+
+end
+
+function cft.closeCraftingMenu()
+    cft.openMenu:Remove()
+    cft.openMenu = nil
 end
 
 concommand.Add("rvr_open_crafting_menu", function()
