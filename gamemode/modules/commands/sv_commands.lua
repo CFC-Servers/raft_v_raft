@@ -63,7 +63,7 @@ commands.addType( "string", function( arg )
 end )
 
 commands.addType( "entity", function( arg, ply ) 
-    local n, err = commands.types[argType]( arg, ply )
+    local n, err = commands.types["int"]( arg, ply )
     if err == nil then
         return Entity( n ), nil
     end

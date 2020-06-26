@@ -1,5 +1,5 @@
-ENT.Base = "raft_base"
-ENT.PrintName = "Raft Platform"
+ENT.Base = "raft_platform"
+ENT.PrintName = "Raft Stars"
 ENT.Model = "models/rvr/raft/raft_stairs.mdl"
 
 function ENT.IsValidPlacement(piece, dir)

@@ -27,7 +27,7 @@ function RVR.expandRaft( piece, class, dir, rotation )
     local targetPosition = raft:GetPosition( piece ) + raftDir
     
     if raft:GetPiece( targetPosition ) then 
-        return nil, "Target position contains an a raft piece"
+        return nil, "Target position contains a raft piece"
     end
  
     local size = piece:OBBMaxs() - piece:OBBMins()

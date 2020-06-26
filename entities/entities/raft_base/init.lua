@@ -14,12 +14,13 @@ function ENT:Initialize()
 end
 
 function ENT:OnRemove()
+    self._removing = true
     local neighbors = self.raft:GetNeighbors( self )
     local raft = self:GetRaft()
 
     for _, ent in pairs( neighbors ) do
-        if raft:ShouldExist( ent ) then
-            v:Remove()
+        if not ent:ShouldExist() then
+            ent:Remove()
         end
     end
 end

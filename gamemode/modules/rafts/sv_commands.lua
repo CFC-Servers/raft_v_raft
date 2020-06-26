@@ -7,7 +7,8 @@ local function summonCommandCallback( ply )
     }
 
     local pos = trace.HitPos
-    RVR.summonRaft( pos )
+    local raft = RVR.createRaft( pos )
+    raft:AddOwnerID( ply:SteamID() )
 end
 
 local function expandCallback( ply, piece, class, x, y ,z, yaw )
@@ -30,7 +31,7 @@ hook.Add("RVR_ModulesLoaded", "RvR_MakeRaftCommands", function()
         "expand_raft",
         {"piece", "class", "x", "y", "z", "yaw"},
         {"entity", "string", "int", "int", "int", "int"},
-        RVR_USER_SUPERADMIN,
+        RVR_USER_ALL,
         expandCallback,
         "expand a raft"
     )

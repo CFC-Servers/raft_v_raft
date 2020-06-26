@@ -14,17 +14,24 @@ end
 function raftMeta:GetPiece( position )
     local index = self.grid[self.vectorIndex( position )]
     if not index then return end
-    return self.pieces[index]
+    
+    local ent = self.pieces[index]
+
+    if not IsValid( ent ) then
+        self.pieces[index] = nil
+        return
+    end
+    return ent
 end
 
 function raftMeta:GetNeighbors( piece )
-    local neighbors = 0
-
+    local neighbors = {}
+    
     for x=-1, 1 do 
         for y=-1, 1  do 
             for z=-1, 1 do
-                local pos = raftMeta:GetPosition( piece ) + Vector( x, y, z )
-                neighbors[#neighbors+1] = raftMeta:GetPiece( pos )
+                local pos = self:GetPosition( piece ) + Vector( x, y, z )
+                neighbors[#neighbors+1] = self:GetPiece( pos )
             end
         end
     end
@@ -37,7 +44,7 @@ function raftMeta:GetPosition( piece )
 end
 
 -- ownership
-function raftMeta:AddOwner( ply )
+function raftMeta:AddOwnerID( steamid )
     self.owners[ply:SteamID()] = true
 end
 
@@ -55,6 +62,7 @@ function raftMeta.vectorIndex( v )
     local x = v.x + 1000
     local y = v.y + 1000
     local z = v.z + 1000
+
     return x + 1000 * ( y + 1000 * z)
 end
 
