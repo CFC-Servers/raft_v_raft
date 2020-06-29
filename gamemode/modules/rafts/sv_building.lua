@@ -16,6 +16,11 @@ function RVR.createRaft( position )
     return raft
 end
 
+function RVR.getSizeFromDirection( ent, dir )
+    local size = ent:OBBMaxs() - piece:OBBMins()
+    local _, size = getFirstNonZero( ( size  * dir ):ToTable() )
+    return math.abs( size )
+end
 
 -- returns an error
 function RVR.expandRaft( piece, class, dir, rotation )
@@ -25,22 +30,18 @@ function RVR.expandRaft( piece, class, dir, rotation )
     local raft = piece:GetRaft()
     local raftDir = piece:ToRaftDir( dir )
     local targetPosition = raft:GetPosition( piece ) + raftDir
-    
+ 
     if raft:GetPiece( targetPosition ) then 
         return nil, "Target position contains a raft piece"
     end
  
-    local size = piece:OBBMaxs() - piece:OBBMins()
-
-    _, size = getFirstNonZero( ( size * dir ):ToTable() )
-    size = math.abs( size ) 
-
+    local size = RVR.getSizeFromDirection( piece, dir )
     local ClassTable = baseclass.Get( class )
 
     if not ClassTable.IsValidPlacement( piece, raftDir ) then
         return nil, "This placement direction is not valid"
     end
-    
+   
     local adjustedDir = ClassTable.GetOffsetDir( piece, dir ) 
 
     local newEnt = ents.Create( class )
