@@ -11,6 +11,18 @@ for _, category in pairs( cft.Recipes ) do
     categoryMats[category.name] = Material( category.icon )
 end
 
+--[[ CLIENTSIDE TODO:
+    Create ingredient panels
+        Show ingredient data + counts
+        requires making "get total of item" functions, probably in another branch so PCL can use
+    Somehow show which category is selected
+    Show craft progress
+        Could be done by graying out then filling up the craft button
+
+    Redo item tooltips to show much more info
+
+]]
+
 -- TODO: Move this to some sort of util file (same with def in inventory scroller)
 -- Makes the scrollbar look pretty
 local function formatScrollbar( bar )
@@ -318,7 +330,23 @@ end
 
 function cft.populateRecipePanel( panel, recipe )
     panel.populated = true
-    print( "populate" )
+
+    local craftButton = vgui.Create( "DImage", panel )
+    craftButton:SetImage( "rvr/icons/craftingmenu_craftbutton.png" )
+    craftButton:SetCursor( "hand" )
+    craftButton:SetMouseInputEnabled( true )
+
+    function craftButton:PerformLayout()
+        local w, h = panel:GetSize()
+        local btnH = h * 0.20
+        self:SetSize( btnH * ( 98 / 35 ), btnH )
+        self:SetPos( w - craftButton:GetWide() - 10, h - craftButton:GetTall() - 10 )
+    end
+
+    function craftButton:OnMousePressed( btn )
+        if btn ~= MOUSE_LEFT then return end
+        print( "Craft" )
+    end
 end
 
 function cft.closeCraftingMenu()
