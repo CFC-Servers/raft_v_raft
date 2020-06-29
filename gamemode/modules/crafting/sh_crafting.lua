@@ -1,9 +1,23 @@
 RVR.Crafting = RVR.Crafting or {}
 RVR.Crafting.Recipes = {
     {
-        categoryName = "Weapons",
+        name = "Weapons",
         icon = "rvr/icons/food.png",
         recipes = {
+            {
+                item = "wood",
+                ingredients = {
+                    nail = 5
+                },
+                timeToCraft = 3,
+            },
+            {
+                item = "wood",
+                ingredients = {
+                    nail = 5
+                },
+                timeToCraft = 3,
+            },
             {
                 item = "wood",
                 ingredients = {
@@ -14,32 +28,32 @@ RVR.Crafting.Recipes = {
         }
     },
     {
-        categoryName = "Tools",
+        name = "Tools",
         icon = "rvr/icons/food.png",
         recipes = {}
     },
     {
-        categoryName = "Other",
+        name = "Other",
         icon = "rvr/icons/food.png",
         recipes = {}
     },
     {
-        categoryName = "Equipment",
+        name = "Equipment",
         icon = "rvr/icons/food.png",
         recipes = {}
     },
     {
-        categoryName = "Resources",
+        name = "Resources",
         icon = "rvr/icons/food.png",
         recipes = {}
     },
     {
-        categoryName = "Navigation",
+        name = "Navigation",
         icon = "rvr/icons/food.png",
         recipes = {}
     },
     {
-        categoryName = "Furniture",
+        name = "Furniture",
         icon = "rvr/icons/food.png",
         recipes = {}
     }
