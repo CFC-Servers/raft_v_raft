@@ -26,3 +26,14 @@ function inv.checkItems( inventory, items )
 
     return false, items
 end
+
+function inv.getItemCount( inventory, itemType )
+    local count = 0
+    for invPos, invItem in pairs( inventory.Inventory ) do
+        if invItem.item.type == itemType then
+            count = count + invItem.count
+        end
+    end
+
+    return count
+end
