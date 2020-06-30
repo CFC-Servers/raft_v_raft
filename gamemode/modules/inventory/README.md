@@ -83,8 +83,8 @@ Return true to prevent access
     - Example:
         ```
         RVR.Inventory.checkItems( player.GetAll()[1].RVR_Inventory, {
-            { item = RVR.items.getItemData( "wood" ), count = 10 },
-            { item = RVR.items.getItemData( "nails" ), count = 20 }
+            { item = RVR.Items.getItemData( "wood" ), count = 10 },
+            { item = RVR.Items.getItemData( "nail" ), count = 20 }
         } )
         ```
 - `RVR.Inventory.getItemCount( inventory, itemType )`
