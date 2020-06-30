@@ -8,4 +8,3 @@ end
 
 function SWEP:Reload()
 end
-

@@ -14,11 +14,11 @@ local validPlacementDirections = {
 
 
 function ENT:SetRaft( raft )
-    self.raft = raft
+    self._raftID = raft.id
 end
 
 function ENT:GetRaft( raft )
-    return self.raft
+    return RVR.raftLookup[self._raftID]
 end
 
 function ENT.IsValidPlacement(piece, dir)

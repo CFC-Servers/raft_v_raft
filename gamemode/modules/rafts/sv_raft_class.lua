@@ -1,10 +1,17 @@
 local raftMeta = {}
 raftMeta.__index = raftMeta
+RVR.raftsList = {}
 
 function raftMeta:AddPiece( position, ent )
     ent._raftGridPosition = position
     self.pieces[ent:EntIndex()] = ent
     self.grid[self.vectorIndex( position )] = ent:EntIndex()
+
+    net.Start("new_raft_piece")
+        net.WriteInt(self.id, 32)
+        net.WriteInt(ent:EntIndex(), 32)
+        net.WriteVector(position)
+    net.Send( self:GetOwners() )
 end
 
 function raftMeta:RemovePiece( ent )
@@ -26,7 +33,7 @@ end
 
 function raftMeta:GetNeighbors( piece )
     local neighbors = {}
-    
+
     for x=-1, 1 do 
         for y=-1, 1  do 
             for z=-1, 1 do
@@ -43,9 +50,15 @@ function raftMeta:GetPosition( piece )
     return piece._raftGridPosition
 end
 
+function raftMeta:NetMessage(name, )
 -- ownership
 function raftMeta:AddOwnerID( steamid )
     self.owners[steamid] = true
+
+    net.Start("new_raft_owner")
+        net.WriteInt( r.id, 32 )
+        net.WriteString( steamid )
+    net.Send( self:GetOwners() )
 end
 
 function raftMeta:AddOwner( ply )
@@ -64,8 +77,20 @@ function raftMeta:IsOwner( ply )
     return self.owners[ply:SteamID()] == true
 end
 
+function raftMeta:GetOwners()
+    local owners = {}
+    for steamid, isowner in pairs( self.owners ) do
+        local ply = player.GetBySteamID( steamid )
+        
+        if ply and isowner then
+            owners[#owners+1] = ply
+        end
+    end
+
+    return owners
+end
+
 function raftMeta:CanBuild( ply )
-    print(ply)
     if self:IsOwner( ply ) then return true end
     if ply:IsSuperAdmin() then return true end
 
@@ -82,13 +107,46 @@ function raftMeta.vectorIndex( v )
     return x + 1000 * ( y + 1000 * z)
 end
 
-function RVR.newRaft( piece )
+local lastid = 0
+RVR.raftLookup = {}
+
+function RVR.newRaft( id )
+    lastid = lastid + 1
+
     local r = {
         pieces = {},
         owners = {},
         grid   = {},
+        id     = id or lastid,
     }
-
+    
     setmetatable( r, raftMeta )
+
+    RVR.raftLookup[r.id] = r
+    if not SERVER then return r end
+
+    net.Start("new_raft")
+        net.WriteInt(r.id, 32)
+    net.Send( self:GetOwners() )
+
     return r
 end
+
+net.Receive("new_raft", function()
+    local id = net.ReadInt(32)
+    RVR.newRaft(id)
+end)
+
+net.Receive("new_raft_piece", function()
+    local raftid = net.ReadInt(32)
+    local entindex = net.ReadInt(32)
+    local position = net.ReadVector()
+
+    local ent = Entity(raftid)
+    local raft = RVR.raftLookup[raftid]
+    if not IsValid( ent ) then return end
+
+    ent._raftGridPosition = position
+    raft.pieces[entindex] = ent
+    raft.grid[raft.vectorIndex( position )] = entindex
+end)

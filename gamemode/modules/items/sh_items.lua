@@ -36,4 +36,10 @@ items.items = {
         icon = "materials/rvr/items/nail.png",
         stackable = true,
     },
+    {
+        type = "raft_builder",
+        displayName = "Raft Builder",
+        swep = "raft_builder",
+        icon = "materials/rvr/items/raft_builder.png",
+    },
 }

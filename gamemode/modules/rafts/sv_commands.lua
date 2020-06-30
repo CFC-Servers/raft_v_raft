@@ -28,7 +28,7 @@ local function expandCallback( ply, piece, class, x, y ,z, yaw )
         return
     end
     
-    local dir = piece:ToPieceDir( Vector(x, y, z) )
+    local dir = Vector(x, y, z)
    
     local _, err = RVR.expandRaft( piece, class, dir, Angle(0, yaw, 0))
     if err ~= nil then
@@ -39,6 +39,13 @@ end
 local function deleteCallback( ply, piece )
     piece:Remove()
 end
+
+local function listRafts( ply )
+    for id, raft in pairs( RVR.raftLookup ) do
+        ply:PrintMessage( HUD_PRINTCONSOLE, tostring(id)  )
+    end
+end
+
 hook.Add("RVR_ModulesLoaded", "RvR_MakeRaftCommands", function()    
 
     RVR.Commands.register( "summon_raft", {}, {}, RVR_USER_SUPERADMIN, summonCommandCallback, "summon a raft" ) 
@@ -52,5 +59,6 @@ hook.Add("RVR_ModulesLoaded", "RvR_MakeRaftCommands", function()
         "expand a raft"
     )
 
-    RVR.Commands.register( "rvr_delete_piece", {"piece"}, {"entity"}, RVR_USER_SUPERADMIN, deleteCallback, "delete a raft piece" )
+    RVR.Commands.register( "delete_piece", {"piece"}, {"entity"}, RVR_USER_SUPERADMIN, deleteCallback, "delete a raft piece" )
+    RVR.commands.register( "list_rafts", {}, {}, RVR_USER_ALL, listRafts, "list rafts in raftLookup table" )
 end)
