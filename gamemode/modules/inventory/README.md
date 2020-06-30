@@ -87,8 +87,25 @@ Return true to prevent access
             { item = RVR.items.getItemData( "nails" ), count = 20 }
         } )
         ```
+- `RVR.Inventory.getItemCount( inventory, itemType )`
+    - `inventory` - Inventory to check, for eample `pl.RVR_Inventory`
+    - `itemType` - Type of item to get count of
+- `RVR.Inventory.canFitItem( inventory, item, count )`
+    - `inventory` - Inventory to check, for eample `pl.RVR_Inventory`
+    - `item` - Item instance
+    - `count` - Item count
 
 ## Client-side
+### Functions
+- `RVR.Inventory.selfHasItems( items )`
+    - `items` - List of `{ item = item, count = count }`
+    - Returns: `success`, `itemsMissing`
+- `RVR.Inventory.selfGetItemCount( itemType )`
+    - `itemType` - Type of item to get count of
+- `RVR.Inventory.selfCanFitItem( item, count )`
+    - `item` - Item instance
+    - `count` - Item count
+
 ### SWEPS
 - `rvr_held_item`  
   - Dynamically sets its models based on net messages, used to show any model that doesn't have actions

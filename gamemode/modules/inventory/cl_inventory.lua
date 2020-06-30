@@ -158,6 +158,10 @@ function inv.selfGetItemCount( itemType )
     return inv.getItemCount( inv.plyInventoryCache, itemType )
 end
 
+function inv.selfCanFitItem( item, count )
+    return inv.canFitItem( inv.plyInventoryCache, item, count )
+end
+
 -- Render the cursor slot
 hook.Add( "PostRenderVGUI", "RVR_Inventory_DrawCursorItem", function()
     if not inv.showCursorItem or not inv.cursorItemMaterial then return end
