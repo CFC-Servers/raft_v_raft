@@ -37,3 +37,23 @@ function inv.getItemCount( inventory, itemType )
 
     return count
 end
+
+function inv.canFitItem( inventory, item, count )
+    local itemData = RVR.Items.getItemData( item.type )
+
+    for k = 1, inventory.MaxSlots do
+        local invData = inventory.Inventory[k]
+
+        if not invData then
+            count = count - itemData.maxCount
+        elseif inv.canItemsStack( invData.item, item ) then
+            local remaining = itemData.maxCount - invData.count
+
+            count = count - remaining
+        end
+
+        if count <= 0 then return true end
+    end
+
+    return false
+end
