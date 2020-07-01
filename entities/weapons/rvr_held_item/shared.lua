@@ -18,6 +18,8 @@ function SWEP:SetupDataTables()
 
     self:NetworkVar( "Angle", 1, "WorldModelAng" )
     self:NetworkVar( "Vector", 1, "WorldModelOffset" )
+
+    self:NetworkVar( "String", 1, "ItemType" )
 end
 
 function SWEP:Initialize()
@@ -42,4 +44,34 @@ end
 
 -- Empty to remove default behaviour, don't remove >:(
 function SWEP:PrimaryAttack()
+    self:SetNextPrimaryFire( CurTime() + 1 )
+
+    if CLIENT then
+        if CurTime() < ( self.nextFire or 0 ) then return end
+        self.nextFire = CurTime() + 1
+    end
+
+    local itemType = self:GetItemType()
+    if not itemType then return end
+
+    local itemData = RVR.Items.getItemData( itemType )
+
+    if itemData and itemData.consumable then
+        if not itemData.canConsume( self.Owner ) then return end
+        if SERVER then
+            local inv = self.Owner.RVR_Inventory
+            local slotData = RVR.Inventory.getSlot( self.Owner, inv.HotbarSelected )
+
+            slotData.count = slotData.count - 1
+            if slotData.count == 0 then
+                slotData = nil
+            end
+
+            RVR.Inventory.setSlot( self.Owner, inv.HotbarSelected, slotData, { self.Owner } )
+
+            itemData.onConsume( self.Owner )
+        else
+            -- TODO: some sort of animation?
+        end
+    end
 end

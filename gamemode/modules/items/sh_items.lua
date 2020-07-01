@@ -24,7 +24,7 @@ items.items = {
         type = "wood",
         displayName = "Wood",
         maxCount = 10,
-        model = "models/Gibs/wood_gib01b.mdl",
+        model = "models/rvr/items/item_plank.mdl",
         icon = "materials/rvr/items/wood.png",
         stackable = true,
     },
@@ -37,3 +37,39 @@ items.items = {
         stackable = true,
     },
 }
+
+local config = GM.Config.Hunger
+
+for k, item in pairs( items.items ) do
+    if item.consumable and ( item.food or item.water or item.health ) then
+        function item.onConsume( ply )
+            if item.food then
+                ply:AddFood( item.food )
+            end
+
+            if item.water then
+                ply:AddWater( item.water )
+            end
+
+            if item.health then
+                ply:SetHealth( math.Clamp( ply:Health() + item.health, 0, 100 ) )
+            end
+        end
+
+        function item.canConsume( ply )
+            if item.food and ply:GetFood() <= config.MAX_FOOD - 1 then
+                return true
+            end
+
+            if item.water and ply:GetWater() <= config.MAX_WATER - 1 then
+                return true
+            end
+
+            if item.health and ply:Health() <= 99 then
+                return true
+            end
+
+            return false
+        end
+    end
+end

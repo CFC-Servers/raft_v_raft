@@ -11,5 +11,6 @@ function SWEP:SetItemData( itemData )
         self:SetWorldModelOffset( itemData.worldModelOffset or Vector( 5, -2.7, -3.4 ) )
         self:SetWorldModelAng( itemData.worldModelAng or Angle( 180, 90, 0 ) )
         self:SetItemModel( itemData.model )
+        self:SetItemType( itemData.type )
     end )
 end
