@@ -16,12 +16,8 @@ function ENT.IsValidPlacement(piece, dir)
 end
 
 function ENT.GetOffsetDir( piece, dir ) 
-    if piece:GetClass() ~= "raft_foundation" then
-        dir.z = dir.z * 0.82
-        return dir
-    end
-
-    if dir.z == 1 then
+    
+    if piece:GetClass() == "raft_foundation" and dir.z == 1 then
         dir.z = 0
         return dir
     end
