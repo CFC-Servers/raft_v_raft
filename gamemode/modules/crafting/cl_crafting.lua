@@ -358,12 +358,13 @@ function cft.populateRecipePanel( panel, recipe )
         ingredPanel.Paint = nil
 
         function ingredPanel:PerformLayout()
-            self:SetWide( self:GetTall() * 0.8 )
+            self:SetWide( self:GetTall() * 0.75 )
         end
 
         local itemSlot = vgui.Create( "RVR_ItemSlot", ingredPanel )
         itemSlot:ConvertToGhost()
         itemSlot:SetItemData( RVR.Items.getItemData( ingredient ), 1 )
+        itemSlot:SetImage( "rvr/backgrounds/craftingmenu_ingredient.png" )
         itemSlot:Dock( TOP )
 
         function itemSlot:PerformLayout()
@@ -413,8 +414,8 @@ function cft.populateRecipePanel( panel, recipe )
 
     function ingredientContainer:PerformLayout()
         local h = panel:GetTall()
-        self:SetTall( h * 0.6 )
-        self:SetPos( 0, h * 0.2 )
+        self:SetTall( h * 0.58 )
+        self:SetPos( 0, h * 0.22 )
 
         self:SizeToChildren( true, false )
         self:SetWide( self:GetWide() + 10 ) -- Account for right margin >:(
