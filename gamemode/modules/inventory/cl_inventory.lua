@@ -27,6 +27,7 @@ net.Receive( "RVR_Inventory_Open", function()
     end
 
     inv.plyInventoryCache = table.Copy( plyInventory )
+    hook.Run( "RVR_InventoryCacheUpdate", inv.plyInventoryCache )
 
     local invType = inventory.InventoryType
 
@@ -88,6 +89,7 @@ net.Receive( "RVR_Inventory_UpdateSlot", function()
 
     if ent == LocalPlayer() and inv.plyInventoryCache then
         inv.plyInventoryCache.Inventory[position] = slotData
+        hook.Run( "RVR_InventoryCacheUpdate", inv.plyInventoryCache )
     end
 end )
 
@@ -150,6 +152,14 @@ end
 
 function inv.selfHasItems( items )
     return inv.checkItems( inv.plyInventoryCache, items, false )
+end
+
+function inv.selfGetItemCount( itemType )
+    return inv.getItemCount( inv.plyInventoryCache, itemType )
+end
+
+function inv.selfCanFitItem( item, count )
+    return inv.canFitItem( inv.plyInventoryCache, item, count )
 end
 
 -- Render the cursor slot

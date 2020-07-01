@@ -83,12 +83,29 @@ Return true to prevent access
     - Example:
         ```
         RVR.Inventory.checkItems( player.GetAll()[1].RVR_Inventory, {
-            { item = RVR.items.getItemData( "wood" ), count = 10 },
-            { item = RVR.items.getItemData( "nails" ), count = 20 }
+            { item = RVR.Items.getItemData( "wood" ), count = 10 },
+            { item = RVR.Items.getItemData( "nail" ), count = 20 }
         } )
         ```
+- `RVR.Inventory.getItemCount( inventory, itemType )`
+    - `inventory` - Inventory to check, for eample `pl.RVR_Inventory`
+    - `itemType` - Type of item to get count of
+- `RVR.Inventory.canFitItem( inventory, item, count )`
+    - `inventory` - Inventory to check, for eample `pl.RVR_Inventory`
+    - `item` - Item instance
+    - `count` - Item count
 
 ## Client-side
+### Functions
+- `RVR.Inventory.selfHasItems( items )`
+    - `items` - List of `{ item = item, count = count }`
+    - Returns: `success`, `itemsMissing`
+- `RVR.Inventory.selfGetItemCount( itemType )`
+    - `itemType` - Type of item to get count of
+- `RVR.Inventory.selfCanFitItem( item, count )`
+    - `item` - Item instance
+    - `count` - Item count
+
 ### SWEPS
 - `rvr_held_item`  
   - Dynamically sets its models based on net messages, used to show any model that doesn't have actions
@@ -104,6 +121,10 @@ Return true to prevent access
     - Base storage box
     - `ent:SetStorageName( name )` - Default: `"Medium Storage"`
     - `ent:SetMaxSlots( slotCount )` - Default: `50`
+
+### Hooks
+- `nil GM:RVR_InventoryCacheUpdate( table inventoryCache )`  
+    Called when the client side local players inventory cache updates
 
 ### Vgui elements
 - `RVR_ItemSlot`  
