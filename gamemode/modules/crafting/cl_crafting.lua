@@ -349,6 +349,7 @@ function cft.populateRecipePanel( panel, recipe )
     local canAfford = true
 
     local keys = table.GetKeys( recipe.ingredients )
+    table.sort( keys )
     for k, ingredient in pairs( keys ) do
         local count = recipe.ingredients[ingredient]
 
@@ -423,10 +424,21 @@ function cft.populateRecipePanel( panel, recipe )
         self:CenterHorizontal()
     end
 
+    local canFitResult = true -- RVR.Inventory.selfCanFitItem( { type = recipe.item }, recipe.count or 1 )
+
+    local canCraft = canAfford and canFitResult
+
     local craftButton = vgui.Create( "DImage", panel )
     craftButton:SetImage( "rvr/icons/craftingmenu_craftbutton.png" )
-    craftButton:SetCursor( canAfford and "hand" or "no" )
-    craftButton:SetImageColor( canAfford and Color( 255, 255, 255 ) or Color( 255, 150, 150 ) )
+    craftButton:SetCursor( canCraft and "hand" or "no" )
+    if not canCraft then
+        if not canAfford then
+            craftButton:SetTooltip( "You don't have enough materials!" )
+        else
+            craftButton:SetTooltip( "You can't fit this item in your inventory!" )
+        end
+    end
+    craftButton:SetImageColor( canCraft and Color( 255, 255, 255 ) or Color( 255, 150, 150 ) )
     craftButton:SetMouseInputEnabled( true )
 
     function craftButton:PerformLayout()
@@ -438,8 +450,12 @@ function cft.populateRecipePanel( panel, recipe )
 
     function craftButton:OnMousePressed( btn )
         if btn ~= MOUSE_LEFT then return end
-        if not canAfford then return end
-        print( "Craft" )
+        if not canCraft then return end
+        
+        net.Start( "RVR_Crafting_AttemptCraft" )
+        net.WriteInt( recipe.categoryID, 8 )
+        net.WriteInt( recipe.recipeID, 8 )
+        net.SendToServer()
     end
 end
 

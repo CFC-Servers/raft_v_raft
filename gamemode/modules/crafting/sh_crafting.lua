@@ -9,9 +9,6 @@ RVR.Crafting.Recipes = {
                 ingredients = {
                     nail = 5,
                     wood = 3,
-                    Wood = 3,
-                    WOod = 3,
-                    WoOd = 3,
                 },
                 timeToCraft = 3,
             },
@@ -64,13 +61,16 @@ RVR.Crafting.Recipes = {
 }
 
 
-for _, category in ipairs( RVR.Crafting.Recipes ) do
+for catID, category in ipairs( RVR.Crafting.Recipes ) do
     local categoryTier = 1000
-    for _, recipe in pairs( category.recipes ) do
+    for recipeID, recipe in pairs( category.recipes ) do
         recipe.tier = recipe.tier or 1
         if recipe.tier < categoryTier then
             categoryTier = recipe.tier
         end
+
+        recipe.categoryID = catID
+        recipe.recipeID = recipeID
     end
 
     category.minTier = categoryTier == 1000 and 1 or categoryTier
