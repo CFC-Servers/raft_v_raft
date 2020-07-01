@@ -4,7 +4,7 @@ Inventories are stored on the entity they belong to, under `RVR_Inventory` and a
 ```
     {
         Inventory = {},
-        MaxSlots = 10
+        MaxSlots = 10,
         InventoryType = "Box",
     }
 ```
@@ -23,16 +23,11 @@ All item transactions are done by specifying actions to do on slots, rather than
 - `ITEM_DESPAWN_TIME` - In seconds
 
 ### Functions
-- `RVR.Inventory.playerHasItems( ply, items )`
-    - `ply` - Player to check
-    - `items` - List of `{ item = item, count = count }`
-    - Example:
-        ```
-        RVR.Inventory.playerHasItems( player.GetAll()[1], {
-            { item = RVR.items.getItemData( "wood" ), count = 10 },
-            { item = RVR.items.getItemData( "nails" ), count = 20 }
-        } )
-        ```
+- `RVR.Inventory.tryTakeItems( ent, items )`
+    Will take all items if it can, else none.
+     - `ent` - Entity with inventory
+     - `items` - Same structure as `RVR.Inventory.checkItems()`
+     - Return: `success`, `itemsMissing`
 - `RVR.Inventory.setSlot( ent, position, itemData, plysToNotify )`
      - `ent` - Entity with the inventory
      - `position` - Slot index, see above for special cases
@@ -79,7 +74,38 @@ It's syntax is as follows:
 `boolean GM:RVR_PreventInventory( Player ply, Entity inventoryEnt )`  
 Return true to prevent access
 
+## Shared
+### Functions
+- `RVR.Inventory.checkItems( inventory, items )`
+    - `inventory` - Inventory to check, for example `ply.RVR_Inventory`
+    - `items` - List of `{ item = item, count = count }`
+    - Returns: `success`, `itemsMissing`
+    - Example:
+        ```
+        RVR.Inventory.checkItems( player.GetAll()[1].RVR_Inventory, {
+            { item = RVR.Items.getItemData( "wood" ), count = 10 },
+            { item = RVR.Items.getItemData( "nail" ), count = 20 }
+        } )
+        ```
+- `RVR.Inventory.getItemCount( inventory, itemType )`
+    - `inventory` - Inventory to check, for eample `pl.RVR_Inventory`
+    - `itemType` - Type of item to get count of
+- `RVR.Inventory.canFitItem( inventory, item, count )`
+    - `inventory` - Inventory to check, for eample `pl.RVR_Inventory`
+    - `item` - Item instance
+    - `count` - Item count
+
 ## Client-side
+### Functions
+- `RVR.Inventory.selfHasItems( items )`
+    - `items` - List of `{ item = item, count = count }`
+    - Returns: `success`, `itemsMissing`
+- `RVR.Inventory.selfGetItemCount( itemType )`
+    - `itemType` - Type of item to get count of
+- `RVR.Inventory.selfCanFitItem( item, count )`
+    - `item` - Item instance
+    - `count` - Item count
+
 ### SWEPS
 - `rvr_held_item`  
   - Dynamically sets its models based on net messages, used to show any model that doesn't have actions
@@ -95,6 +121,10 @@ Return true to prevent access
     - Base storage box
     - `ent:SetStorageName( name )` - Default: `"Medium Storage"`
     - `ent:SetMaxSlots( slotCount )` - Default: `50`
+
+### Hooks
+- `nil GM:RVR_InventoryCacheUpdate( table inventoryCache )`  
+    Called when the client side local players inventory cache updates
 
 ### Vgui elements
 - `RVR_ItemSlot`  
