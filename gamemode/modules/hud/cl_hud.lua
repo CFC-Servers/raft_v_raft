@@ -1,49 +1,73 @@
+local leftBg = Material( "rvr/backgrounds/hud_background.png" )
+local rightBg = Material( "rvr/backgrounds/hud_background_main.png" )
+
 local config = GM.Config.Hunger
 local stats = {
     {
-        color = Color( 138, 138, 230 ),
-        get  = function()
-            return  LocalPlayer():GetWater()
+        material = Material( "rvr/icons/health.png" ),
+        color = Color( 218, 75, 89 ),
+        get = function()
+            return LocalPlayer():Health()
+        end,
+        max = 100,
+    },
+    {
+        material = Material( "rvr/icons/water.png" ),
+        color = Color( 103, 151, 200 ),
+        get = function()
+            return LocalPlayer():GetWater()
         end,
         max = config.MAX_WATER,
     },
     {
-        color = Color( 181, 114, 60 ),
+        material = Material( "rvr/icons/food.png" ),
+        color = Color( 172, 131, 35 ),
         get = function()
             return LocalPlayer():GetFood()
         end,
         max = config.MAX_FOOD,
     },
-    {
-        material = Material( "rvr/icons/health.png" ),
-        color = Color( 227, 100, 100 ),
-        get = function()
-            return LocalPlayer():Health()
-        end,
-        max = 100,
-    }
 }
 
--- TODO widths and heights should scale with screen resolution
 function GM:HUDPaint()
-    local x = 0
-    local y = ScrH() - 5 - 35 * #stats
-    draw.RoundedBox( 2, x, y, 320, 35 * #stats + 5, Color( 50, 50, 50, 190 ) )
+    local barHeight = ScrH() * 0.04
+
+    local hudHeight = barHeight * #stats
+    local leftBgWidth = hudHeight * ( 128 / 300 )
+
+    local x = 5
+    local y = ScrH() - hudHeight - 5
+
+    surface.SetDrawColor( Color( 255, 255, 255 ) )
+
+    surface.SetMaterial( leftBg )
+    surface.DrawTexturedRect( x, y, leftBgWidth, hudHeight )
+
+    local rightBgWidth = hudHeight * 1.7
+
+    local bgSpacing = 2
+
+    surface.SetMaterial( rightBg )
+    surface.DrawTexturedRect( x + leftBgWidth + bgSpacing, y, rightBgWidth, hudHeight )
 
     for i, stat in ipairs( stats ) do
-        local width = 272
-        local height = 30
-        width = width * stat.get() / stat.max
-        local x = 40
-        local y = ScrH() - 35 * i
+        local prog = stat.get() / stat.max
+        prog = math.Clamp( prog, 0, 1 )
 
-        draw.RoundedBox( 2, x, y, width, height, stat.color )
-        if stat.material then
-            surface.SetMaterial( stat.material )
-        end
+        local barWidth = ( rightBgWidth - 10 ) * prog
+
+        local barX = x + leftBgWidth + bgSpacing + 5
+        local barY = y + ( i - 1 ) * barHeight
+
+        local col = stat.color
+        local darkCol = Color( col.r * 0.8, col.g * 0.8, col.b * 0.8 )
+        draw.RoundedBox( 5, barX, barY + 5, barWidth, barHeight - 10, darkCol )
+
+        draw.RoundedBox( 5, barX + 2, barY + 7, barWidth - 4, barHeight - 14, col )
 
         surface.SetDrawColor( Color( 255, 255, 255 ) )
-        surface.DrawTexturedRect( 5, y, 30, 30 )
+        surface.SetMaterial( stat.material )
+        surface.DrawTexturedRect( x + 8, barY + 2, barHeight - 5, barHeight - 5 )
     end
 end
 
