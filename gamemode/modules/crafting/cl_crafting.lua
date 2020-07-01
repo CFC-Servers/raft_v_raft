@@ -451,7 +451,7 @@ function cft.populateRecipePanel( panel, recipe )
     function craftButton:OnMousePressed( btn )
         if btn ~= MOUSE_LEFT then return end
         if not canCraft then return end
-        
+
         net.Start( "RVR_Crafting_AttemptCraft" )
         net.WriteInt( recipe.categoryID, 8 )
         net.WriteInt( recipe.recipeID, 8 )
@@ -462,8 +462,14 @@ end
 function cft.closeCraftingMenu()
     cft.openMenu:Remove()
     cft.openMenu = nil
+    net.Start( "RVR_Crafting_CloseCraftingMenu" )
+    net.SendToServer()
 end
 
-concommand.Add("rvr_open_crafting_menu", function()
+net.Receive( "RVR_Crafting_OpenCraftingMenu", function()
+    cft.openCraftingMenu( net.ReadInt( 4 ) )
+end )
+
+concommand.Add( "rvr_open_crafting_menu", function()
     cft.openCraftingMenu()
 end )
