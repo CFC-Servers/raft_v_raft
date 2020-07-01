@@ -12,6 +12,9 @@ function SWEP:Initialize()
     self.ghost:SetColor( Color( 0, 0, 0, 0 ) )
 
     self.yaw = 0 
+
+    self.placeableClasses = {"raft_foundation", "raft_platform", "raft_stairs"}
+    self.classIndex = 1
 end
 
 function SWEP:SetSelectedClass( cls )
@@ -41,6 +44,7 @@ function SWEP:Think()
     local dir = ent:ToRaftDir( localDir )
 
     local targetPosition = raft:GetPosition( ent ) + dir
+
     if raft:GetPiece( targetPosition ) then return end
 
     if not self.selectedClassTable.IsValidPlacement( ent, dir ) then return end
@@ -97,7 +101,11 @@ function SWEP:GetPlacementDirection()
     return dir
 end
 
+local nextPrimary = 0
 function SWEP:PrimaryAttack()
+    if CurTime() <= nextPrimary then return end
+    nextPrimary = CurTime() + 0.2
+    
     local ent = self:GetAimEntity()
     if not ent or not ent.IsRaft then return end
     
@@ -108,23 +116,25 @@ function SWEP:PrimaryAttack()
     if not raft then return end
 
     local dir = ent:ToRaftDir( localDir )
-
+    
+    self.ghost:SetColor( GHOST_INVIS )
     RunConsoleCommand("rvr", "expand_raft", ent:EntIndex(), self.selectedClass, dir.x, dir.y, dir.z, self.yaw)
 end
 
-local classIndex = 1
-local classes = {"raft_foundation", "raft_platform", "raft_stairs"}
+local nextSecondary = 0
 function SWEP:SecondaryAttack()
-    classIndex = classIndex % #classes + 1
-    self:SetSelectedClass( classes[classIndex] )
+    if CurTime() <= nextSecondary then return end
+    nextSecondary = CurTime() + 0.2
+    self.classIndex = self.classIndex % #self.placeableClasses + 1
+    self:SetSelectedClass( self.placeableClasses[self.classIndex] )
 end
 
-local lastReloadTick = 0
+local nextReload = 0
 function SWEP:Reload()
     -- TODO a solution thats not gross
     if not self.Owner:KeyPressed( IN_RELOAD ) then return end
-    if engine.TickCount() < lastReloadTick+10 then return end
-    lastReloadTick = engine.TickCount()
+    if CurTime() <= nextReload then return end
+    nextReload = CurTime() + 0.2
 
     self.yaw = self.yaw % 360 + 90
 end
