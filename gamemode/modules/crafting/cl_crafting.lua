@@ -60,7 +60,7 @@ surface.CreateFont( "RVR_CraftingLabel", {
     weight = 700,
 } )
 
-function cft.openCraftingMenu( tier )
+function cft.openCraftingMenu( ent )
     if cft.openMenu then
         cft.closeCraftingMenu()
     end
@@ -72,7 +72,7 @@ function cft.openCraftingMenu( tier )
         categoryMatsLoaded = true
     end
 
-    tier = tier or 1
+    local tier = ent.RVR_CraftTier or 1
 
     local w, h = ScrH() * 0.91, ScrH() * 0.7
 
@@ -218,6 +218,8 @@ function cft.setCategory( category )
     content:Clear()
 
     local recipePanels = {}
+    cft.recipePanels = recipePanels
+    cft.category = category.categoryID
     for k, recipe in pairs( category.recipes ) do
         local panel = vgui.Create( "DPanel", content )
         panel:Dock( TOP )
@@ -259,11 +261,7 @@ function cft.setCategory( category )
             return self.targetProg == 1
         end
 
-        local header = vgui.Create( "DImage", panel )
-        header:SetImage( "rvr/backgrounds/craftingmenu_itembackground.png" )
-        header:Dock( TOP )
-        header:SetMouseInputEnabled( true )
-        function header:OnMousePressed()
+        local function clickHeader()
             for _, recipePanel in pairs( recipePanels ) do
                 if recipePanel ~= panel then
                     recipePanel:SetExpanded( false )
@@ -272,6 +270,12 @@ function cft.setCategory( category )
 
             panel:SetExpanded( not panel:GetExpanded() )
         end
+
+        local header = vgui.Create( "DImage", panel )
+        header:SetImage( "rvr/backgrounds/craftingmenu_itembackground.png" )
+        header:Dock( TOP )
+        header:SetMouseInputEnabled( true )
+        header.OnMousePressed = clickHeader
 
         function header:PerformLayout()
             self:SetTall( self:GetWide() * 0.152 )
@@ -283,6 +287,7 @@ function cft.setCategory( category )
         itemIcon:ConvertToGhost()
         itemIcon:SetImageColor( Color( 0, 0, 0, 0 ) )
         itemIcon:SetItemData( itemData, recipe.count or 1 )
+        itemIcon.OnMousePressed = clickHeader
 
         function itemIcon:PerformLayout()
             local _w, _h = header:GetSize()
@@ -337,16 +342,18 @@ function cft.setCategory( category )
         end
 
         panel.content = panelContent
+        panel.recipe = recipe
     end
 end
 
 function cft.populateRecipePanel( panel, recipe )
+    panel:Clear()
     panel.populated = true
 
     local ingredientContainer = vgui.Create( "DPanel", panel )
     ingredientContainer.Paint = nil
 
-    local canAfford = true
+    panel.ingredientLabels = {}
 
     local keys = table.GetKeys( recipe.ingredients )
     table.sort( keys )
@@ -379,17 +386,20 @@ function cft.populateRecipePanel( panel, recipe )
         local countLabel = vgui.Create( "DLabel", countLabelContainer )
         countLabel:SetFont( "RVR_CraftingLabel" )
 
-        local has = 0 -- RVR.Inventory.selfGetItemCount( ingredient )
-        countLabel:SetTextColor( has >= count and brown or Color( 180, 0, 0 ) )
-
-        if has < count then canAfford = false end
-
-        countLabel:SetText( has .. "/" .. count )
+        function countLabel:UpdateText()
+            local has = RVR.Inventory.selfGetItemCount( ingredient )
+            self:SetTextColor( has >= count and brown or Color( 180, 0, 0 ) )
+            self:SetText( has .. "/" .. count )
+        end
 
         function countLabel:PerformLayout()
             self:SizeToContents()
             self:Center()
         end
+
+        countLabel:UpdateText()
+
+        table.insert( panel.ingredientLabels, countLabel )
 
         if k ~= #keys then
             local plus = vgui.Create( "DPanel", ingredientContainer )
@@ -424,22 +434,49 @@ function cft.populateRecipePanel( panel, recipe )
         self:CenterHorizontal()
     end
 
-    local canFitResult = true -- RVR.Inventory.selfCanFitItem( { type = recipe.item }, recipe.count or 1 )
+    cft.createCraftButton( panel, recipe )
+end
 
-    local canCraft = canAfford and canFitResult
+function cft.createCraftButton( panel, recipe )
+    local canAfford = true
+    for name, count in pairs( recipe.ingredients ) do
+        local has = RVR.Inventory.selfGetItemCount( name )
+        if has < count then
+            canAfford = false
+            break
+        end
+    end
+
+    local canCraft = canAfford and ( not cft.crafting or cft.crafting.crafted )
+    if panel.craftButton then panel.craftButton:Remove() end
 
     local craftButton = vgui.Create( "DImage", panel )
-    craftButton:SetImage( "rvr/icons/craftingmenu_craftbutton.png" )
+    if cft.crafting and ( cft.crafting.crafted or cft.crafting.grabbed ) then
+        craftButton:SetImage( "rvr/icons/craftingmenu_grabbutton.png" )
+    else
+        craftButton:SetImage( "rvr/icons/craftingmenu_craftbutton.png" )
+    end
     craftButton:SetCursor( canCraft and "hand" or "no" )
     if not canCraft then
         if not canAfford then
             craftButton:SetTooltip( "You don't have enough materials!" )
+        elseif cft.crafting and cft.crafting.recipe == recipe then
+            craftButton:SetTooltip( cft.crafting.grabbed and "Grabbing..." or "Crafting..." )
         else
-            craftButton:SetTooltip( "You can't fit this item in your inventory!" )
+            craftButton:SetTooltip( "Another item is crafting" )
         end
     end
-    craftButton:SetImageColor( canCraft and Color( 255, 255, 255 ) or Color( 255, 150, 150 ) )
+
+    if not canCraft then
+        if cft.crafting and cft.crafting.recipe == recipe then
+            craftButton:SetImageColor( Color( 150, 150, 150 ) )
+        else
+            craftButton:SetImageColor( Color( 255, 150, 150 ) )
+        end
+    end
     craftButton:SetMouseInputEnabled( true )
+
+    panel.craftButton = craftButton
 
     function craftButton:PerformLayout()
         local w, h = panel:GetSize()
@@ -452,24 +489,80 @@ function cft.populateRecipePanel( panel, recipe )
         if btn ~= MOUSE_LEFT then return end
         if not canCraft then return end
 
-        net.Start( "RVR_Crafting_AttemptCraft" )
-        net.WriteInt( recipe.categoryID, 8 )
-        net.WriteInt( recipe.recipeID, 8 )
-        net.SendToServer()
+        if cft.crafting and cft.crafting.crafted then
+            cft.crafting.grabbed = true
+            cft.crafting.crafted = false
+
+            net.Start( "RVR_Crafting_Grab" )
+            net.WriteEntity()
+            net.SendToServer()
+        else
+            cft.crafting = {
+                recipe = recipe,
+                timeStart = -1,
+            }
+
+            net.Start( "RVR_Crafting_AttemptCraft" )
+            net.WriteInt( recipe.categoryID, 8 )
+            net.WriteInt( recipe.recipeID, 8 )
+            net.SendToServer()
+        end
+
+        cft.createCraftButton( panel, recipe )
+    end
+
+    function craftButton:PaintOver( w, h )
+        if not cft.crafting then return end
+        if cft.crafting.recipe ~= recipe then return end
+        if cft.crafting.timeStart == -1 then return end
+
+        local prog = ( CurTime() - cft.crafting.timeStart ) / recipe.timeToCraft
+
+        prog = math.Clamp( prog, 0, 1 )
+
+        surface.SetDrawColor( Color( 0, 150, 0, 80 ) )
+        surface.DrawRect( 0, 0, w * prog, h )
+
+        if prog == 1 then
+            cft.crafting.crafted = true
+            cft.crafting.timeStart = -1
+            cft.createCraftButton( panel, recipe )
+        end
     end
 end
 
 function cft.closeCraftingMenu()
     cft.openMenu:Remove()
     cft.openMenu = nil
+    cft.crafting = nil
+    cft.recipePanels = nil
+
     net.Start( "RVR_Crafting_CloseCraftingMenu" )
     net.SendToServer()
 end
 
+net.Receive( "RVR_Crafting_CraftResponse", function()
+    local crafting = net.ReadBool()
+
+    if not crafting then
+        cft.crafting = nil
+        for k, panel in pairs( cft.recipePanels or {} ) do
+            if panel:GetExpanded() then
+                cft.createCraftButton( panel.content, panel.recipe )
+                for _, label in pairs( panel.content.ingredientLabels ) do
+                    label:UpdateText()
+                end
+            end
+        end
+    else
+        cft.crafting.timeStart = CurTime()
+    end
+end )
+
 net.Receive( "RVR_Crafting_OpenCraftingMenu", function()
-    cft.openCraftingMenu( net.ReadInt( 4 ) )
+    cft.openCraftingMenu( net.ReadEntity() )
 end )
 
 concommand.Add( "rvr_open_crafting_menu", function()
-    cft.openCraftingMenu()
+    cft.openCraftingMenu( LocalPlayer() )
 end )

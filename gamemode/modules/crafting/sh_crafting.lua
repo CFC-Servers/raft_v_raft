@@ -31,7 +31,15 @@ RVR.Crafting.Recipes = {
     {
         name = "Tools",
         icon = "rvr/icons/food.png",
-        recipes = {}
+        recipes = {
+            {
+                item = "wood",
+                ingredients = {
+                    nail = 5
+                },
+                timeToCraft = 3,
+            }
+        }
     },
     {
         name = "Other",
@@ -72,6 +80,7 @@ for catID, category in ipairs( RVR.Crafting.Recipes ) do
         recipe.categoryID = catID
         recipe.recipeID = recipeID
     end
+    category.categoryID = catID
 
     category.minTier = categoryTier == 1000 and 1 or categoryTier
 end

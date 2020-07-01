@@ -5,12 +5,21 @@ util.AddNetworkString( "RVR_Crafting_AttemptCraft" )
 util.AddNetworkString( "RVR_Crafting_CraftResponse" )
 util.AddNetworkString( "RVR_Crafting_CloseCraftingMenu" )
 util.AddNetworkString( "RVR_Crafting_OpenCraftingMenu" )
+util.AddNetworkString( "RVR_Crafting_Grab" )
 
 local function craftFail( ply )
     net.Start( "RVR_Crafting_CraftResponse" )
     net.WriteBool( false )
     net.Send( ply )
 end
+
+net.Receive( "RVR_Crafting_Grab", function( len, ply )
+    local ent = net.ReadEntity()
+
+    net.Start( "RVR_Crafting_CraftResponse" )
+    net.WriteBool( false )
+    net.Send( ply )
+end )
 
 net.Receive( "RVR_Crafting_AttemptCraft", function( len, ply )
     local categoryID = net.ReadInt( 8 )
@@ -26,24 +35,30 @@ net.Receive( "RVR_Crafting_AttemptCraft", function( len, ply )
 end )
 
 function cft.craft( ply, recipe )
-    if ( ply.RVR_CraftingTier or 1 ) < recipe.tier then return end
+    local craftingEnt = ply.RVR_CraftingEnt or ply
+    local tier = craftingEnt.RVR_CraftingTier or 1
+    if tier < recipe.tier then return end
 
-    local itemInstance = RVR.Items.getInstance( recipe.item )
+    local itemInstance = RVR.Items.getItemInstance( recipe.item )
     local canFit = RVR.Inventory.canFitItem( ply.RVR_Inventory, itemInstance, recipe.count or 1 )
 
     if not canFit then return end
 
-
-end
-
-function cft.openMenu( ply, t )
-    net.Start( "RVR_Crafting_OpenCraftingMenu" )
-    net.WriteInt( t, 4 )
+    net.Start( "RVR_Crafting_CraftResponse" )
+    net.WriteBool( true )
     net.Send( ply )
 
-    ply.RVR_CraftingTier = t
+    return true
+end
+
+function cft.openMenu( ply, ent )
+    net.Start( "RVR_Crafting_OpenCraftingMenu" )
+    net.WriteEntity( ent )
+    net.Send( ply )
+
+    ply.RVR_CraftingEnt = ent
 end
 
 net.Receive( "RVR_Crafting_CloseCraftingMenu", function( len, ply )
-    ply.RVR_CraftingTier = nil
+    ply.RVR_CraftingEnt = nil
 end )
