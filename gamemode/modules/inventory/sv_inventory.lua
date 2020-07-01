@@ -62,11 +62,6 @@ function inv.tryTakeItems( ent, items )
     return false, items
 end
 
--- Allows for modifying stack checking later - used for checking crafting as well.
-function inv.canItemsStack( item1, item2 )
-    return item1.type == item2.type and RVR.Items.getItemData( item1.type ).stackable
-end
-
 function inv.setSlot( ent, position, itemData, plysToNotify )
     local inventory = ent.RVR_Inventory
     if not inventory then return end
