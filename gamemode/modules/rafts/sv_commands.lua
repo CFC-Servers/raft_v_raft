@@ -13,14 +13,16 @@ end
 
 local function expandCallback( ply, piece, class, x, y ,z, yaw )
     local raft = piece:GetRaft()
+    if not raft then return end
     if not raft:CanBuild( ply ) then 
         ply:PrintMessage( HUD_PRINTCONSOLE, "you do not have permissions to build on this raft" )
         return 
     end
+    local required = piece:GetRequiredItems()
     
     local success, itemsMissing = RVR.Inventory.tryTakeItems( 
-        piece,  
-        piece:GetRequiredItems()
+        ply,  
+        required
     )
     if not success then
         -- TODO print itemsMissing in a human readable format
@@ -60,5 +62,5 @@ hook.Add("RVR_ModulesLoaded", "RvR_MakeRaftCommands", function()
     )
 
     RVR.Commands.register( "delete_piece", {"piece"}, {"entity"}, RVR_USER_SUPERADMIN, deleteCallback, "delete a raft piece" )
-    RVR.commands.register( "list_rafts", {}, {}, RVR_USER_ALL, listRafts, "list rafts in raftLookup table" )
+    RVR.Commands.register( "list_rafts", {}, {}, RVR_USER_ALL, listRafts, "list rafts in raftLookup table" )
 end)

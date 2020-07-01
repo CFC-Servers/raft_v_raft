@@ -40,6 +40,8 @@ items.items = {
         type = "raft_builder",
         displayName = "Raft Builder",
         swep = "raft_builder",
+        maxCount = 1,
+        stackable = false,
         icon = "materials/rvr/items/raft_builder.png",
     },
 }

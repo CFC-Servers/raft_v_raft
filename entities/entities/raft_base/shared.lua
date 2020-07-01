@@ -5,28 +5,22 @@ ENT.PrintName = ""
 ENT.Model = ""
 ENT.IsRaft = true
 
-local validPlacementDirections = {
-    Vector(1, 0, 0),
-    Vector(0, 1, 0),
-    Vector(-1, 0, 0),
-    Vector(0, -1, 0),
-}
-
-
 function ENT:SetRaft( raft )
-    self._raftID = raft.id
+    self:SetRaftID( raft.id )
 end
 
 function ENT:GetRaft( raft )
-    return RVR.raftLookup[self._raftID]
+    return RVR.raftLookup[self:GetRaftID()]
 end
 
 function ENT.IsValidPlacement(piece, dir)
-    for _, validDir in pairs( validPlacementDirections ) do
-        if dir == validDir then return true end
-    end
+    if dir.z ~= 0 then return end
     
-    return false
+    if math.abs(dir.x) == math.abs(dir.y) then
+        return false
+    end
+
+    return true
 end
 
 function ENT:GetOffsetDir( dir )
@@ -35,19 +29,20 @@ end
 
 function ENT:ToRaftDir( dir )
     local copy = Vector( dir.x, dir.y, dir.z )
+    
+    local rotationOffset = self:GetRaftRotationOffset()
 
-    self.raftRotationOffset = self.raftRotationOffset or Angle(0, 0, 0)
-
-    copy:Rotate( self.raftRotationOffset )
+    copy:Rotate( rotationOffset )
 
     return copy
 end
 
 function ENT:ToPieceDir( raftDir )
     local dir = Vector( raftDir.x, raftDir.y, raftDir.z )
-    self.raftRotationOffset = self.raftRotationOffset or Angle(0, 0, 0)
+    
+    local rotationOffset = self:GetRaftRotationOffset()
 
-    dir:Rotate(-self.raftRotationOffset)
+    dir:Rotate( -rotationOffset )
 
     return dir
 end
@@ -57,4 +52,16 @@ function ENT:GetRequiredItems()
         { item = RVR.items.getItemData( "wood" ), count = 5 },
         { item = RVR.items.getItemData( "nails" ), count = 5 },
     }
+end
+
+function ENT:SetupDataTables()
+    self:NetworkVar( "Int", 0, "RaftID" )
+    self:NetworkVar( "Vector", 0, "RaftGridPosition" )
+    self:NetworkVar( "Angle", 0, "RaftRotationOffset" )
+
+    if SERVER then
+        self:SetRaftID(0)
+        self:SetRaftGridPosition( Vector(0,0,0) )
+        self:SetRaftRotationOffset( Angle(0,0,0) )
+    end
 end

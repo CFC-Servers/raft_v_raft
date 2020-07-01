@@ -11,13 +11,12 @@ function SWEP:Initialize()
     self.ghost:SetRenderMode( RENDERMODE_TRANSCOLOR )
     self.ghost:SetColor( Color( 0, 0, 0, 0 ) )
 
-    self.yaw = 0
-    
+    self.yaw = 0 
 end
 
 function SWEP:SetSelectedClass( cls )
     self.selectedClass = cls
-    self.selectedClassTable = baseclass.Get( self.class )
+    self.selectedClassTable = baseclass.Get( self.selectedClass )
     self.ghost:SetModel( self.selectedClassTable.Model )
 end
 
@@ -31,20 +30,34 @@ function SWEP:Think()
         return self.ghost:SetColor( GHOST_INVIS ) 
     end
 
-    local dir = self:GetPlacementDirection()
-    if not dir then 
+    local localDir = self:GetPlacementDirection()
+    if not localDir then 
         return self.ghost:SetColor( GHOST_INVIS ) 
     end
 
+    local raft = ent:GetRaft()
+    if not raft then return end
+
+    local dir = ent:ToRaftDir( localDir )
+
+    local targetPosition = raft:GetPosition( ent ) + dir
+    if raft:GetPiece( targetPosition ) then return end
+
+    if not self.selectedClassTable.IsValidPlacement( ent, dir ) then return end
+
+    local size = RVR.getSizeFromDirection( ent, localDir )
+    if not size then return end
+
+    localDir = self.selectedClassTable.GetOffsetDir( ent, localDir )
+
+    -- update ghost position 
     self.ghost:SetColor( GHOST_COLOR )
 
-    local size = RVR.getSizeFromDirection( ent, dir )
-
-    self.ghost:SetModel( ent:GetModel() )
+    self.ghost:SetModel( self.selectedClassTable.Model )
     self.ghost:SetColor( GHOST_COLOR )
  
-    self.ghost:SetPos( ent:LocalToWorld( dir * size ) )
-    self.ghost:SetAngles( ent:GetAngles() + Angle( 0, self.yaw, 0 ) )
+    self.ghost:SetPos( ent:LocalToWorld( localDir * size ) )
+    self.ghost:SetAngles( ent:GetAngles() - ent:GetRaftRotationOffset() + Angle( 0, self.yaw, 0 ) )
 end
 
 function SWEP:GetAimEntity()
@@ -63,7 +76,7 @@ function SWEP:GetPlacementDirection()
     if not ent then return end
     if not ent.IsRaft then return end
 
-    if ent:GetClass() == "raft_platform" or ent:GetClass() == "raft_stairs" then
+    if self.selectedClass == "raft_platform" or self.selectedClass == "raft_stairs" then
         return Vector( 0, 0, 1 )
     end
 
@@ -71,7 +84,9 @@ function SWEP:GetPlacementDirection()
 
     local pos = ply:GetAimVector() + ent:GetPos()
     local dir = ent:WorldToLocal( pos )
-  
+    if self.selectedClass == "raft_foundation" then
+        dir.z = 0
+    end
     dir.x = math.Round( dir.x )
     dir.y = math.Round( dir.y )
     dir.z = math.Round( dir.z ) 
@@ -85,16 +100,31 @@ end
 function SWEP:PrimaryAttack()
     local ent = self:GetAimEntity()
     if not ent or not ent.IsRaft then return end
-
-    local dir = self:GetPlacementDirection()
-    if not dir then  return end
-
     
+    local localDir = self:GetPlacementDirection()
+    if not localDir then return end
+ 
+    local raft = ent:GetRaft()
+    if not raft then return end
+
+    local dir = ent:ToRaftDir( localDir )
+
+    RunConsoleCommand("rvr", "expand_raft", ent:EntIndex(), self.selectedClass, dir.x, dir.y, dir.z, self.yaw)
 end
 
+local classIndex = 1
+local classes = {"raft_foundation", "raft_platform", "raft_stairs"}
 function SWEP:SecondaryAttack()
+    classIndex = classIndex % #classes + 1
+    self:SetSelectedClass( classes[classIndex] )
 end
 
+local lastReloadTick = 0
 function SWEP:Reload()
-    self.yaw = ( self.yaw + 90 ) % 360
+    -- TODO a solution thats not gross
+    if not self.Owner:KeyPressed( IN_RELOAD ) then return end
+    if engine.TickCount() < lastReloadTick+10 then return end
+    lastReloadTick = engine.TickCount()
+
+    self.yaw = self.yaw % 360 + 90
 end
