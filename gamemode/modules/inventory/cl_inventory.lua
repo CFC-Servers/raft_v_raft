@@ -226,7 +226,7 @@ function inv.makeHotbar()
     local w, h = ScrW(), ScrH()
 
     local slotCount = config.PLAYER_HOTBAR_SLOTS
-    local innerHotbarWidth = w * 0.5
+    local innerHotbarWidth = w * 0.45
 
     local horizontalPadding = 0.05
     local verticalPadding = 0.1
