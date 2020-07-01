@@ -1,3 +1,5 @@
+RVR.Crafting = RVR.Crafting or {}
+
 local cft = RVR.Crafting
 local backgroundMat = Material( "rvr/backgrounds/crafting_background.png" )
 local categoriesBackgroundMat = Material( "rvr/backgrounds/craftingmenu_categoriesbackground.png" )
@@ -5,11 +7,7 @@ local iconBackgroundMat = Material( "rvr/backgrounds/craftingmenu_categorybackgr
 local yellow = Color( 188, 162, 105 )
 local brown = Color( 91, 56, 34 )
 local categoryMats = {}
-
--- Pre-loading category materials
-for _, category in pairs( cft.Recipes ) do
-    categoryMats[category.name] = Material( category.icon )
-end
+local categoryMatsLoaded = false
 
 --[[ CLIENTSIDE TODO:
     Create ingredient panels
@@ -56,9 +54,22 @@ surface.CreateFont( "RVR_CraftingHeader", {
     weight = 700,
 } )
 
+surface.CreateFont( "RVR_CraftingLabel", {
+    font = "Bungee Regular",
+    size = ScrH() * 0.07,
+    weight = 700,
+} )
+
 function cft.openCraftingMenu( tier )
     if cft.openMenu then
         cft.closeCraftingMenu()
+    end
+
+    if not categoryMatsLoaded then
+        for _, category in pairs( cft.Recipes ) do
+            categoryMats[category.name] = Material( category.icon )
+        end
+        categoryMatsLoaded = true
     end
 
     tier = tier or 1
@@ -139,6 +150,7 @@ function cft.openCraftingMenu( tier )
     local firstCat
     for _, category in ipairs( cft.Recipes ) do
         if category.minTier > tier then continue end
+        if #category.recipes == 0 then continue end
         firstCat = firstCat or category
 
         local categoryButton = vgui.Create( "DImageButton", categoryScroller )
@@ -331,20 +343,101 @@ end
 function cft.populateRecipePanel( panel, recipe )
     panel.populated = true
 
+    local ingredientContainer = vgui.Create( "DPanel", panel )
+    ingredientContainer.Paint = nil
+
+    local canAfford = true
+
+    local keys = table.GetKeys( recipe.ingredients )
+    for k, ingredient in pairs( keys ) do
+        local count = recipe.ingredients[ingredient]
+
+        local ingredPanel = vgui.Create( "DPanel", ingredientContainer )
+        ingredPanel:Dock( LEFT )
+        ingredPanel:DockMargin( 10, 0, 10, 0 )
+        ingredPanel.Paint = nil
+
+        function ingredPanel:PerformLayout()
+            self:SetWide( self:GetTall() * 0.8 )
+        end
+
+        local itemSlot = vgui.Create( "RVR_ItemSlot", ingredPanel )
+        itemSlot:ConvertToGhost()
+        itemSlot:SetItemData( RVR.Items.getItemData( ingredient ), 1 )
+        itemSlot:Dock( TOP )
+
+        function itemSlot:PerformLayout()
+            self:SetTall( self:GetWide() )
+        end
+
+        local countLabelContainer = vgui.Create( "DPanel", ingredPanel )
+        countLabelContainer:Dock( FILL )
+        countLabelContainer.Paint = nil
+
+        local countLabel = vgui.Create( "DLabel", countLabelContainer )
+        countLabel:SetFont( "RVR_CraftingLabel" )
+
+        local has = 0 -- RVR.Inventory.selfGetItemCount( ingredient )
+        countLabel:SetTextColor( has >= count and brown or Color( 180, 0, 0 ) )
+
+        if has < count then canAfford = false end
+
+        countLabel:SetText( has .. "/" .. count )
+
+        function countLabel:PerformLayout()
+            self:SizeToContents()
+            self:Center()
+        end
+
+        if k ~= #keys then
+            local plus = vgui.Create( "DPanel", ingredientContainer )
+            plus:Dock( LEFT )
+
+            function plus:PerformLayout()
+                local h = ingredientContainer:GetTall()
+                local plusH = h * 0.2
+                local yMult = 0.35
+
+
+                self:DockMargin( 0, ( h - plusH ) * yMult, 0, ( h - plusH ) * ( 1 - yMult ) )
+                self:SetWide( self:GetTall() )
+            end
+
+            function plus:Paint( w, h )
+                draw.RoundedBox( 0, 0, math.Round( h * 0.35 ), w, math.Round( h * 0.3 ), brown )
+                draw.RoundedBox( 0, math.Round( w * 0.35 ), 0, math.Round( w * 0.3 ), h, brown )
+            end
+        end
+
+    end
+
+    function ingredientContainer:PerformLayout()
+        local h = panel:GetTall()
+        self:SetTall( h * 0.6 )
+        self:SetPos( 0, h * 0.2 )
+
+        self:SizeToChildren( true, false )
+        self:SetWide( self:GetWide() + 10 ) -- Account for right margin >:(
+
+        self:CenterHorizontal()
+    end
+
     local craftButton = vgui.Create( "DImage", panel )
     craftButton:SetImage( "rvr/icons/craftingmenu_craftbutton.png" )
-    craftButton:SetCursor( "hand" )
+    craftButton:SetCursor( canAfford and "hand" or "no" )
+    craftButton:SetImageColor( canAfford and Color( 255, 255, 255 ) or Color( 255, 150, 150 ) )
     craftButton:SetMouseInputEnabled( true )
 
     function craftButton:PerformLayout()
         local w, h = panel:GetSize()
-        local btnH = h * 0.20
+        local btnH = h * 0.16
         self:SetSize( btnH * ( 98 / 35 ), btnH )
-        self:SetPos( w - craftButton:GetWide() - 10, h - craftButton:GetTall() - 10 )
+        self:SetPos( w - craftButton:GetWide() - 5, h - craftButton:GetTall() - 5 )
     end
 
     function craftButton:OnMousePressed( btn )
         if btn ~= MOUSE_LEFT then return end
+        if not canAfford then return end
         print( "Craft" )
     end
 end

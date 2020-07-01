@@ -2,6 +2,7 @@ RVR.Items = RVR.Items or {}
 local items = RVR.Items
 
 function items.getItemData( itemType )
+    itemType = string.lower( itemType )
     for _, itemData in pairs( items.items ) do
         if itemData.type == itemType then return itemData end
     end

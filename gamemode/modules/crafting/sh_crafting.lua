@@ -7,7 +7,11 @@ RVR.Crafting.Recipes = {
             {
                 item = "wood",
                 ingredients = {
-                    nail = 5
+                    nail = 5,
+                    wood = 3,
+                    Wood = 3,
+                    WOod = 3,
+                    WoOd = 3,
                 },
                 timeToCraft = 3,
             },
@@ -70,13 +74,4 @@ for _, category in ipairs( RVR.Crafting.Recipes ) do
     end
 
     category.minTier = categoryTier == 1000 and 1 or categoryTier
-end
-
-if SERVER then
-    include( "crafting/sv_crafting.lua" )
-    AddCSLuaFile( "crafting/cl_crafting.lua" )
-end
-
-if CLIENT then
-    include( "crafting/cl_crafting.lua" )
 end
