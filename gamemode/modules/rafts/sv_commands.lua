@@ -17,12 +17,11 @@ local function expandCallback( ply, piece, class, x, y ,z, yaw )
     if not raft:CanBuild( ply ) then 
         ply:PrintMessage( HUD_PRINTCONSOLE, "you do not have permissions to build on this raft" )
         return 
-    end
-    local required = piece:GetRequiredItems()
-    
-    local success, itemsMissing = RVR.Inventory.tryTakeItems( 
-        ply,  
-        required
+    end 
+ 
+    local success, itemsMissing = RVR.Inventory.checkItems( 
+        ply.RVR_Inventory,  
+        piece:GetRequiredItems()
     )
     if not success then
         -- TODO print itemsMissing in a human readable format
@@ -36,6 +35,11 @@ local function expandCallback( ply, piece, class, x, y ,z, yaw )
     if err ~= nil then
         return "Couldn't place raft piece: " .. err
     end
+
+    local success, itemsMissing = RVR.Inventory.tryTakeItems( 
+        ply,  
+        required
+    )
 end
 
 local function deleteCallback( ply, piece )
