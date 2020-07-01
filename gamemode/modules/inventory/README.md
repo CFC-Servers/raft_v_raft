@@ -122,6 +122,10 @@ Return true to prevent access
     - `ent:SetStorageName( name )` - Default: `"Medium Storage"`
     - `ent:SetMaxSlots( slotCount )` - Default: `50`
 
+### Hooks
+- `nil GM:RVR_InventoryCacheUpdate( table inventoryCache )`  
+    Called when the client side local players inventory cache updates
+
 ### Vgui elements
 - `RVR_ItemSlot`  
     Specify entity, slot index, and initial item (optional), and this element will handle all item movement
