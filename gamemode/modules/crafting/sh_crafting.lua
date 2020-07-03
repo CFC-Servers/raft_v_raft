@@ -49,7 +49,7 @@ cft.Recipes = {
     },
     {
         name = "Resources",
-        icon = "rvr/icons/food.png",
+        icon = "rvr/icons/craftingmenu_category_resources.png",
         recipes = {},
     },
     {
@@ -69,7 +69,7 @@ cft.Recipes = {
     },
     {
         name = "Other",
-        icon = "rvr/icons/food.png",
+        icon = "rvr/icons/craftingmenu_category_other.png",
         recipes = {},
     },
 }

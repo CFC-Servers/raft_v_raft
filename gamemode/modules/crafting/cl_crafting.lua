@@ -10,9 +10,7 @@ local categoryMats = {}
 local categoryMatsLoaded = false
 
 --[[ TODO:
-    show time
-    put icons in
-    Add "Grab items" big button
+    put icons in - need navigation, furniture
     Somehow show which category is selected
     Redo item tooltips to show much more info
 
@@ -34,9 +32,9 @@ local function formatScrollbar( bar )
     end
 
     -- Makes the scrollbar always show
-    function bar:SetUp( _barsize_, _canvassize_ )
-        self.BarSize = _barsize_
-        self.CanvasSize = math.max( _canvassize_ - _barsize_, 0.01 )
+    function bar:SetUp( barSize, canvasSize )
+        self.BarSize = barSize
+        self.CanvasSize = math.max( canvasSize - barSize, 0.01 )
 
         self:SetEnabled( true )
 
@@ -170,15 +168,15 @@ function cft.openCraftingMenu( craftingData )
         end
 
         function categoryButton:Paint( _w, _h )
+            surface.SetDrawColor( Color( 255, 255, 255 ) )
+
             -- Background
             surface.SetMaterial( iconBackgroundMat )
-            surface.SetDrawColor( Color( 255, 255, 255 ) )
             surface.DrawTexturedRect( 0, 0, _w, _h )
 
             -- Icon
-            local margin = 5
+            local margin = 10
             surface.SetMaterial( categoryMats[category.name] )
-            surface.SetDrawColor( Color( 120, 100, 100 ) )
             surface.DrawTexturedRect( margin, margin, _w - ( margin * 2 ), _h - ( margin * 2 ) )
         end
     end
@@ -205,11 +203,13 @@ function cft.openCraftingMenu( craftingData )
     local categoryContent = vgui.Create( "DScrollPanel", frame )
     formatScrollbar( categoryContent:GetVBar() )
     categoryContent:SetPos( w * 0.16, h * 0.17 )
-    categoryContent:SetSize( w * 0.81, h * 0.765 )
+    categoryContent:SetSize( w * 0.81, h * 0.68 )
 
     cft.categoryDerma.categoryContent = categoryContent
 
     cft.setCategory( firstCat )
+
+    cft.createGrabButton( frame )
 end
 
 function cft.setCategory( category )
@@ -485,6 +485,7 @@ function cft.createCraftButton( panel, recipe )
     end
 
     if panel.craftButton then panel.craftButton:Remove() end
+    if panel.timeLabel then panel.timeLabel:Remove() end
 
     local craftButton = vgui.Create( "DImage", panel )
     if isSelf and ( cft.craftingData.state == cft.STATE_CRAFTED or cft.craftingData.state == cft.STATE_GRAB_REQUEST ) then
@@ -506,7 +507,7 @@ function cft.createCraftButton( panel, recipe )
         local w, h = panel:GetSize()
         local btnH = h * 0.16
         self:SetSize( btnH * ( 98 / 35 ), btnH )
-        self:SetPos( w - craftButton:GetWide() - 5, h - craftButton:GetTall() - 5 )
+        self:SetPos( w - self:GetWide() - 5, h - self:GetTall() - 5 )
     end
 
     function craftButton:OnMousePressed( btn )
@@ -529,6 +530,7 @@ function cft.createCraftButton( panel, recipe )
         end
 
         cft.createCraftButton( panel, recipe )
+        cft.createGrabButton( cft.openMenu )
     end
 
     function craftButton:PaintOver( w, h )
@@ -542,12 +544,107 @@ function cft.createCraftButton( panel, recipe )
 
         surface.SetDrawColor( Color( 0, 150, 0, 80 ) )
         surface.DrawRect( 0, 0, w * prog, h )
+    end
 
-        if prog == 1 then
-            cft.craftingData.state = cft.STATE_CRAFTED
-            cft.createCraftButton( panel, recipe )
+    local timeLabel = vgui.Create( "DLabel", panel )
+    timeLabel:SetTextColor( brown )
+    timeLabel:SetFont( "RVR_CraftingLabel" )
+    timeLabel:SizeToContents()
+
+    function timeLabel:PerformLayout()
+        self:SetTall( craftButton:GetTall() )
+        local w, h = panel:GetSize()
+        self:SetPos( w - craftButton:GetWide() - 5 - self:GetWide(), h - self:GetTall() - 5 )
+    end
+
+    function timeLabel:Think()
+        local time = 0
+        if cft.craftingData.state ~= cft.STATE_CRAFTING or cft.craftingData.recipe ~= recipe then
+            time = recipe.timeToCraft
+        else
+            time = math.Clamp( math.ceil( recipe.timeToCraft - ( CurTime() - cft.craftingData.timeStart ) ), 0, recipe.timeToCraft )
+        end
+        timeLabel:SetText( string.FormattedTime( time, "%02i:%02i" ) )
+    end
+
+    panel.timeLabel = timeLabel
+
+end
+
+function cft.createGrabButton( frame )
+    if frame.grabButton then
+        frame.grabButton:Remove()
+    end
+
+    local w, h = frame:GetSize()
+
+    local state = cft.craftingData.state
+    local recipe = cft.craftingData.recipe
+
+    local canGrab = state == cft.STATE_CRAFTED
+    if canGrab then
+        local itemInstance = RVR.Items.getItemInstance( recipe.item )
+
+        canGrab = RVR.Inventory.selfCanFitItem( itemInstance, recipe.count )
+    end
+
+    local grabButton = vgui.Create( "DImage", frame )
+    grabButton:SetImage( "rvr/icons/craftingmenu_biggrabbutton.png" )
+    grabButton:SetMouseInputEnabled( true )
+    grabButton:SetCursor( canGrab and "hand" or "no" )
+    if not canGrab then
+        if state == cft.STATE_CRAFTED then
+            grabButton:SetImageColor( Color( 255, 150, 150 ) )
+            grabButton:SetTooltip( "No space in inventory" )
+        else
+            grabButton:SetImageColor( Color( 150, 150, 150 ) )
         end
     end
+    grabButton:SetPos( w * 0.16, h * 0.885 )
+    grabButton:SetWide( w * 0.81 )
+
+    function grabButton:PerformLayout()
+        self:SetTall( self:GetWide() * ( 56 / 747 ) )
+    end
+
+    function grabButton:PaintOver( w, h )
+        if cft.craftingData.state ~= cft.STATE_CRAFTING then return end
+
+        local prog = ( CurTime() - cft.craftingData.timeStart ) / recipe.timeToCraft
+
+        prog = math.Clamp( prog, 0, 1 )
+
+        surface.SetDrawColor( Color( 0, 150, 0, 80 ) )
+        surface.DrawRect( 0, 0, w * prog, h )
+    end
+
+    function grabButton:OnMousePressed( btn )
+        if btn ~= MOUSE_LEFT then return end
+        if not canGrab then return end
+
+        cft.craftingData.state = cft.STATE_GRAB_REQUEST
+
+        net.Start( "RVR_Crafting_Grab" )
+        net.SendToServer()
+
+        cft.reloadCraftButtons()
+    end
+
+    frame.grabButton = grabButton
+end
+
+function cft.reloadCraftButtons( reloadIngredients )
+    for k, panel in pairs( cft.recipePanels or {} ) do
+        if panel:GetExpanded() then
+            cft.createCraftButton( panel.content, panel.recipe )
+            if reloadIngredients then
+                for _, label in pairs( panel.content.ingredientLabels ) do
+                    label:UpdateText()
+                end
+            end
+        end
+    end
+    cft.createGrabButton( cft.openMenu )
 end
 
 function cft.closeCraftingMenu()
@@ -566,17 +663,15 @@ net.Receive( "RVR_Crafting_CraftResponse", function()
 
     cft.craftingData.state = state
     if state == cft.STATE_WAITING or state == cft.STATE_CRAFTING then
-        for k, panel in pairs( cft.recipePanels or {} ) do
-            if panel:GetExpanded() then
-                cft.createCraftButton( panel.content, panel.recipe )
-                for _, label in pairs( panel.content.ingredientLabels ) do
-                    label:UpdateText()
-                end
-            end
-        end
+        cft.reloadCraftButtons( true )
     end
     if state == cft.STATE_CRAFTING then
         cft.craftingData.timeStart = CurTime()
+        timer.Simple( cft.craftingData.recipe.timeToCraft, function()
+            if not cft.craftingData then return end -- TODO: Check we're in same menu or something
+            cft.craftingData.state = cft.STATE_CRAFTED
+            cft.reloadCraftButtons()
+        end )
     end
 end )
 
