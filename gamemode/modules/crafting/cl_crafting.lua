@@ -577,7 +577,14 @@ net.Receive( "RVR_Crafting_OpenCraftingMenu", function()
     cft.openCraftingMenu( net.ReadTable() )
 end )
 
--- TODO: change this to a key
+hook.Add( "PlayerBindPress", "RVR_Crafting", function( _, bind, pressed )
+    if not pressed then return end
+    if bind ~= "" then return end -- Put whatever bind this will be here, perhaps +context?
+
+    net.Start( "RVR_Crafting_OpenCraftingMenu" )
+    net.SendToServer()
+end )
+
 concommand.Add( "rvr_crafting_open", function()
     net.Start( "RVR_Crafting_OpenCraftingMenu" )
     net.SendToServer()
