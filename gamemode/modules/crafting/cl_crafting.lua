@@ -12,6 +12,7 @@ local categoryMats = {}
 local categoryMatsLoaded = false
 
 --[[ TODO:
+    Add bench entity using model Peri made
     Redo item tooltips to show much more info
 ]]
 
@@ -89,6 +90,13 @@ function cft.openCraftingMenu( craftingData )
     frame:SetDraggable( false )
     frame:MakePopup()
     frame:SetDeleteOnClose( false )
+
+    function frame:OnKeyCodePressed( key )
+        local contextKey = input.GetKeyCode( input.LookupBinding( "+menu_context" ) )
+        if key == contextKey then
+            cft.closeCraftingMenu()
+        end
+    end
 
     cft.openMenu = frame
 
@@ -742,13 +750,8 @@ end )
 
 hook.Add( "PlayerBindPress", "RVR_Crafting", function( _, bind, pressed )
     if not pressed then return end
-    if bind ~= "" then return end -- Put whatever bind this will be here, perhaps +context?
+    if bind ~= "+menu_context" then return end
 
-    net.Start( "RVR_Crafting_OpenCraftingMenu" )
-    net.SendToServer()
-end )
-
-concommand.Add( "rvr_crafting_open", function()
     net.Start( "RVR_Crafting_OpenCraftingMenu" )
     net.SendToServer()
 end )
