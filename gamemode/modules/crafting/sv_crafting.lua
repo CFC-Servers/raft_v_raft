@@ -102,6 +102,7 @@ function cft.openMenu( ply, ent )
 
     craftData.tier = ent.RVR_Crafting.tier
     craftData.name = ent.RVR_Crafting.name
+    craftData.ent = ent
 
     net.Start( "RVR_Crafting_OpenCraftingMenu" )
     net.WriteTable( craftData )

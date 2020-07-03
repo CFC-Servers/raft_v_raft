@@ -11,7 +11,7 @@ RVR.Crafting.Recipes = {
                     nail = 5,
                     wood = 3,
                 },
-                timeToCraft = 3,
+                timeToCraft = 120,
             },
             {
                 item = "wood",

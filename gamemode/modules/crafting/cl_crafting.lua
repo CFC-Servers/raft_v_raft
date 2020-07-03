@@ -11,11 +11,6 @@ local brown = Color( 91, 56, 34 )
 local categoryMats = {}
 local categoryMatsLoaded = false
 
---[[ TODO:
-    Add bench entity using model Peri made
-    Redo item tooltips to show much more info
-]]
-
 -- TODO: Move this to some sort of util file (same with def in inventory scroller)
 -- Makes the scrollbar look pretty
 local function formatScrollbar( bar )
@@ -74,12 +69,17 @@ function cft.openCraftingMenu( craftingData )
     end
 
     cft.craftingData = {
-        state = craftingData.state
+        state = craftingData.state,
+        ent = craftingData.ent,
     }
 
     if craftingData.state ~= cft.STATE_WAITING then
         cft.craftingData.recipe = cft.Recipes[craftingData.categoryID].recipes[craftingData.recipeID]
         cft.craftingData.timeStart = craftingData.timeStart
+    end
+
+    if craftingData.state == cft.STATE_CRAFTING then
+        cft.createFinishCraftTimer( cft.craftingData.recipe.timeToCraft - ( CurTime() - craftingData.timeStart ) )
     end
 
     local tier = craftingData.tier
@@ -755,9 +755,18 @@ function cft.closeCraftingMenu()
     cft.openMenu = nil
     cft.craftingData = nil
     cft.recipePanels = nil
+    timer.Remove( "RVR_Crafting_timeout" )
 
     net.Start( "RVR_Crafting_CloseCraftingMenu" )
     net.SendToServer()
+end
+
+function cft.createFinishCraftTimer( t )
+    timer.Create( "RVR_Crafting_timeout", t, 1, function()
+        cft.craftingData.state = cft.STATE_CRAFTED
+        cft.reloadCraftButtons()
+        cft.updateCraftingHammers()
+    end )
 end
 
 net.Receive( "RVR_Crafting_CraftResponse", function()
@@ -770,12 +779,8 @@ net.Receive( "RVR_Crafting_CraftResponse", function()
     end
     if state == cft.STATE_CRAFTING then
         cft.craftingData.timeStart = CurTime()
-        timer.Simple( cft.craftingData.recipe.timeToCraft, function()
-            if not cft.craftingData then return end -- TODO: Check we're in same menu or something
-            cft.craftingData.state = cft.STATE_CRAFTED
-            cft.reloadCraftButtons()
-            cft.updateCraftingHammers()
-        end )
+
+        cft.createFinishCraftTimer( cft.craftingData.recipe.timeToCraft )
     end
 
     cft.updateCraftingHammers()
