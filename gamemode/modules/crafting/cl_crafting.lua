@@ -350,7 +350,7 @@ function cft.setCategory( category )
         local itemIcon = vgui.Create( "RVR_ItemSlot", header )
         itemIcon:ConvertToGhost()
         itemIcon:SetImageColor( Color( 0, 0, 0, 0 ) )
-        itemIcon:SetItemData( itemData, recipe.count )
+        itemIcon:SetItemData( itemData, 1 )
         itemIcon.OnMousePressed = clickHeader
         panel.icon = itemIcon
 
@@ -376,7 +376,11 @@ function cft.setCategory( category )
         end
 
         local itemLabel = vgui.Create( "DLabel", header )
-        itemLabel:SetText( itemData.displayName )
+        local text = itemData.displayName
+        if recipe.count > 1 then
+            text = text .. " (" .. recipe.count .. ")"
+        end
+        itemLabel:SetText( text )
         itemLabel:SetFont( "RVR_BoxInventoryHeader" )
         itemLabel:SizeToContents()
         itemLabel:SetColor( brown )
