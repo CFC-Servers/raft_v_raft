@@ -23,6 +23,7 @@ items.items = {
     {
         type = "wood",
         displayName = "Wood",
+        description = "A soggy plank of wood found in the ocean.",
         maxCount = 10,
         model = "models/rvr/items/item_plank.mdl",
         icon = "materials/rvr/items/wood.png",
@@ -31,10 +32,34 @@ items.items = {
     {
         type = "nail",
         displayName = "Nail",
-        maxCount = 25,
+        description = "Careful! It's sharp!",
+        maxCount = 5,
         model = "models/rvr/items/item_nail.mdl",
         icon = "materials/rvr/items/nail.png",
         stackable = true,
+    },
+    {
+        type = "tuna",
+        displayName = "Tuna",
+        description = "A living tuna, eating it would not only make you a monster, but also hurt you!",
+        maxCount = 5,
+        model = "models/rvr/items/item_nail.mdl",
+        icon = "materials/rvr/items/tuna.png",
+        stackable = true,
+        consumable = true,
+        food = 10,
+        health = -5,
+    },
+    {
+        type = "cooked_tuna",
+        displayName = "Cooked Tuna",
+        description = "A cooked tuna, yum?",
+        maxCount = 5,
+        model = "models/rvr/items/item_nail.mdl",
+        icon = "materials/rvr/items/cooked_tuna.png",
+        stackable = true,
+        consumable = true,
+        food = 30,
     },
 }
 
@@ -52,7 +77,11 @@ for k, item in pairs( items.items ) do
             end
 
             if item.health then
-                ply:SetHealth( math.Clamp( ply:Health() + item.health, 0, 100 ) )
+                if item.health < 0 then
+                    ply:TakeDamage( -item.health, ply, ply )
+                else
+                    ply:SetHealth( math.Clamp( ply:Health() + item.health, 0, 100 ) )
+                end
             end
         end
 
@@ -65,7 +94,7 @@ for k, item in pairs( items.items ) do
                 return true
             end
 
-            if item.health and ply:Health() <= 99 then
+            if item.health and ( item.health < 0 or ply:Health() <= 99 ) then
                 return true
             end
 

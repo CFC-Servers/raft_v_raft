@@ -8,6 +8,7 @@ Creates a simple table for an item instance, currently just `{ type = itemType }
 ## Item structure
 - `type` - (string) Unique name for item
 - `displayName` - (string) Name used in menus
+- `description` - (string) Description
 - `maxCount` - (int) Max stack size in inventories
 - `model` - (string) Dropped item + held item model
 - `icon` - (string) Inventory icon
