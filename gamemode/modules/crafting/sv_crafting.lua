@@ -23,7 +23,7 @@ net.Receive( "RVR_Crafting_Grab", function( len, ply )
             local recipe = ent.RVR_CraftingOutput.recipe
             local itemInstance = RVR.Items.getItemInstance( recipe.item )
 
-            if RVR.Inventory.canFitItem( ply, itemInstance, recipe.count ) then
+            if RVR.Inventory.canFitItem( ply.RVR_Inventory, itemInstance, recipe.count ) then
                 RVR.Inventory.attemptPickupItem( ply, itemInstance, recipe.count )
                 ent.RVR_CraftingOutput = nil
             else

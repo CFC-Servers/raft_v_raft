@@ -1,5 +1,6 @@
 RVR.Crafting = RVR.Crafting or {}
-RVR.Crafting.Recipes = {
+local cft = RVR.Crafting
+cft.Recipes = {
     {
         name = "Weapons",
         icon = "rvr/icons/food.png",
@@ -74,7 +75,7 @@ cft.STATE_CRAFTING = 2
 cft.STATE_CRAFTED = 3
 cft.STATE_GRAB_REQUEST = 4
 
-for catID, category in ipairs( RVR.Crafting.Recipes ) do
+for catID, category in ipairs( cft.Recipes ) do
     local categoryTier = 1000
     for recipeID, recipe in pairs( category.recipes ) do
         recipe.tier = recipe.tier or 1
@@ -89,6 +90,8 @@ for catID, category in ipairs( RVR.Crafting.Recipes ) do
         for name, count in pairs( recipe.ingredients ) do
             table.insert( recipe.itemsStruct, { item = { type = name }, count = count } )
         end
+
+        recipe.count = recipe.count or 1
     end
     category.categoryID = catID
 

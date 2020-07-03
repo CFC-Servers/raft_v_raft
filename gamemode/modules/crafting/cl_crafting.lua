@@ -10,6 +10,10 @@ local categoryMats = {}
 local categoryMatsLoaded = false
 
 --[[ TODO:
+    move all crafting data server side into RVR_Crafting on the ent, add convertToCrafter( ent, tier )
+    put icons in
+    show time
+    Add "Grab items" big button
     Somehow show which category is selected
     Redo item tooltips to show much more info
 
@@ -71,7 +75,7 @@ function cft.openCraftingMenu( craftingData )
     }
 
     if craftingData.state ~= cft.STATE_WAITING then
-        cft.craftingData.recipe = cft.Recipes[craftingData.categoryID][craftingData.recipeID]
+        cft.craftingData.recipe = cft.Recipes[craftingData.categoryID].recipes[craftingData.recipeID]
         cft.craftingData.timeStart = craftingData.timeStart
     end
 
@@ -289,7 +293,7 @@ function cft.setCategory( category )
         local itemIcon = vgui.Create( "RVR_ItemSlot", header )
         itemIcon:ConvertToGhost()
         itemIcon:SetImageColor( Color( 0, 0, 0, 0 ) )
-        itemIcon:SetItemData( itemData, recipe.count or 1 )
+        itemIcon:SetItemData( itemData, recipe.count )
         itemIcon.OnMousePressed = clickHeader
 
         function itemIcon:PerformLayout()
@@ -446,6 +450,8 @@ function cft.createCraftButton( panel, recipe )
     local tooltip
     local btnColor
 
+    local isSelf = cft.craftingData.recipe == recipe
+
     if cft.craftingData.state == cft.STATE_WAITING then
         canCraft = true
         for name, count in pairs( recipe.ingredients ) do
@@ -457,7 +463,7 @@ function cft.createCraftButton( panel, recipe )
                 break
             end
         end
-    elseif cft.craftingData.recipe == recipe then
+    elseif isSelf then
         if cft.craftingData.state == cft.STATE_CRAFTED then
             local itemInstance = RVR.Items.getItemInstance( recipe.item )
 
@@ -482,7 +488,7 @@ function cft.createCraftButton( panel, recipe )
     if panel.craftButton then panel.craftButton:Remove() end
 
     local craftButton = vgui.Create( "DImage", panel )
-    if cft.craftingData.state == cft.STATE_CRAFTED or cft.craftingData.state == cft.STATE_GRAB_REQUEST then
+    if isSelf and ( cft.craftingData.state == cft.STATE_CRAFTED or cft.craftingData.state == cft.STATE_GRAB_REQUEST ) then
         craftButton:SetImage( "rvr/icons/craftingmenu_grabbutton.png" )
     else
         craftButton:SetImage( "rvr/icons/craftingmenu_craftbutton.png" )
@@ -528,6 +534,7 @@ function cft.createCraftButton( panel, recipe )
 
     function craftButton:PaintOver( w, h )
         if not cft.craftingData then return end
+        if cft.craftingData.recipe ~= recipe then return end
         if cft.craftingData.state ~= cft.STATE_CRAFTING then return end
 
         local prog = ( CurTime() - cft.craftingData.timeStart ) / recipe.timeToCraft
@@ -568,7 +575,8 @@ net.Receive( "RVR_Crafting_CraftResponse", function()
                 end
             end
         end
-    elseif state == cft.STATE_CRAFTING then
+    end
+    if state == cft.STATE_CRAFTING then
         cft.craftingData.timeStart = CurTime()
     end
 end )
