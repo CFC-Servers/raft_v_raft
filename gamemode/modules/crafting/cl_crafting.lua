@@ -100,7 +100,8 @@ function cft.openCraftingMenu( craftingData )
 
     function frame:OnKeyCodePressed( key )
         local contextKey = input.GetKeyCode( input.LookupBinding( "+menu_context" ) )
-        if key == contextKey then
+        local useKey = input.GetKeyCode( input.LookupBinding( "+use" ) )
+        if key == contextKey or key == useKey then
             cft.closeCraftingMenu()
         end
     end
