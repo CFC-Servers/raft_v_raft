@@ -45,7 +45,13 @@ end
 
 surface.CreateFont( "RVR_CraftingHeader", {
     font = "Bungee Regular",
-    size = ScrH() * 0.1,
+    size = ScrH() * 0.12,
+    weight = 700,
+} )
+
+surface.CreateFont( "RVR_CraftingSubHeader", {
+    font = "Bungee Regular",
+    size = ScrH() * 0.08,
     weight = 700,
 } )
 
@@ -77,6 +83,7 @@ function cft.openCraftingMenu( craftingData )
     end
 
     local tier = craftingData.tier
+    local name = craftingData.name
 
     local w, h = ScrH() * 0.91, ScrH() * 0.7
 
@@ -210,6 +217,27 @@ function cft.openCraftingMenu( craftingData )
     paddingPanel:SetSize( 0, 0 )
     paddingPanel:Dock( TOP )
 
+    local nameLabel = vgui.Create( "DLabel", frame )
+    nameLabel:SetText( name )
+    nameLabel:SetFont( "RVR_CraftingSubHeader" )
+    nameLabel:SizeToContents()
+    nameLabel:SetTextColor( brown )
+
+    function nameLabel:PerformLayout()
+        self:SetPos( w * 0.56 - self:GetWide() * 0.5, -h * 0.01 )
+    end
+
+    local titleBackground = vgui.Create( "DShape", frame )
+    titleBackground:SetType( "Rect" )
+    titleBackground:SetPos( w * 0.165, h * 0.08 )
+    titleBackground:SetSize( w * 0.792, h * 0.08 )
+    titleBackground:SetColor( brown )
+
+    local nameUnderline = vgui.Create( "DShape", frame )
+    nameUnderline:SetType( "Rect" )
+    nameUnderline:SetPos( w * 0.161, h * 0.08 )
+    nameUnderline:SetSize( w * 0.80, 2 )
+    nameUnderline:SetColor( yellow )
 
     local title = vgui.Create( "DLabel", frame )
     title:SetText( "" )
@@ -218,15 +246,15 @@ function cft.openCraftingMenu( craftingData )
 
     local titleUnderline = vgui.Create( "DShape", frame )
     titleUnderline:SetType( "Rect" )
-    titleUnderline:SetPos( w * 0.17, h * 0.13 )
-    titleUnderline:SetSize( w * 0.79, 1 )
+    titleUnderline:SetPos( w * 0.161, h * 0.16 )
+    titleUnderline:SetSize( w * 0.80, 2 )
     titleUnderline:SetColor( yellow )
 
     cft.categoryDerma.title = title
 
     local categoryContent = vgui.Create( "DScrollPanel", frame )
     formatScrollbar( categoryContent:GetVBar() )
-    categoryContent:SetPos( w * 0.16, h * 0.17 )
+    categoryContent:SetPos( w * 0.16, h * 0.183 )
     categoryContent:SetSize( w * 0.81, h * 0.68 )
 
     cft.categoryDerma.categoryContent = categoryContent
@@ -244,7 +272,7 @@ function cft.setCategory( category )
     local title = cft.categoryDerma.title
     title:SetText( category.name )
     title:SizeToContents()
-    title:SetPos( w * 0.55 - title:GetWide() / 2, h * 0.013 )
+    title:SetPos( w * 0.56 - title:GetWide() / 2, h * 0.035 )
 
     for catID, btn in pairs( cft.categoryDerma.buttons ) do
         btn.selected = catID == category.categoryID

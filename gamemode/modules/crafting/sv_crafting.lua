@@ -101,6 +101,7 @@ function cft.openMenu( ply, ent )
     end
 
     craftData.tier = ent.RVR_Crafting.tier
+    craftData.name = ent.RVR_Crafting.name
 
     net.Start( "RVR_Crafting_OpenCraftingMenu" )
     net.WriteTable( craftData )
@@ -109,14 +110,15 @@ function cft.openMenu( ply, ent )
     ply.RVR_CraftingEnt = ent
 end
 
-function cft.makeCrafter( ent, tier )
+function cft.makeCrafter( ent, name, tier )
     ent.RVR_Crafting = {
-        tier = tier
+        tier = tier,
+        name = name,
     }
 end
 
 hook.Add( "PlayerInitialSpawn", "RVR_Crafting_addCrafter", function( ply )
-    cft.makeCrafter( ply, 1 )
+    cft.makeCrafter( ply, "Player", 1 )
 end )
 
 net.Receive( "RVR_Crafting_CloseCraftingMenu", function( len, ply )
