@@ -395,6 +395,8 @@ function cft.setCategory( category )
         panel.content = panelContent
         panel.recipe = recipe
     end
+
+    cft.updateCraftingHammers()
 end
 
 function cft.populateRecipePanel( panel, recipe )
@@ -652,7 +654,7 @@ function cft.createGrabButton( frame )
         self:SetTall( self:GetWide() * ( 56 / 747 ) )
     end
 
-    function grabButton:PaintOver( w, h )
+    function grabButton:PaintOver( _w, _h )
         if cft.craftingData.state ~= cft.STATE_CRAFTING then return end
 
         local prog = ( CurTime() - cft.craftingData.timeStart ) / recipe.timeToCraft
@@ -660,7 +662,7 @@ function cft.createGrabButton( frame )
         prog = math.Clamp( prog, 0, 1 )
 
         surface.SetDrawColor( Color( 0, 150, 0, 80 ) )
-        surface.DrawRect( 0, 0, w * prog, h )
+        surface.DrawRect( 0, 0, _w * prog, _h )
     end
 
     function grabButton:OnMousePressed( btn )
@@ -712,6 +714,12 @@ function cft.updateCraftingHammers()
         end
     end
 end
+
+hook.Add( "RVR_Inventory_HotbarCanScroll", "RVR_Crafting_stopScroll", function()
+    if cft.openMenu then
+        return false
+    end
+end )
 
 function cft.closeCraftingMenu()
     cft.openMenu:Remove()
