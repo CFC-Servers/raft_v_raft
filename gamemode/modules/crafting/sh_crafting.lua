@@ -68,6 +68,11 @@ RVR.Crafting.Recipes = {
     }
 }
 
+cft.STATE_WAITING = 0
+cft.STATE_CRAFT_REQUEST = 1
+cft.STATE_CRAFTING = 2
+cft.STATE_CRAFTED = 3
+cft.STATE_GRAB_REQUEST = 4
 
 for catID, category in ipairs( RVR.Crafting.Recipes ) do
     local categoryTier = 1000
@@ -79,6 +84,11 @@ for catID, category in ipairs( RVR.Crafting.Recipes ) do
 
         recipe.categoryID = catID
         recipe.recipeID = recipeID
+
+        recipe.itemsStruct = {}
+        for name, count in pairs( recipe.ingredients ) do
+            table.insert( recipe.itemsStruct, { item = { type = name }, count = count } )
+        end
     end
     category.categoryID = catID
 
