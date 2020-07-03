@@ -59,12 +59,12 @@ cft.Recipes = {
     },
     {
         name = "Navigation",
-        icon = "rvr/icons/food.png",
+        icon = "rvr/icons/craftingmenu_category_navigation.png",
         recipes = {},
     },
     {
         name = "Furniture",
-        icon = "rvr/icons/food.png",
+        icon = "rvr/icons/craftingmenu_category_furniture.png",
         recipes = {},
     },
     {

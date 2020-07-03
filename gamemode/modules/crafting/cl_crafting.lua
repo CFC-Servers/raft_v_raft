@@ -4,16 +4,15 @@ local cft = RVR.Crafting
 local backgroundMat = Material( "rvr/backgrounds/crafting_background.png" )
 local categoriesBackgroundMat = Material( "rvr/backgrounds/craftingmenu_categoriesbackground.png" )
 local iconBackgroundMat = Material( "rvr/backgrounds/craftingmenu_categorybackground.png" )
+local hammerIcon = Material( "rvr/icons/crafting_hammer.png" )
+
 local yellow = Color( 188, 162, 105 )
 local brown = Color( 91, 56, 34 )
 local categoryMats = {}
 local categoryMatsLoaded = false
 
 --[[ TODO:
-    put icons in - need navigation, furniture
-    Somehow show which category is selected
     Redo item tooltips to show much more info
-
 ]]
 
 -- TODO: Move this to some sort of util file (same with def in inventory scroller)
@@ -151,6 +150,9 @@ function cft.openCraftingMenu( craftingData )
         self:GetVBar():AddScroll( change * 0.05 )
     end
 
+    cft.categoryDerma = {}
+    cft.categoryDerma.buttons = {}
+
     local firstCat
     for _, category in ipairs( cft.Recipes ) do
         if category.minTier > tier then continue end
@@ -163,14 +165,15 @@ function cft.openCraftingMenu( craftingData )
         categoryButton:InvalidateParent( true )
         categoryButton:SetTall( categoryButton:GetWide() )
 
+        cft.categoryDerma.buttons[category.categoryID] = categoryButton
+
         function categoryButton:DoClick()
             cft.setCategory( category )
         end
 
         function categoryButton:Paint( _w, _h )
-            surface.SetDrawColor( Color( 255, 255, 255 ) )
-
             -- Background
+            surface.SetDrawColor( self.selected and Color( 255, 255, 255 ) or Color( 180, 180, 180 ) )
             surface.SetMaterial( iconBackgroundMat )
             surface.DrawTexturedRect( 0, 0, _w, _h )
 
@@ -178,6 +181,20 @@ function cft.openCraftingMenu( craftingData )
             local margin = 10
             surface.SetMaterial( categoryMats[category.name] )
             surface.DrawTexturedRect( margin, margin, _w - ( margin * 2 ), _h - ( margin * 2 ) )
+
+            if not self.showHammer then return end
+
+            local hammerSize = 30
+
+            local ang = 0
+            if self.animateHammer then
+                ang = math.deg( math.abs( math.sin( CurTime() * 3 ) ) )
+            end
+
+            local colVal = self.selected and 180 or 130
+            surface.SetDrawColor( self.animateHammer and Color( colVal, 0, 0 ) or Color( 0, colVal, 0 ) )
+            surface.SetMaterial( hammerIcon )
+            surface.DrawTexturedRectRotated( _w - hammerSize + 8, _h - hammerSize + 5, hammerSize, hammerSize, ang )
         end
     end
 
@@ -185,7 +202,6 @@ function cft.openCraftingMenu( craftingData )
     paddingPanel:SetSize( 0, 0 )
     paddingPanel:Dock( TOP )
 
-    cft.categoryDerma = {}
 
     local title = vgui.Create( "DLabel", frame )
     title:SetText( "" )
@@ -210,6 +226,8 @@ function cft.openCraftingMenu( craftingData )
     cft.setCategory( firstCat )
 
     cft.createGrabButton( frame )
+
+    cft.updateCraftingHammers()
 end
 
 function cft.setCategory( category )
@@ -220,12 +238,15 @@ function cft.setCategory( category )
     title:SizeToContents()
     title:SetPos( w * 0.55 - title:GetWide() / 2, h * 0.013 )
 
+    for catID, btn in pairs( cft.categoryDerma.buttons ) do
+        btn.selected = catID == category.categoryID
+    end
+
     local content = cft.categoryDerma.categoryContent
     content:Clear()
 
     local recipePanels = {}
     cft.recipePanels = recipePanels
-    cft.category = category.categoryID
     for k, recipe in pairs( category.recipes ) do
         local panel = vgui.Create( "DPanel", content )
         panel:Dock( TOP )
@@ -294,11 +315,27 @@ function cft.setCategory( category )
         itemIcon:SetImageColor( Color( 0, 0, 0, 0 ) )
         itemIcon:SetItemData( itemData, recipe.count )
         itemIcon.OnMousePressed = clickHeader
+        panel.icon = itemIcon
 
         function itemIcon:PerformLayout()
             local _w, _h = header:GetSize()
             self:SetPos( _w * 0.015, _h * 0.05 )
             self:SetSize( _h * 0.9, _h * 0.9 )
+        end
+
+        function itemIcon:PaintOver( _w, _h )
+            if not self.showHammer then return end
+
+            local hammerSize = 30
+
+            local ang = 0
+            if self.animateHammer then
+                ang = math.deg( math.abs( math.sin( CurTime() * 3 ) ) )
+            end
+
+            surface.SetDrawColor( self.animateHammer and Color( 180, 0, 0 ) or Color( 0, 180, 0 ) )
+            surface.SetMaterial( hammerIcon )
+            surface.DrawTexturedRectRotated( _w - hammerSize + 5, _h - hammerSize + 5, hammerSize, hammerSize, ang )
         end
 
         local itemLabel = vgui.Create( "DLabel", header )
@@ -647,6 +684,27 @@ function cft.reloadCraftButtons( reloadIngredients )
     cft.createGrabButton( cft.openMenu )
 end
 
+function cft.updateCraftingHammers()
+    for id, btn in pairs( cft.categoryDerma.buttons ) do
+        btn.showHammer = false
+        if cft.craftingData.state ~= cft.STATE_WAITING and cft.craftingData.recipe.categoryID == id then
+            btn.showHammer = true
+            btn.animateHammer = cft.craftingData.state == cft.STATE_CRAFTING
+        end
+    end
+
+    for k, panel in pairs( cft.recipePanels ) do
+        local icon = panel.icon
+        local recipe = panel.recipe
+
+        icon.showHammer = false
+        if cft.craftingData.state ~= cft.STATE_WAITING and cft.craftingData.recipe == recipe then
+            icon.showHammer = true
+            icon.animateHammer = cft.craftingData.state == cft.STATE_CRAFTING
+        end
+    end
+end
+
 function cft.closeCraftingMenu()
     cft.openMenu:Remove()
     cft.openMenu = nil
@@ -671,8 +729,11 @@ net.Receive( "RVR_Crafting_CraftResponse", function()
             if not cft.craftingData then return end -- TODO: Check we're in same menu or something
             cft.craftingData.state = cft.STATE_CRAFTED
             cft.reloadCraftButtons()
+            cft.updateCraftingHammers()
         end )
     end
+
+    cft.updateCraftingHammers()
 end )
 
 net.Receive( "RVR_Crafting_OpenCraftingMenu", function()
