@@ -16,16 +16,19 @@ end
 net.Receive( "RVR_Crafting_Grab", function( len, ply )
     local ent = ply.RVR_CraftingEnt or ply
 
+    if not ent.RVR_Crafting then return end
+
     local state = cft.STATE_WAITING
 
-    if ent.RVR_CraftingOutput then
-        if CurTime() >= ent.RVR_CraftingOutput.timeStart + ent.RVR_CraftingOutput.recipe.timeToCraft then
-            local recipe = ent.RVR_CraftingOutput.recipe
+    local output = ent.RVR_Crafting.output
+    if output then
+        if CurTime() >= output.timeStart + output.recipe.timeToCraft then
+            local recipe = output.recipe
             local itemInstance = RVR.Items.getItemInstance( recipe.item )
 
             if RVR.Inventory.canFitItem( ply.RVR_Inventory, itemInstance, recipe.count ) then
                 RVR.Inventory.attemptPickupItem( ply, itemInstance, recipe.count )
-                ent.RVR_CraftingOutput = nil
+                ent.RVR_Crafting.output = nil
             else
                 state = cft.STATE_CRAFTED
             end
@@ -55,15 +58,17 @@ net.Receive( "RVR_Crafting_AttemptCraft", function( len, ply )
 end )
 
 function cft.craft( ply, ent, recipe )
-    if ent.RVR_CraftingOutput then return end
+    if not ent.RVR_Crafting then return end
 
-    local tier = ent.RVR_CraftingTier or 1
+    if ent.RVR_Crafting.output then return end
+
+    local tier = ent.RVR_Crafting.tier
     if tier < recipe.tier then return end
 
     local success = RVR.Inventory.tryTakeItems( ply, recipe.itemsStruct )
     if not success then return end
 
-    ent.RVR_CraftingOutput = {
+    ent.RVR_Crafting.output = {
         recipe = recipe,
         timeStart = CurTime(),
     }
@@ -76,22 +81,26 @@ function cft.craft( ply, ent, recipe )
 end
 
 function cft.openMenu( ply, ent )
+    if not ent.RVR_Crafting then return end
+
     local craftData = { state = cft.STATE_WAITING }
 
-    if ent.RVR_CraftingOutput then
-        if CurTime() >= ent.RVR_CraftingOutput.timeStart + ent.RVR_CraftingOutput.recipe.timeToCraft then
+    local output = ent.RVR_Crafting.output
+    if output then
+        local recipe = output.recipe
+
+        if CurTime() >= output.timeStart + recipe.timeToCraft then
             craftData.state = cft.STATE_CRAFTED
         else
             craftData.state = cft.STATE_CRAFTING
         end
-        craftData.timeStart = ent.RVR_CraftingOutput.timeStart
+        craftData.timeStart = output.timeStart
 
-        local recipe = ent.RVR_CraftingOutput.recipe
         craftData.categoryID = recipe.categoryID
         craftData.recipeID = recipe.recipeID
     end
 
-    craftData.tier = ent.RVR_CraftingTier or 1
+    craftData.tier = ent.RVR_Crafting.tier
 
     net.Start( "RVR_Crafting_OpenCraftingMenu" )
     net.WriteTable( craftData )
@@ -99,6 +108,16 @@ function cft.openMenu( ply, ent )
 
     ply.RVR_CraftingEnt = ent
 end
+
+function cft.makeCrafter( ent, tier )
+    ent.RVR_Crafting = {
+        tier = tier
+    }
+end
+
+hook.Add( "PlayerInitialSpawn", "RVR_Crafting_addCrafter", function( ply )
+    cft.makeCrafter( ply, 1 )
+end )
 
 net.Receive( "RVR_Crafting_CloseCraftingMenu", function( len, ply )
     ply.RVR_CraftingEnt = nil
