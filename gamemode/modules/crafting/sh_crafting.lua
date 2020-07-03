@@ -20,7 +20,12 @@ for catID, category in ipairs( cft.Recipes ) do
 
         recipe.itemsStruct = {}
         for name, count in pairs( recipe.ingredients ) do
-            table.insert( recipe.itemsStruct, { item = { type = name }, count = count } )
+            table.insert( recipe.itemsStruct, {
+                item = {
+                    type = name
+                },
+                count = count,
+            } )
         end
 
         recipe.count = recipe.count or 1

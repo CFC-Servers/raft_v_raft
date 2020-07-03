@@ -604,8 +604,8 @@ function cft.createCraftButton( panel, recipe )
             cft.craftingData.recipe = recipe
 
             net.Start( "RVR_Crafting_AttemptCraft" )
-            net.WriteInt( recipe.categoryID, 8 )
-            net.WriteInt( recipe.recipeID, 8 )
+                net.WriteInt( recipe.categoryID, 8 )
+                net.WriteInt( recipe.recipeID, 8 )
             net.SendToServer()
         end
 

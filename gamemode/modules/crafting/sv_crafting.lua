@@ -9,7 +9,7 @@ util.AddNetworkString( "RVR_Crafting_Grab" )
 
 local function craftFail( ply )
     net.Start( "RVR_Crafting_CraftResponse" )
-    net.WriteInt( cft.STATE_WAITING, 4 )
+        net.WriteInt( cft.STATE_WAITING, 4 )
     net.Send( ply )
 end
 
@@ -38,7 +38,7 @@ net.Receive( "RVR_Crafting_Grab", function( len, ply )
     end
 
     net.Start( "RVR_Crafting_CraftResponse" )
-    net.WriteInt( state, 4 )
+        net.WriteInt( state, 4 )
     net.Send( ply )
 end )
 
@@ -74,7 +74,7 @@ function cft.craft( ply, ent, recipe )
     }
 
     net.Start( "RVR_Crafting_CraftResponse" )
-    net.WriteInt( cft.STATE_CRAFTING, 4 )
+        net.WriteInt( cft.STATE_CRAFTING, 4 )
     net.Send( ply )
 
     return true
@@ -105,7 +105,7 @@ function cft.openMenu( ply, ent )
     craftData.ent = ent
 
     net.Start( "RVR_Crafting_OpenCraftingMenu" )
-    net.WriteTable( craftData )
+        net.WriteTable( craftData )
     net.Send( ply )
 
     ply.RVR_CraftingEnt = ent
