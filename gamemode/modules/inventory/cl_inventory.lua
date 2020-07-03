@@ -295,6 +295,7 @@ function inv.setHotbarSlot( newIndex )
 end
 
 hook.Add( "InitPostEntity", "RVR_Inventory_HotbarSetup", inv.makeHotbar )
+hook.Add( "OnScreenSizeChanged", "RVR_Inventory_HotbarSetup", inv.makeHotbar )
 
 if GAMEMODE then
     inv.makeHotbar()
