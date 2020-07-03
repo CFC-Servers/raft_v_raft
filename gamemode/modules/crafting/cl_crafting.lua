@@ -10,9 +10,8 @@ local categoryMats = {}
 local categoryMatsLoaded = false
 
 --[[ TODO:
-    move all crafting data server side into RVR_Crafting on the ent, add convertToCrafter( ent, tier )
-    put icons in
     show time
+    put icons in
     Add "Grab items" big button
     Somehow show which category is selected
     Redo item tooltips to show much more info

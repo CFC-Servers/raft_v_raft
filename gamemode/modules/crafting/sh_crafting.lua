@@ -3,7 +3,7 @@ local cft = RVR.Crafting
 cft.Recipes = {
     {
         name = "Weapons",
-        icon = "rvr/icons/food.png",
+        icon = "rvr/icons/craftingmenu_category_weapons.png",
         recipes = {
             {
                 item = "wood",
@@ -16,22 +16,22 @@ cft.Recipes = {
             {
                 item = "wood",
                 ingredients = {
-                    nail = 5
+                    nail = 5,
                 },
                 timeToCraft = 3,
             },
             {
                 item = "wood",
                 ingredients = {
-                    nail = 5
+                    nail = 5,
                 },
                 timeToCraft = 3,
-            }
-        }
+            },
+        },
     },
     {
         name = "Tools",
-        icon = "rvr/icons/food.png",
+        icon = "rvr/icons/craftingmenu_category_tools.png",
         recipes = {
             {
                 item = "wood",
@@ -39,34 +39,39 @@ cft.Recipes = {
                     nail = 5
                 },
                 timeToCraft = 3,
-            }
-        }
+            },
+        },
     },
     {
-        name = "Other",
-        icon = "rvr/icons/food.png",
-        recipes = {}
-    },
-    {
-        name = "Equipment",
-        icon = "rvr/icons/food.png",
-        recipes = {}
+        name = "Food",
+        icon = "rvr/icons/craftingmenu_category_weapons.png",
+        recipes = {},
     },
     {
         name = "Resources",
         icon = "rvr/icons/food.png",
-        recipes = {}
+        recipes = {},
+    },
+    {
+        name = "Equipment",
+        icon = "rvr/icons/craftingmenu_category_armor.png",
+        recipes = {},
     },
     {
         name = "Navigation",
         icon = "rvr/icons/food.png",
-        recipes = {}
+        recipes = {},
     },
     {
         name = "Furniture",
         icon = "rvr/icons/food.png",
-        recipes = {}
-    }
+        recipes = {},
+    },
+    {
+        name = "Other",
+        icon = "rvr/icons/food.png",
+        recipes = {},
+    },
 }
 
 cft.STATE_WAITING = 0
