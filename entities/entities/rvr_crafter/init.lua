@@ -20,7 +20,7 @@ function ENT:Initialize()
         physObj:EnableMotion( true )
     end
 
-    RVR.Crafting.makeCrafter( self, self.CrafterName, self.Tier )
+    RVR.Crafting.makeCrafter( self, self.CrafterName, self.Tier, self.CrafterType )
 end
 
 function ENT:Use( activator, caller )

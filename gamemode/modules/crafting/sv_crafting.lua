@@ -65,6 +65,9 @@ function cft.craft( ply, ent, recipe )
     local tier = ent.RVR_Crafting.tier
     if tier < recipe.tier then return end
 
+    local category = RVR.Crafting.Recipes[recipe.categoryID]
+    if ent.RVR_Crafting.type ~= category.type then return end
+
     local success = RVR.Inventory.tryTakeItems( ply, recipe.itemsStruct )
     if not success then return end
 
@@ -103,6 +106,7 @@ function cft.openMenu( ply, ent )
     craftData.tier = ent.RVR_Crafting.tier
     craftData.name = ent.RVR_Crafting.name
     craftData.ent = ent
+    craftData.crafterType = ent.RVR_Crafting.type
 
     net.Start( "RVR_Crafting_OpenCraftingMenu" )
         net.WriteTable( craftData )
@@ -111,10 +115,11 @@ function cft.openMenu( ply, ent )
     ply.RVR_CraftingEnt = ent
 end
 
-function cft.makeCrafter( ent, name, tier )
+function cft.makeCrafter( ent, name, tier, crafterType )
     ent.RVR_Crafting = {
         tier = tier,
         name = name,
+        type = crafterType or "normal",
     }
 end
 

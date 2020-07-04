@@ -84,6 +84,7 @@ function cft.openCraftingMenu( craftingData )
 
     local tier = craftingData.tier
     local name = craftingData.name
+    local crafterType = craftingData.crafterType
 
     local w, h = ScrH() * 0.91, ScrH() * 0.7
 
@@ -172,6 +173,7 @@ function cft.openCraftingMenu( craftingData )
     local firstCat
     for _, category in ipairs( cft.Recipes ) do
         if category.minTier > tier then continue end
+        if category.type ~= crafterType then continue end
         if #category.recipes == 0 then continue end
         firstCat = firstCat or category
 

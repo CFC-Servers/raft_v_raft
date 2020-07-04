@@ -32,5 +32,7 @@ for catID, category in ipairs( cft.Recipes ) do
     end
     category.categoryID = catID
 
+    category.crafterType = category.crafterType or "normal"
+
     category.minTier = categoryTier == 1000 and 1 or categoryTier
 end
