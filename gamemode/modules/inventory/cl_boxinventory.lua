@@ -1,6 +1,6 @@
 RVR.Inventory = RVR.Inventory or {}
 local inv = RVR.Inventory
-local L = RVR.Localize
+local L = RVR.Localization.Localize
 
 local backgroundMat = Material( "rvr/backgrounds/generic_menu_background.png" )
 
