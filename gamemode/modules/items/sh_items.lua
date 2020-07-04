@@ -1,5 +1,6 @@
 RVR.Items = RVR.Items or {}
 local items = RVR.Items
+local L = RVR.Localization.Localize
 
 function items.getItemData( itemType )
     for _, itemData in pairs( items.items ) do
@@ -10,7 +11,7 @@ end
 -- Wrapper for now, allows adding metadata to item instances later
 function items.getItemInstance( itemType )
     if not items.getItemData( itemType ) then
-        error( "Item type " .. itemType .. " does not exist" )
+        error( L( "itemTypeDoesNotExist", itemType ) )
     end
 
     return {

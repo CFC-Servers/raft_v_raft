@@ -1,5 +1,6 @@
 RVR.Inventory = RVR.Inventory or {}
 local inv = RVR.Inventory
+local L = RVR.Localize
 
 local backgroundMat = Material( "rvr/backgrounds/generic_menu_background.png" )
 
@@ -43,7 +44,7 @@ function inv.openBoxInventory( boxInventory, playerInventory )
     end
 
     local label = vgui.Create( "DLabel", frame )
-    label:SetText( string.upper( boxInventory.Name or "STORAGE" ) )
+    label:SetText( string.upper( boxInventory.Name or L( "storage" ) ) )
     label:SetTextColor( Color( 188, 162, 105 ) )
     label:SetFont( "RVR_BoxInventoryHeader" )
     label:SizeToContents()
