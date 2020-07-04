@@ -1,5 +1,31 @@
 RVR.Crafting = RVR.Crafting or {}
 
+--[[
+
+Recipe structure
+
+Recipes = { categories }
+
+category = {
+    name = Name of category
+    icon = Path to icon for category, from materials/
+    crafterType = (optional) Type of crafter required for this category, defaults to "normal"
+    recipes = { recipes }
+}
+
+recipe = {
+    item = Output item type
+    count = (optional) Number of items to give, defaults to 1
+    ingredients = {
+        ingredient1Type = count1
+        ingredient12ype = count2
+    }
+    tier = (optional) Minimum crafter tier required, defaults to 1
+    timeToCraft = Time in seconds this craft takes (non-zero)
+}
+
+]]
+
 RVR.Crafting.Recipes = {
     {
         name = "Weapons",
@@ -7,11 +33,11 @@ RVR.Crafting.Recipes = {
         recipes = {
             {
                 item = "wood",
+                count = 4,
                 ingredients = {
                     nail = 5,
                     wood = 3,
                 },
-                count = 4,
                 timeToCraft = 120,
             },
             {

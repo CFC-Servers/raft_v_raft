@@ -66,7 +66,7 @@ function cft.craft( ply, ent, recipe )
     if tier < recipe.tier then return end
 
     local category = RVR.Crafting.Recipes[recipe.categoryID]
-    if ent.RVR_Crafting.type ~= category.type then return end
+    if ent.RVR_Crafting.type ~= category.crafterType then return end
 
     local success = RVR.Inventory.tryTakeItems( ply, recipe.itemsStruct )
     if not success then return end
