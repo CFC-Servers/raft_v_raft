@@ -279,6 +279,8 @@ function inv.setHotbarSlot( newIndex )
 
     if newIndex < 1 or newIndex > GAMEMODE.Config.Inventory.PLAYER_HOTBAR_SLOTS then return end
 
+    if hook.Run( "RVR_Inventory_CanChangeHotbarSelected", LocalPlayer(), newIndex ) == false then return end
+
     local prevSlot = hotbar.slots[hotbar.selectedSlot]
     if prevSlot then
         prevSlot:SetImageColor( Color( 255, 255, 255 ) )

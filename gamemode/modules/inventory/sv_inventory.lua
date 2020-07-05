@@ -213,6 +213,8 @@ function inv.setSelectedItem( ply, idx )
     if not ply.RVR_Inventory then return end
     idx = math.Clamp( idx, 1, config.PLAYER_INVENTORY_SLOTS )
 
+    if hook.Run( "RVR_Inventory_CanChangeHotbarSelected", ply, idx ) == false then return end
+
     ply.RVR_Inventory.HotbarSelected = idx
 
     ply:StripWeapons()

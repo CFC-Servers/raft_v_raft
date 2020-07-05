@@ -11,6 +11,8 @@ SWEP.BobScale = 0.1
 SWEP.SwayScale = 0
 SWEP.DrawAmmo = false
 
+local useCooldown = 1
+
 function SWEP:SetupDataTables()
     self:NetworkVar( "String", 0, "ItemModel" )
     self:NetworkVar( "Angle", 0, "ViewModelAng" )
@@ -44,11 +46,11 @@ end
 
 -- Empty to remove default behaviour, don't remove >:(
 function SWEP:PrimaryAttack()
-    self:SetNextPrimaryFire( CurTime() + 1 )
+    self:SetNextPrimaryFire( CurTime() + useCooldown )
 
     if CLIENT then
         if CurTime() < ( self.nextFire or 0 ) then return end
-        self.nextFire = CurTime() + 1
+        self.nextFire = CurTime() + useCooldown
     end
 
     local itemType = self:GetItemType()
@@ -58,20 +60,38 @@ function SWEP:PrimaryAttack()
 
     if itemData and itemData.consumable then
         if not itemData.canConsume( self.Owner ) then return end
+
+        local owner = self.Owner
+
+        hook.Add( "RVR_Inventory_CanChangeHotbarSelected", "RVR_HeldItemConsume" .. owner:EntIndex(), function( ply, idx )
+            if ply ~= owner then return end
+            return false
+        end )
+
+        timer.Simple( useCooldown, function()
+            hook.Remove( "RVR_Inventory_CanChangeHotbarSelected", "RVR_HeldItemConsume" .. owner:EntIndex() )
+        end )
+
         if SERVER then
-            local inv = self.Owner.RVR_Inventory
-            local slotData = RVR.Inventory.getSlot( self.Owner, inv.HotbarSelected )
+            timer.Simple( useCooldown, function()
+                local inv = owner.RVR_Inventory
+                local slotData = RVR.Inventory.getSlot( owner, inv.HotbarSelected )
 
-            slotData.count = slotData.count - 1
-            if slotData.count == 0 then
-                slotData = nil
-            end
+                slotData.count = slotData.count - 1
+                if slotData.count == 0 then
+                    slotData = nil
+                end
 
-            RVR.Inventory.setSlot( self.Owner, inv.HotbarSelected, slotData, { self.Owner } )
+                RVR.Inventory.setSlot( owner, inv.HotbarSelected, slotData, { owner } )
+            end )
 
-            itemData.onConsume( self.Owner )
+            timer.Simple( useCooldown * 0.5, function()
+                itemData.onConsume( owner )
+            end )
         else
             -- TODO: some sort of animation?
         end
     end
 end
+
+
