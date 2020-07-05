@@ -95,5 +95,3 @@ function SWEP:PrimaryAttack()
         end
     end
 end
-
-
