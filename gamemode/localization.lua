@@ -10,36 +10,36 @@ end
 -- Words
 L.storage = {
     en = "Storage",
-    fr = "Je suis une baguette"
+    fr = "Espace de rangement"
 }
 
 -- Error messages
 L.notHoldingItem = {
     en = "Not holding an item",
-    fr = "Je suis une baguette"
+    fr = "Aucun item sélectionné"
 }
 
 L.itemDoesNotExist = {
     en = "Item %s does not exist",
-    fr = "Je suis une %s"
+    fr = "L'item %s n'éxiste pas"
 }
 
 L.noSpaceInInventory = {
     en = "No space in inventory",
-    fr = "Je suis une baguette"
+    fr = "L'inventaire est plein"
 }
 
 L.canOnlyFitAmount = {
     en = "Only able to fit %i of %i items in inventory",
-    fr = "Je suis %i baguettes %i"
+    fr = "Seulement %i des %i items on été placé dans l'inventaire"
 }
 
 L.cantGiveLessThanOne = {
     en = "Canot give less than 1 item, what are you expecting to happen?",
-    fr = "Je suis une baguette?"
+    fr = "Impossible de donner moins d'un item, comment penses-tu que ça fonctionnerait?"
 }
 
 L.itemTypeDoesNotExist = {
     en = "Item type %s does not exist",
-    fr = "Je suis une %s"
+    fr = "L'item de type %s n'éxiste pas"
 }
