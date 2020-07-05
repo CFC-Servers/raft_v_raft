@@ -61,6 +61,17 @@ items.items = {
         consumable = true,
         food = 30,
     },
+    {
+        type = "water",
+        displayName = "Bottle of water",
+        description = "A non-brand bottle of water, how convenient!",
+        maxCount = 5,
+        model = "models/rvr/items/water_bottle.mdl",
+        icon = "materials/rvr/items/water_bottle.png",
+        stackable = true,
+        consumable = true,
+        water = 60,
+    },
 }
 
 local config = GM.Config.Hunger
