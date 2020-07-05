@@ -69,6 +69,7 @@ function inv.openPlayerInventory( inventory )
     icon:SetPos( w * 0.1, h * 0.15 )
     icon:SetSize( w * 0.24, h * 0.74 )
     icon:SetModel( LocalPlayer():GetModel() )
+    icon:SetMouseInputEnabled( false )
 
     -- Go far away and zoom in, to give less of a "fish-eye" effect
     icon:SetCamPos( Vector( 100, 0, 35 ) )
