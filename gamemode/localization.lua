@@ -9,7 +9,7 @@ end
 
 -- Words
 L.storage = {
-    en = "storage",
+    en = "Storage",
     fr = "Je suis une baguette"
 }
 
@@ -43,5 +43,3 @@ L.itemTypeDoesNotExist = {
     en = "Item type %s does not exist",
     fr = "Je suis une %s"
 }
-
-
