@@ -35,7 +35,7 @@ L.canOnlyFitAmount = {
 }
 
 L.cantGiveLessThanOne = {
-    en = "Canot give less than 1 item, what are you expecting to happen?",
+    en = "Cannot give less than 1 item, what are you expecting to happen?",
     fr = "Impossible de donner moins d'un item, comment penses-tu que ça fonctionnerait?"
 }
 
