@@ -8,35 +8,36 @@ util.AddNetworkString( "RVR_Player_Enter_Water" )
 util.AddNetworkString( "RVR_Player_Leave_Water" )
 util.AddNetworkString( "RVR_Player_Take_Drown_Damage" )
 
-local function isDrowning( player )
-    return ( CurTime() - player.FirstSubmergedTime ) >= config.DROWNING_THRESHOLD
+local function isDrowning( ply )
+    return ( CurTime() - ply.FirstSubmergedTime ) >= config.DROWNING_THRESHOLD
 end
 
-local function canTakeDrownDamage( player )
-    return ( CurTime() - player.LastDrownTick ) >= config.DROWNING_TICK_DELAY
+local function canTakeDrownDamage( ply )
+    return ( CurTime() - ply.LastDrownTick ) >= config.DROWNING_TICK_DELAY
 end
 
-local function takeDrownDamage( player )
-    if not canTakeDrownDamage( player ) then return end
+local function takeDrownDamage( ply )
+    if not canTakeDrownDamage( ply ) then return end
 
-    player.LastDrownTick = CurTime()
+    ply.LastDrownTick = CurTime()
 
     local dmg = DamageInfo()
     dmg:SetDamage( config.DROWNING_DAMAGE )
     dmg:SetDamageType( DMG_DROWN )
+    dmg:SetAttacker( ply )
 
-    player:TakeDamageInfo( dmg )
+    ply:TakeDamageInfo( dmg )
 end
 
-local function alertPlayerOfEnterWater( player, time )
+local function alertPlayerOfEnterWater( ply, time )
     net.Start( "RVR_Player_Enter_Water" )
         net.WriteFloat( time )
-    net.Send( player )
+    net.Send( ply )
 end
 
-local function alertPlayerOfLeaveWater( player )
+local function alertPlayerOfLeaveWater( ply )
     net.Start( "RVR_Player_Leave_Water" )
-    net.Send( player )
+    net.Send( ply )
 end
 
 local function drowningCheck()
