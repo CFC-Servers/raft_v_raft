@@ -68,6 +68,8 @@ function inv.setSlot( ent, position, itemData, plysToNotify )
 
     local isPlayer = type( ent ) == "Player"
 
+    local typeChanged = false
+
     if position < 0 then
         if isPlayer then
             ent.RVR_Inventory.CursorSlot = itemData
@@ -75,6 +77,11 @@ function inv.setSlot( ent, position, itemData, plysToNotify )
             return
         end
     elseif position > 0 and position <= inventory.MaxSlots then
+        if inventory.Inventory[position] and itemData then
+            typeChanged = inventory.Inventory[position].item.type ~= itemData.item.type
+        else
+            typeChanged = tobool( itemData ) ~= tobool( inventory.Inventory[position] )
+        end
         inventory.Inventory[position] = itemData
     elseif isPlayer and position > inventory.MaxSlots and position < inventory.MaxSlots + 3 then
         if position == inventory.MaxSlots + 1 then
@@ -88,7 +95,7 @@ function inv.setSlot( ent, position, itemData, plysToNotify )
         return
     end
 
-    if isPlayer and position == inventory.HotbarSelected then
+    if isPlayer and position == inventory.HotbarSelected and typeChanged then
         -- Refresh weapon
         inv.setSelectedItem( ent, inventory.HotbarSelected )
     end

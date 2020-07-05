@@ -10,8 +10,7 @@ SWEP.Secondary.Ammo = "None"
 SWEP.BobScale = 0.1
 SWEP.SwayScale = 0
 SWEP.DrawAmmo = false
-
-local useCooldown = 1
+SWEP.Cooldown = 1
 
 function SWEP:SetupDataTables()
     self:NetworkVar( "String", 0, "ItemModel" )
@@ -46,11 +45,11 @@ end
 
 -- Empty to remove default behaviour, don't remove >:(
 function SWEP:PrimaryAttack()
-    self:SetNextPrimaryFire( CurTime() + useCooldown )
+    self:SetNextPrimaryFire( CurTime() + self.Cooldown )
 
     if CLIENT then
         if CurTime() < ( self.nextFire or 0 ) then return end
-        self.nextFire = CurTime() + useCooldown
+        self.nextFire = CurTime() + self.Cooldown
     end
 
     local itemType = self:GetItemType()
@@ -68,12 +67,12 @@ function SWEP:PrimaryAttack()
             return false
         end )
 
-        timer.Simple( useCooldown, function()
+        timer.Simple( self.Cooldown, function()
             hook.Remove( "RVR_Inventory_CanChangeHotbarSelected", "RVR_HeldItemConsume" .. owner:EntIndex() )
         end )
 
         if SERVER then
-            timer.Simple( useCooldown, function()
+            timer.Simple( self.Cooldown, function()
                 local inv = owner.RVR_Inventory
                 local slotData = RVR.Inventory.getSlot( owner, inv.HotbarSelected )
 
@@ -85,11 +84,14 @@ function SWEP:PrimaryAttack()
                 RVR.Inventory.setSlot( owner, inv.HotbarSelected, slotData, { owner } )
             end )
 
-            timer.Simple( useCooldown * 0.5, function()
+            timer.Simple( self.Cooldown * 0.5, function()
                 itemData.onConsume( owner )
             end )
         else
-            -- TODO: some sort of animation?
+            self.consumeAnimStart = SysTime()
+            timer.Simple( self.Cooldown, function()
+                self.consumeAnimStart = nil
+            end )
         end
     end
 end

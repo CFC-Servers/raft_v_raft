@@ -16,6 +16,25 @@ function SWEP:GetViewModelPosition( eyePos, eyeAng )
     local viewModelAng = self:GetViewModelAng()
     local viewModelOffset = self:GetViewModelOffset()
 
+    if self.consumeAnimStart then
+        local tPassed = SysTime() - self.consumeAnimStart
+        local prog = tPassed / self.Cooldown
+
+        prog = math.Clamp( prog, 0, 1 )
+
+        local pingPonged = 0.5 - math.abs( 0.5 - prog )
+        local clamped = math.Clamp( pingPonged * 4, 0, 1 )
+        local munch = 0
+
+        if clamped == 1 then
+            local munchProg = ( 0.25 - pingPonged ) / 0.75
+            munch = math.sin( munchProg * math.pi * 8 ) * 0.5
+        end
+
+        viewModelOffset = viewModelOffset + Vector( 0, clamped * -10, munch )
+        viewModelAng = viewModelAng + Angle( 0, clamped * 10, 0 )
+    end
+
     eyeAng:RotateAroundAxis( eyeAng:Right(), viewModelAng.x )
     eyeAng:RotateAroundAxis( eyeAng:Up(), viewModelAng.y )
     eyeAng:RotateAroundAxis( eyeAng:Forward(), viewModelAng.z )
@@ -40,7 +59,6 @@ function SWEP:DrawWorldModel()
     local owner = self:GetOwner()
 
     if IsValid( owner ) then
-        -- TODO: Pull out into network vars
         local offsetVec = self:GetWorldModelOffset()
         local offsetAng = self:GetWorldModelAng()
 
