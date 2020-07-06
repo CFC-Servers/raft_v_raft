@@ -290,7 +290,7 @@ function cft.setCategory( category )
     content:Clear()
 
     local recipePanels = {}
-    cft.recipePanels = recipePanels
+    cft.categoryDerma.recipePanels = recipePanels
     for k, recipe in pairs( category.recipes ) do
         local panel = vgui.Create( "DPanel", content )
         panel:Dock( TOP )
@@ -721,7 +721,9 @@ function cft.createGrabButton( frame )
 end
 
 function cft.reloadCraftButtons( reloadIngredients )
-    for k, panel in pairs( cft.recipePanels or {} ) do
+    if not cft.categoryDerma then return end
+
+    for k, panel in pairs( cft.categoryDerma.recipePanels or {} ) do
         if panel:GetExpanded() then
             cft.createCraftButton( panel.content, panel.recipe )
             if reloadIngredients then
@@ -735,6 +737,8 @@ function cft.reloadCraftButtons( reloadIngredients )
 end
 
 function cft.updateCraftingHammers()
+    if not cft.categoryDerma then return end
+
     for id, btn in pairs( cft.categoryDerma.buttons ) do
         btn.showHammer = false
         if cft.craftingData.state ~= cft.STATE_WAITING and cft.craftingData.recipe.categoryID == id then
@@ -743,7 +747,7 @@ function cft.updateCraftingHammers()
         end
     end
 
-    for k, panel in pairs( cft.recipePanels ) do
+    for k, panel in pairs( cft.categoryDerma.recipePanels ) do
         local icon = panel.icon
         local recipe = panel.recipe
 
@@ -765,7 +769,7 @@ function cft.closeCraftingMenu()
     cft.openMenu:Remove()
     cft.openMenu = nil
     cft.craftingData = nil
-    cft.recipePanels = nil
+    cft.categoryDerma = nil
     timer.Remove( "RVR_Crafting_timeout" )
 
     net.Start( "RVR_Crafting_CloseCraftingMenu" )
