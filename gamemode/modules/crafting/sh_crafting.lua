@@ -11,11 +11,11 @@ hook.Add( "PreGamemodeLoaded", "RVR_Crafting_AddRecipes", function()
     hook.Run( "RVR_Crafting_AddRecipes" )
 
     for catID, category in ipairs( GAMEMODE.Config.Crafting.RECIPES ) do
-        local categoryTier = 1000
+        local minRecipeTier = 1000
         for recipeID, recipe in pairs( category.recipes ) do
             recipe.tier = recipe.tier or 1
-            if recipe.tier < categoryTier then
-                categoryTier = recipe.tier
+            if recipe.tier < minRecipeTier then
+                minRecipeTier = recipe.tier
             end
 
             recipe.categoryID = catID
@@ -37,7 +37,7 @@ hook.Add( "PreGamemodeLoaded", "RVR_Crafting_AddRecipes", function()
 
         category.crafterType = category.crafterType or "normal"
 
-        category.minTier = categoryTier == 1000 and 1 or categoryTier
+        category.minTier = minRecipeTier == 1000 and 1 or minRecipeTier
     end
 end )
 
