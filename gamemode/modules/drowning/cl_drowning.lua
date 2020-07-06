@@ -28,10 +28,10 @@ local function renderDrowningElement()
     local hotbarFrame = RVR.Inventory.hotbar.frame
     local x, y = hotbarFrame:GetPos()
     local w = hotbarFrame:GetWide()
-    local wToRemove = 40
+    local horizontalMargin = 40
 
-    w = w - wToRemove
-    x = x + wToRemove * 0.5
+    w = w - horizontalMargin
+    x = x + horizontalMargin * 0.5
 
     local h = w * ( 58 / 808 ) * 0.6
     y = y - h - 10
