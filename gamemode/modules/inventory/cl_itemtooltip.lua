@@ -1,12 +1,10 @@
-RVR.Inventory = RVR.Inventory or {}
-local inv = RVR.Inventory
-
 local PANEL = {}
 
-local h = ScrH() * 0.12
-local w = h * ( 921 / 261 ) * 1.6
-
 local background = Material( "rvr/backgrounds/item_tooltip_background.png" )
+
+local h = ScrH() * 0.12
+local w = h * ( background:Width() / background:Height() ) * 1.6
+
 local yellow = Color( 188, 162, 105 )
 
 local spillover = 6
