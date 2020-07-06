@@ -46,7 +46,7 @@ net.Receive( "RVR_Crafting_AttemptCraft", function( len, ply )
     local categoryID = net.ReadInt( 8 )
     local recipeID = net.ReadInt( 8 )
 
-    local category = RVR.Crafting.Recipes[categoryID]
+    local category = GAMEMODE.Config.Crafting.RECIPES[categoryID]
     if not category then return craftFail( ply ) end
 
     local recipe = category.recipes[recipeID]
@@ -65,7 +65,7 @@ function cft.craft( ply, ent, recipe )
     local tier = ent.RVR_Crafting.tier
     if tier < recipe.tier then return end
 
-    local category = RVR.Crafting.Recipes[recipe.categoryID]
+    local category = GAMEMODE.Config.Crafting.RECIPES[recipe.categoryID]
     if ent.RVR_Crafting.type ~= category.crafterType then return end
 
     local success = RVR.Inventory.tryTakeItems( ply, recipe.itemsStruct )

@@ -7,32 +7,67 @@ cft.STATE_CRAFTING = 2
 cft.STATE_CRAFTED = 3
 cft.STATE_GRAB_REQUEST = 4
 
-for catID, category in ipairs( cft.Recipes ) do
-    local categoryTier = 1000
-    for recipeID, recipe in pairs( category.recipes ) do
-        recipe.tier = recipe.tier or 1
-        if recipe.tier < categoryTier then
-            categoryTier = recipe.tier
+hook.Add( "PreGamemodeLoaded", "RVR_Crafting_AddRecipes", function()
+    hook.Run( "RVR_Crafting_AddRecipes" )
+
+    for catID, category in ipairs( GAMEMODE.Config.Crafting.RECIPES ) do
+        local categoryTier = 1000
+        for recipeID, recipe in pairs( category.recipes ) do
+            recipe.tier = recipe.tier or 1
+            if recipe.tier < categoryTier then
+                categoryTier = recipe.tier
+            end
+
+            recipe.categoryID = catID
+            recipe.recipeID = recipeID
+
+            recipe.itemsStruct = {}
+            for name, count in pairs( recipe.ingredients ) do
+                table.insert( recipe.itemsStruct, {
+                    item = {
+                        type = name
+                    },
+                    count = count,
+                } )
+            end
+
+            recipe.count = recipe.count or 1
         end
+        category.categoryID = catID
 
-        recipe.categoryID = catID
-        recipe.recipeID = recipeID
+        category.crafterType = category.crafterType or "normal"
 
-        recipe.itemsStruct = {}
-        for name, count in pairs( recipe.ingredients ) do
-            table.insert( recipe.itemsStruct, {
-                item = {
-                    type = name
-                },
-                count = count,
-            } )
-        end
-
-        recipe.count = recipe.count or 1
+        category.minTier = categoryTier == 1000 and 1 or categoryTier
     end
-    category.categoryID = catID
+end )
 
-    category.crafterType = category.crafterType or "normal"
+function cft.addCategory( name, icon, crafterType, index )
+    local categories = GAMEMODE.Config.Crafting.RECIPES
+    table.insert( categories, index or #categories, {
+        name = name,
+        icon = icon,
+        crafterType = crafterType,
+        recipes = {},
+    } )
+end
 
-    category.minTier = categoryTier == 1000 and 1 or categoryTier
+function cft.addRecipe( categoryName, item, count, ingredients, timeToCraft, tier )
+    local category
+    for k, v in pairs( GAMEMODE.Config.Crafting.RECIPES ) do
+        if v.name == categoryName then
+            category = v
+        end
+    end
+
+    if not category then
+        error( "No category with name " .. categoryName )
+    end
+
+    table.insert( category.recipes, {
+        item = item,
+        count = count or 1,
+        ingredients = ingredients,
+        tier = tier,
+        timeToCraft = timeToCraft,
+    } )
 end

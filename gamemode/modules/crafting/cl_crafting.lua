@@ -61,8 +61,10 @@ function cft.openCraftingMenu( craftingData )
         cft.closeCraftingMenu()
     end
 
+    local categories = GAMEMODE.Config.Crafting.RECIPES
+
     if not categoryMatsLoaded then
-        for _, category in pairs( cft.Recipes ) do
+        for _, category in pairs( categories ) do
             categoryMats[category.name] = Material( category.icon )
         end
         categoryMatsLoaded = true
@@ -74,7 +76,7 @@ function cft.openCraftingMenu( craftingData )
     }
 
     if craftingData.state ~= cft.STATE_WAITING then
-        cft.craftingData.recipe = cft.Recipes[craftingData.categoryID].recipes[craftingData.recipeID]
+        cft.craftingData.recipe = categories[craftingData.categoryID].recipes[craftingData.recipeID]
         cft.craftingData.timeStart = craftingData.timeStart
     end
 
@@ -171,7 +173,7 @@ function cft.openCraftingMenu( craftingData )
     cft.categoryDerma.buttons = {}
 
     local firstCat
-    for _, category in ipairs( cft.Recipes ) do
+    for _, category in ipairs( categories ) do
         local shouldAdd = category.minTier <= tier and category.crafterType == crafterType and #category.recipes > 0
 
         if shouldAdd then

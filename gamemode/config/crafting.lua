@@ -1,5 +1,7 @@
-RVR.Crafting = RVR.Crafting or {}
+GM.Config = GM.Config or {}
+GM.Config.Crafting = GM.Config.Crafting or {}
 
+local config = GM.Config.Crafting
 --[[
 
 Recipe structure
@@ -26,7 +28,7 @@ recipe = {
 
 ]]
 
-RVR.Crafting.Recipes = {
+config.RECIPES = {
     {
         name = "Weapons",
         icon = "rvr/icons/craftingmenu_category_weapons.png",
