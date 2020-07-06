@@ -20,7 +20,12 @@ net.Receive( "RVR_Inventory_OnPickup", function()
     local itemData = net.ReadTable()
     local count = net.ReadUInt( 16 )
 
-    table.insert( inv.pickupPopups, 1, { itemData = itemData, count = count, startTime = CurTime(), iconMat = Material( itemData.icon ) } )
+    table.insert( inv.pickupPopups, 1, {
+        itemData = itemData,
+        count = count,
+        startTime = CurTime(),
+        iconMat = Material( itemData.icon ),
+    } )
     popupOffset = popupOffset - popupHeight - popupSpacing
 end )
 
@@ -62,7 +67,9 @@ hook.Add( "HUDPaint", "RVR_Inventory_OnPickup", function()
     local x = ScrW() - popupWidth
 
     local cTime = CurTime()
-    if prevTime == 0 then prevTime = cTime end
+    if prevTime == 0 then
+        prevTime = cTime
+    end
 
     local dTime = cTime - prevTime
     prevTime = cTime
