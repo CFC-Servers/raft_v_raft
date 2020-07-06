@@ -23,6 +23,7 @@ items.items = {
     {
         type = "wood",
         displayName = "Wood",
+        description = "<placeholder>",
         maxCount = 10,
         model = "models/Gibs/wood_gib01b.mdl",
         icon = "materials/rvr/items/wood.png",
@@ -31,6 +32,7 @@ items.items = {
     {
         type = "nail",
         displayName = "Nail",
+        description = "<placeholder>",
         maxCount = 25,
         model = "models/rvr/items/item_nail.mdl",
         icon = "materials/rvr/items/nail.png",
