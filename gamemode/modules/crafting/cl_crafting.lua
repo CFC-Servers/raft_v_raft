@@ -172,47 +172,12 @@ function cft.openCraftingMenu( craftingData )
 
     local firstCat
     for _, category in ipairs( cft.Recipes ) do
-        if category.minTier > tier then continue end
-        if category.crafterType ~= crafterType then continue end
-        if #category.recipes == 0 then continue end
-        firstCat = firstCat or category
+        local shouldAdd = category.minTier <= tier and category.crafterType == crafterType and #category.recipes > 0
 
-        local categoryButton = vgui.Create( "DImageButton", categoryScroller )
-        categoryButton:Dock( TOP )
-        categoryButton:DockMargin( 10, 10, 10, 10 )
-        categoryButton:InvalidateParent( true )
-        categoryButton:SetTall( categoryButton:GetWide() )
+        if shouldAdd then
+            firstCat = firstCat or category
 
-        cft.categoryDerma.buttons[category.categoryID] = categoryButton
-
-        function categoryButton:DoClick()
-            cft.setCategory( category )
-        end
-
-        function categoryButton:Paint( _w, _h )
-            -- Background
-            surface.SetDrawColor( self.selected and Color( 255, 255, 255 ) or Color( 180, 180, 180 ) )
-            surface.SetMaterial( iconBackgroundMat )
-            surface.DrawTexturedRect( 0, 0, _w, _h )
-
-            -- Icon
-            local margin = 10
-            surface.SetMaterial( categoryMats[category.name] )
-            surface.DrawTexturedRect( margin, margin, _w - ( margin * 2 ), _h - ( margin * 2 ) )
-
-            if not self.showHammer then return end
-
-            local hammerSize = 30
-
-            local ang = 0
-            if self.animateHammer then
-                ang = math.deg( math.abs( math.sin( CurTime() * 3 ) ) )
-            end
-
-            local colVal = self.selected and 180 or 130
-            surface.SetDrawColor( self.animateHammer and Color( colVal, 0, 0 ) or Color( 0, colVal, 0 ) )
-            surface.SetMaterial( hammerIcon )
-            surface.DrawTexturedRectRotated( _w - hammerSize + 8, _h - hammerSize + 5, hammerSize, hammerSize, ang )
+            cft.createCategoryButton( category, categoryScroller )
         end
     end
 
@@ -267,6 +232,46 @@ function cft.openCraftingMenu( craftingData )
     cft.createGrabButton( frame )
 
     cft.updateCraftingHammers()
+end
+
+function cft.createCategoryButton( category, categoryScroller )
+    local categoryButton = vgui.Create( "DImageButton", categoryScroller )
+    categoryButton:Dock( TOP )
+    categoryButton:DockMargin( 10, 10, 10, 10 )
+    categoryButton:InvalidateParent( true )
+    categoryButton:SetTall( categoryButton:GetWide() )
+
+    cft.categoryDerma.buttons[category.categoryID] = categoryButton
+
+    function categoryButton:DoClick()
+        cft.setCategory( category )
+    end
+
+    function categoryButton:Paint( _w, _h )
+        -- Background
+        surface.SetDrawColor( self.selected and Color( 255, 255, 255 ) or Color( 180, 180, 180 ) )
+        surface.SetMaterial( iconBackgroundMat )
+        surface.DrawTexturedRect( 0, 0, _w, _h )
+
+        -- Icon
+        local margin = 10
+        surface.SetMaterial( categoryMats[category.name] )
+        surface.DrawTexturedRect( margin, margin, _w - ( margin * 2 ), _h - ( margin * 2 ) )
+
+        if not self.showHammer then return end
+
+        local hammerSize = 30
+
+        local ang = 0
+        if self.animateHammer then
+            ang = math.deg( math.abs( math.sin( CurTime() * 3 ) ) )
+        end
+
+        local colVal = self.selected and 180 or 130
+        surface.SetDrawColor( self.animateHammer and Color( colVal, 0, 0 ) or Color( 0, colVal, 0 ) )
+        surface.SetMaterial( hammerIcon )
+        surface.DrawTexturedRectRotated( _w - hammerSize + 8, _h - hammerSize + 5, hammerSize, hammerSize, ang )
+    end
 end
 
 function cft.setCategory( category )
