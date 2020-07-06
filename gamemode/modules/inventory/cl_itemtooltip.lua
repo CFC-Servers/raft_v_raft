@@ -75,7 +75,7 @@ function PANEL:Init()
 
     function self.iconContainer:PerformLayout()
         local _w, _h = this.foreground:GetSize()
-        self:SetPos( _w * 0.7 - 5, 4 )
+        self:SetPos( _w * 0.7 - 5, 2 )
         self:SetSize( _w * 0.3, _h * 0.36 - 4 )
     end
 end
@@ -127,17 +127,17 @@ function PANEL:SetItem( item )
     self.itemDescription:SetText( item.description )
 
     self:ClearIcons()
-    if item.swep then
-        self:AddIcon( "tool" )
+    updateIsMaterial( item )
+    if item.isMaterial then
+        self:AddIcon( "craftable" )
     end
 
     if item.consumable then
         self:AddIcon( "edible" )
     end
 
-    updateIsMaterial( item )
-    if item.isMaterial then
-        self:AddIcon( "craftable" )
+    if item.swep then
+        self:AddIcon( "tool" )
     end
 end
 
