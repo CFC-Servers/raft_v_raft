@@ -1,5 +1,5 @@
 GM.Name = "Raft v Raft"
-GM.Author = "CFC"
+GM.Author = "THE Gaft Gals ;)"
 GM.Website = "https://github.com/cfc-servers/raft_v_raft"
 
 RVR = RVR or {}
