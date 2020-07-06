@@ -44,6 +44,11 @@ function PANEL:GetLocationData()
     return self.parentEnt, self.slotPosition
 end
 
+function PANEL:ConvertToGhost()
+    table.RemoveByValue( inv.ItemSlots, self )
+    self.OnMousePressed = function() end
+end
+
 function PANEL:OnMousePressed( code )
     local cursorItem, cursorItemCount = inv.getCursorItemData()
 
