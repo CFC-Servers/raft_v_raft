@@ -9,11 +9,11 @@ function raftMeta:AddPiece( position, ent )
     self.grid[self.vectorIndex( position )] = ent:EntIndex()
 
     net.Start("new_raft_piece")
-        net.WriteInt(self.id, 32)
-        net.WriteInt(ent:EntIndex(), 32)
-        net.WriteVector(position)
+        net.WriteInt( self.id, 32 )
+        net.WriteInt( ent:EntIndex(), 32 )
+        net.WriteVector( position )
     net.Broadcast()
-    
+
     -- TODO only owners of the raft should get this info
 end
 
@@ -24,7 +24,7 @@ end
 function raftMeta:GetPiece( position )
     local index = self.grid[self.vectorIndex( position )]
     if not index then return end
-    
+
     local ent = self.pieces[index]
 
     if not IsValid( ent ) then
@@ -37,8 +37,8 @@ end
 function raftMeta:GetNeighbors( piece )
     local neighbors = {}
 
-    for x=-1, 1 do 
-        for y=-1, 1  do 
+    for x=-1, 1 do
+        for y=-1, 1  do
             for z=-1, 1 do
                 local pos = self:GetPosition( piece ) + Vector( x, y, z )
                 neighbors[#neighbors+1] = self:GetPiece( pos )
@@ -105,7 +105,7 @@ function raftMeta.vectorIndex( v )
     local y = v.y + 1000
     local z = v.z + 1000
 
-    return x + 1000 * ( y + 1000 * z)
+    return x + 1000 * ( y + 1000 * z )
 end
 
 local lastid = 0
@@ -120,14 +120,14 @@ function RVR.newRaft( id )
         grid   = {},
         id     = id or lastid,
     }
-    
+
     setmetatable( r, raftMeta )
 
     RVR.raftLookup[r.id] = r
     if not SERVER then return r end
 
-    net.Start("new_raft")
-        net.WriteInt(r.id, 32)
+    net.Start( "new_raft" )
+        net.WriteInt( r.id, 32 )
     net.Broadcast()
 
     return r
@@ -147,11 +147,11 @@ if CLIENT then
     end)
 
     net.Receive("new_raft_piece", function()
-        local raftid = net.ReadInt(32)
-        local entindex = net.ReadInt(32)
+        local raftid = net.ReadInt( 32 )
+        local entindex = net.ReadInt( 32 )
         local position = net.ReadVector()
-        timer.Simple(0.1, function()
-            local ent = Entity(entindex)
+        timer.Simple( 0.1, function()
+            local ent = Entity( entindex )
             local raft = RVR.raftLookup[raftid]
 
             if not IsValid( ent ) then return end
@@ -160,7 +160,7 @@ if CLIENT then
             raft.grid[raft.vectorIndex( position )] = entindex
          end)
     end)
-    
+
     net.Receive( "new_raft_owner", function()
     -- TODO
     end)

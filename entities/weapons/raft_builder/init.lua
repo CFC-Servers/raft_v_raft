@@ -1,6 +1,6 @@
 include("shared.lua")
 
-function SWEP:PrimaryAttack()  
+function SWEP:PrimaryAttack()
 end
 
 function SWEP:SecondaryAttack()

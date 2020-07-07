@@ -1,9 +1,10 @@
-include("shared.lua") 
+include("shared.lua")
 
 local abs = math.abs
 
 local GHOST_COLOR = Color( 0, 255, 0, 150 )
 local GHOST_INVIS = Color( 0, 0, 0, 0 )
+local INPUT_DELAY = 0.2
 
 function SWEP:Initialize()
     self.ghost = ClientsideModel( "models/rvr/raft/raft_base.mdl", RENDERGROUP_BOTH )
@@ -11,10 +12,7 @@ function SWEP:Initialize()
     self.ghost:SetRenderMode( RENDERMODE_TRANSCOLOR )
     self.ghost:SetColor( Color( 0, 0, 0, 0 ) )
 
-    self.yaw = 0 
-
-    self.placeableClasses = {"raft_foundation", "raft_platform", "raft_stairs"}
-    self.classIndex = 1
+    self.yaw = 0
 end
 
 function SWEP:SetSelectedClass( cls )
@@ -27,15 +25,15 @@ function SWEP:OnRemove()
     self.ghost:Remove()
 end
 
-function SWEP:Think() 
+function SWEP:Think()
     local ent = self:GetAimEntity()
-    if not ent or not ent.IsRaft then 
-        return self.ghost:SetColor( GHOST_INVIS ) 
+    if not ent or not ent.IsRaft then
+        return self.ghost:SetColor( GHOST_INVIS )
     end
 
     local localDir = self:GetPlacementDirection()
-    if not localDir then 
-        return self.ghost:SetColor( GHOST_INVIS ) 
+    if not localDir then
+        return self.ghost:SetColor( GHOST_INVIS )
     end
 
     local raft = ent:GetRaft()
@@ -54,12 +52,12 @@ function SWEP:Think()
 
     localDir = self.selectedClassTable.GetOffsetDir( ent, localDir )
 
-    -- update ghost position 
+    -- update ghost position
     self.ghost:SetColor( GHOST_COLOR )
 
     self.ghost:SetModel( self.selectedClassTable.Model )
     self.ghost:SetColor( GHOST_COLOR )
- 
+
     self.ghost:SetPos( ent:LocalToWorld( localDir * size ) )
     self.ghost:SetAngles( ent:GetAngles() - ent:GetRaftRotationOffset() + Angle( 0, self.yaw, 0 ) )
 end
@@ -93,8 +91,8 @@ function SWEP:GetPlacementDirection()
     end
     dir.x = math.Round( dir.x )
     dir.y = math.Round( dir.y )
-    dir.z = math.Round( dir.z ) 
-    local sum = abs(dir.x) + abs(dir.y) + abs(dir.z)
+    dir.z = math.Round( dir.z )
+    local sum = abs( dir.x ) + abs( dir.y ) + abs( dir.z )
 
     if sum ~= 1 then return end
 
@@ -104,37 +102,34 @@ end
 local nextPrimary = 0
 function SWEP:PrimaryAttack()
     if CurTime() <= nextPrimary then return end
-    nextPrimary = CurTime() + 0.2
-    
+    nextPrimary = CurTime() + INPUT_DELAY
+
     local ent = self:GetAimEntity()
     if not ent or not ent.IsRaft then return end
-    
+
     local localDir = self:GetPlacementDirection()
     if not localDir then return end
- 
+
     local raft = ent:GetRaft()
     if not raft then return end
 
     local dir = ent:ToRaftDir( localDir )
-    
+
     self.ghost:SetColor( GHOST_INVIS )
-    RunConsoleCommand("rvr", "expand_raft", ent:EntIndex(), self.selectedClass, dir.x, dir.y, dir.z, self.yaw)
+    RunConsoleCommand( "rvr", "expand_raft", ent:EntIndex(), self.selectedClass, dir.x, dir.y, dir.z, self.yaw )
 end
 
 local nextSecondary = 0
 function SWEP:SecondaryAttack()
     if CurTime() <= nextSecondary then return end
-    nextSecondary = CurTime() + 0.2
-    self.classIndex = self.classIndex % #self.placeableClasses + 1
-    self:SetSelectedClass( self.placeableClasses[self.classIndex] )
+    nextSecondary = CurTime() + INPUT_DELAY
 end
 
 local nextReload = 0
 function SWEP:Reload()
-    -- TODO a solution thats not gross
     if not self.Owner:KeyPressed( IN_RELOAD ) then return end
     if CurTime() <= nextReload then return end
-    nextReload = CurTime() + 0.2
+    nextReload = CurTime() + INPUT_DELAY
 
     self.yaw = self.yaw % 360 + 90
 end

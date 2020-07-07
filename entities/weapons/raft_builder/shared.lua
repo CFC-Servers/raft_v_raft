@@ -16,3 +16,14 @@ SWEP.Secondary.DefaultClip = 0
 SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = ""
 
+SWEP.Placeables = {
+    {
+        class = "raft_foundation",
+    },
+    {
+        class = "raft_platform",
+    },
+    {
+        class = "raft_stairs",
+    },
+}

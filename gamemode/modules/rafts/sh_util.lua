@@ -1,8 +1,8 @@
 local function getFirstNonZero( tbl )
     for k, v in pairs( tbl ) do
-        if math.Round( v ) ~= 0 then 
-            return k, v 
-        end   
+        if math.Round( v ) ~= 0 then
+            return k, v
+        end
     end
 end
 

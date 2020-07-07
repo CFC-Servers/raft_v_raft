@@ -14,32 +14,26 @@ end
 local function expandCallback( ply, piece, class, x, y ,z, yaw )
     local raft = piece:GetRaft()
     if not raft then return end
-    if not raft:CanBuild( ply ) then 
+    if not raft:CanBuild( ply ) then
         ply:PrintMessage( HUD_PRINTCONSOLE, "you do not have permissions to build on this raft" )
-        return 
-    end 
- 
-    local success, itemsMissing = RVR.Inventory.checkItems( 
-        ply.RVR_Inventory,  
-        piece:GetRequiredItems()
-    )
+        return
+    end
+
+    local success, itemsMissing = RVR.Inventory.checkItems( ply.RVR_Inventory, piece:GetRequiredItems() )
     if not success then
         -- TODO print itemsMissing in a human readable format
         ply:PrintMessage( HUD_PRINTCONSOLE, "missing required items" )
         return
     end
-    
-    local dir = Vector(x, y, z)
-   
-    local _, err = RVR.expandRaft( piece, class, dir, Angle(0, yaw, 0))
+
+    local dir = Vector( x, y, z )
+
+    local _, err = RVR.expandRaft( piece, class, dir, Angle( 0, yaw, 0 ) )
     if err ~= nil then
         return "Couldn't place raft piece: " .. err
     end
 
-    local success, itemsMissing = RVR.Inventory.tryTakeItems( 
-        ply,  
-        required
-    )
+    local success, itemsMissing = RVR.Inventory.tryTakeItems( ply, required )
 end
 
 local function deleteCallback( ply, piece )
@@ -48,15 +42,15 @@ end
 
 local function listRafts( ply )
     for id, raft in pairs( RVR.raftLookup ) do
-        ply:PrintMessage( HUD_PRINTCONSOLE, tostring(id)  )
+        ply:PrintMessage( HUD_PRINTCONSOLE, tostring( id )  )
     end
 end
 
-hook.Add("RVR_ModulesLoaded", "RvR_MakeRaftCommands", function()    
+hook.Add( "RVR_ModulesLoaded", "RvR_MakeRaftCommands", function()
 
-    RVR.Commands.register( "summon_raft", {}, {}, RVR_USER_SUPERADMIN, summonCommandCallback, "summon a raft" ) 
+    RVR.Commands.register( "summon_raft", {}, {}, RVR_USER_SUPERADMIN, summonCommandCallback, "summon a raft" )
 
-    RVR.Commands.register( 
+    RVR.Commands.register(
         "expand_raft",
         {"piece", "class", "x", "y", "z", "yaw"},
         {"entity", "string", "int", "int", "int", "int"},
