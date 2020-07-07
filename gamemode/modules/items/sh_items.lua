@@ -24,7 +24,7 @@ items.items = {
         type = "wood",
         displayName = "Wood",
         maxCount = 10,
-        model = "models/Gibs/wood_gib01b.mdl",
+        model = "models/rvr/items/item_plank.mdl",
         icon = "materials/rvr/items/wood.png",
         stackable = true,
     },
@@ -37,3 +37,7 @@ items.items = {
         stackable = true,
     },
 }
+
+for _, item in pairs( items.items ) do
+    util.PrecacheModel( item.model )
+end
