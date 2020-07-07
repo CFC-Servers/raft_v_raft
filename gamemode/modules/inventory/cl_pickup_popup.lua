@@ -13,7 +13,6 @@ local popupWindowHeight = ScrH() * 0.5
 local popupMaterial = Material( "rvr/backgrounds/item_pickup_popup_background.png" )
 local popupItemMaterial = Material( "rvr/backgrounds/craftingmenu_ingredient.png" )
 
-local popupDuration = 4
 local brown = Color( 91, 56, 34 )
 
 net.Receive( "RVR_Inventory_OnPickup", function()
@@ -82,7 +81,7 @@ hook.Add( "HUDPaint", "RVR_Inventory_OnPickup", function()
 
         for k, popup in ipairs( inv.pickupPopups ) do
             local timePassed = cTime - popup.startTime
-            local timeRemaining = popupDuration - timePassed
+            local timeRemaining = GAMEMODE.Config.Inventory.PICKUP_POPUP_DURATION - timePassed
             if timeRemaining <= 0 then
                 table.remove( inv.pickupPopups, k )
             else
