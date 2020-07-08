@@ -19,6 +19,7 @@ function items.getItemInstance( itemType )
 end
 
 -- Item structure in README
+-- TODO: Update item descriptions
 items.items = {
     {
         type = "wood",
