@@ -19,6 +19,7 @@ function items.getItemInstance( itemType )
 end
 
 -- Item structure in README
+-- TODO: Update item descriptions
 items.items = {
     {
         type = "wood",
@@ -112,4 +113,8 @@ for k, item in pairs( items.items ) do
             return false
         end
     end
+end
+
+for _, item in pairs( items.items ) do
+    util.PrecacheModel( item.model )
 end

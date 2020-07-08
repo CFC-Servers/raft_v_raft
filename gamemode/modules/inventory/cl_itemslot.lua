@@ -29,10 +29,8 @@ function PANEL:Init()
         self:SetPos( pw - w - 13, ph - h - 5 )
     end
 
-    self.toolTipText = vgui.Create( "DLabel" )
-    self.toolTipText:SetText( "" )
-    self.toolTipText:SetTextColor( Color( 0, 0, 0 ) )
-    self.toolTipText:Hide()
+    self.toolTipPanel = vgui.Create( "RVR_ItemTooltip" )
+    self.toolTipPanel:Hide()
 end
 
 function PANEL:SetLocationData( ent, position )
@@ -42,6 +40,11 @@ end
 
 function PANEL:GetLocationData()
     return self.parentEnt, self.slotPosition
+end
+
+function PANEL:ConvertToGhost()
+    table.RemoveByValue( inv.ItemSlots, self )
+    self.OnMousePressed = function() end
 end
 
 function PANEL:OnMousePressed( code )
@@ -91,10 +94,9 @@ function PANEL:SetItemData( item, count )
     end
     self.itemCountLabel:SizeToContents()
 
-    self.toolTipText:Show()
-    self:SetTooltipPanel( self.toolTipText )
-    self.toolTipText:SetText( item.displayName )
-    self.toolTipText:SizeToContents()
+    self.toolTipPanel:Show()
+    self:SetTooltipPanel( self.toolTipPanel )
+    self.toolTipPanel:SetItem( item )
 end
 
 function PANEL:GetItemData()
@@ -107,7 +109,7 @@ function PANEL:ClearItemData()
     self.itemImage:SetImageColor( Color( 255, 255, 255, 0 ) )
     self.itemCountLabel:SetText( "" )
 
-    self.toolTipText:Hide()
+    self.toolTipPanel:Hide()
     self:SetTooltipPanel( false )
 end
 

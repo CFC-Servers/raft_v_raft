@@ -6,8 +6,9 @@ end
 
 function SWEP:PreDrawViewModel( vm, weapon, ply )
     -- Update view model when needed
-    if self:GetItemModel() ~= "" and self:GetItemModel() ~= vm:GetModel() then
-        vm:SetModel( self:GetItemModel() )
+    local mdl = self:GetItemModel()
+    if mdl ~= "" and mdl ~= vm:GetModel() then
+        vm:SetWeaponModel( mdl, self )
     end
 end
 
