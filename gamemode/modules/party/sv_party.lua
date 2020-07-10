@@ -2,9 +2,6 @@ RVR.Party = RVR.Party or {}
 local party = RVR.Party
 party.idCounter = party.idCounter or 0
 
--- TODO: extract to config
-party.inviteLifetime = 30
-
 party.JOIN_MODE_PUBLIC = 0
 party.JOIN_MODE_STEAM_FRIENDS = 1
 party.JOIN_MODE_INVITE_ONLY = 2
@@ -129,6 +126,10 @@ function party.addMember( id, ply )
         return false, "Player already in this party"
     end
 
+    if #partyData.members == GAMEMODE.Config.Party.MAX_PLAYERS then
+        return false, "Party is full"
+    end
+
     if ply:GetPartyID() then
         party.removeMember( ply:GetPartyID(), ply )
     end
@@ -165,11 +166,11 @@ function party.attemptJoin( id, ply )
     if inviteTime then
         local cTime = CurTime()
         partyData.invites[ply] = nil
-        if cTime - inviteTime < party.inviteLifetime then
+        if cTime - inviteTime < GAMEMODE.Config.Party.INVITE_LIFETIME then
             party.addMember( id, ply )
             return true
         else
-            return false, "Invite expired " .. ( cTime - inviteTime - party.inviteLifetime ) .. " seconds ago"
+            return false, "Invite expired " .. ( cTime - inviteTime - GAMEMODE.Config.Party.INVITE_LIFETIME ) .. " seconds ago"
         end
     end
 
@@ -189,6 +190,10 @@ function party.invite( id, inviter, ply )
 
     if table.HasValue( partyData.members, ply ) then
         return false, "Player already in party"
+    end
+
+    if #partyData.members == GAMEMODE.Config.Party.MAX_PLAYERS then
+        return false, "Party is full"
     end
 
     -- TODO: Add cooldown
