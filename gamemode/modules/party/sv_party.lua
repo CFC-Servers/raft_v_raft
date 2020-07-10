@@ -304,3 +304,12 @@ hook.Add( "PlayerInitialSpawn", "RVR_Party_updateFriends", function()
     net.Start( "RVR_Party_updateFriends" )
     net.Broadcast()
 end )
+
+hook.Add( "PlayerCanSeePlayersChat", "RVR_Party_chat", function( text, isTeam, listener, speaker )
+    if not isTeam then return end
+
+    local speakerPartyID = speaker:GetPartyID()
+    if not speakerPartyID then return false end
+
+    return speakerPartyID == listener:GetPartyID()
+end )
