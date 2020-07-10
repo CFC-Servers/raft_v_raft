@@ -13,6 +13,29 @@ function SWEP:Initialize()
     self.ghost:SetColor( Color( 0, 0, 0, 0 ) )
 
     self.yaw = 0
+
+    self.radial = RVR.newRadialMenu()
+    local rad = self.radial
+    rad:AddItem("Option 1", Material("rvr/icons/food.png"), function()
+        print("1")
+    end)
+    rad:AddItem("Option 2", Material("rvr/icons/food.png"), function()
+        print("2")
+    end)
+    rad:AddItem("Option  3", Material("rvr/icons/food.png"), function()
+        print("3")
+    end)
+    rad:AddItem("Option 4", Material("rvr/icons/food.png"), function()
+        print("4")
+    end)
+
+    rad:AddItem("Option 5", Material("rvr/icons/food.png"), function()
+        print("1")
+    end)
+    rad:AddItem("Option 6", Material("rvr/icons/food.png"), function()
+        print("2")
+    end)
+
 end
 
 function SWEP:SetSelectedClass( cls )
@@ -123,6 +146,20 @@ local nextSecondary = 0
 function SWEP:SecondaryAttack()
     if CurTime() <= nextSecondary then return end
     nextSecondary = CurTime() + INPUT_DELAY
+   
+    gui.EnableScreenClicker( true ) 
+    timer.Simple(0, function()
+        input.SetCursorPos( ScrW() / 2, ScrH() / 2)
+    end)
+
+    self.radial:Open()
+    hook.Add("KeyRelease", "RVR_Raft_Builder_Release", function( player, key )
+        if key == IN_ATTACK2 then
+            self.radial:RunSelected()
+            self.radial:Close()    
+        end
+        gui.EnableScreenClicker( false )
+    end)
 end
 
 local nextReload = 0

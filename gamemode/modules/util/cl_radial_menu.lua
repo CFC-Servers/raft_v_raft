@@ -15,8 +15,9 @@ end
 
 local radialMeta = {}
 radialMeta.__index = radialMeta
-function radialMeta:AddItem( material, callback )
+function radialMeta:AddItem( name, material, callback )
     local item = {
+        name = name,
         iconMaterial = material,
         callback     = callback,
     }
@@ -50,6 +51,16 @@ function radialMeta:Paint()
 
         self:DrawButton( i * buttonSize, buttonSize, mat )
     end
+end
+
+function radialMeta:Open()
+    hook.Add( "HUDPaint", "RVR_RadialMenu_"..tostring(self), function()
+        self:Paint()
+    end )
+end
+
+function radialMeta:Close()
+    hook.Remove( "HUDPaint", "RVR_RadialMenu_"..tostring(self) )
 end
 
 function radialMeta:DrawButton( start, size, mat )
