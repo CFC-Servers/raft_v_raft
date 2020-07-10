@@ -67,6 +67,20 @@ local function kickPlayer( caller, ply )
     return "Successfully kicked " .. ply:Nick() .. " from your party"
 end
 
+local function createParty( caller, name, tag, color, joinMode )
+    if joinMode < 0 or joinMode > 2 then
+        return "Invalid join mode, must be 0 (PUBLIC), 1 (STEAM_FRIENDS), or 2 (INVITE_ONLY)"
+    end
+
+    local success, err = party.createParty( name, ply, tag, color, joinMode )
+
+    if success then
+        return "Successfully created party " .. name
+    end
+
+    return "Failed to create party: " .. err
+end
+
 hook.Add( "RVR_ModulesLoaded", "RVR_Party_commands", function()
     RVR.Commands.addType( "party", function( str, caller )
         if str == "^" then
@@ -109,6 +123,28 @@ hook.Add( "RVR_ModulesLoaded", "RVR_Party_commands", function()
         return nil, "Unrecognised party, use party ID, name, ^ or @"
     end )
 
+    -- TODO: Move this to commands
+    RVR.Commands.addType( "color", function( str, caller )
+        if str[1] ~= "#" or ( #str ~= 7 and #str ~= 9 ) then
+            return nil, "Colors should be in hex, prefixed with a #, e.g. #FF0000 for red"
+        end
+
+        local r = tonumber( str:sub( 2, 3 ), 16 )
+        local g = tonumber( str:sub( 4, 5 ), 16 )
+        local b = tonumber( str:sub( 6, 7 ), 16 )
+        local a = 255
+
+        if #str > 7 then
+            a = tonumber( str:sub( 7, 8 ), 16 )
+        end
+
+        if r and g and b and a then
+            return Color( r, g, b, a )
+        end
+
+        return nil, "Invalid color string"
+    end )
+
     RVR.Commands.register(
         "invite",
         { "Player" },
@@ -143,5 +179,14 @@ hook.Add( "RVR_ModulesLoaded", "RVR_Party_commands", function()
         RVR_USER_ALL,
         leaveParty,
         "Leave your party and return to menu"
+    )
+
+    RVR.Commands.register(
+        "create_party",
+        { "Name", "Tag", "Color", "Join mode" },
+        { "string", "string", "color", "int" },
+        RVR_USER_ADMIN,
+        createParty,
+        "Creates a party"
     )
 end )

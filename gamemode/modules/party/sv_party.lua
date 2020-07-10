@@ -2,6 +2,8 @@ RVR.Party = RVR.Party or {}
 local party = RVR.Party
 party.idCounter = party.idCounter or 0
 
+-- TODO: Start player as spectator
+
 party.JOIN_MODE_PUBLIC = 0
 party.JOIN_MODE_STEAM_FRIENDS = 1
 party.JOIN_MODE_INVITE_ONLY = 2
@@ -105,8 +107,11 @@ function party.removeMember( id, ply )
     end
 
     if partyData.owner == ply then
-        -- TODO: Alert somehow of ownership change
         partyData.owner = partyData.members[1]
+
+        for _, member in pairs( partyData.members ) do
+            member:ChatPrint( "The owner ( " .. ply:Nick() .. " has left this party, " .. partyData.owner:Nick() .. " is the new owner." )
+        end
     end
 
     updateClientPartyData( id )
