@@ -11,4 +11,3 @@ function GM:PlayerCanSeePlayersChat( text, teamOnly, listener, speaker )
 
     return true
 end
-
