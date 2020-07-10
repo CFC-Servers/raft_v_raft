@@ -32,8 +32,6 @@ net.Receive( "RVR_Party_createParty", function()
     party.createPartyCallback = nil
 end )
 
--- TODO: Add some way to trigger a manual update, or trigger updates in a timer
-
 net.Receive( "RVR_Party_updateClient", function()
     local id = net.ReadInt( 32 )
     local partyExists = net.ReadBool()
@@ -64,6 +62,7 @@ end
 
 hook.Add( "InitPostEntity", "RVR_Party_sendFriendData", sendFriendData )
 net.Receive( "RVR_Party_updateFriends", sendFriendData )
+timer.Create( "RVR_Party_updateFriends", 300, 0, sendFriendData ) -- TODO: discuss if this is good?
 
 hook.Add( "PreDrawHalos", "RVR_Party", function()
     local ownParty = LocalPlayer():GetParty()
