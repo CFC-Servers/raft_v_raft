@@ -14,15 +14,20 @@ end
 
 
 local radialMeta = {}
-
+radialMeta.__index = radialMeta
 function radialMeta:AddItem( material, callback )
     local item = {
         iconMaterial = material,
         callback     = callback,
     }
 
-    table.insert( r, item )
+    table.insert( self.items, item )
     return item
+end
+
+function radialMeta:RunSelected()
+    local item  = self.items[self.selectedItem]
+    item.callback()
 end
 
 function radialMeta:Paint()
@@ -38,6 +43,7 @@ function radialMeta:Paint()
 
         if aimAng > i * buttonSize  and aimAng < buttonSize + i * buttonSize  then
             surface.SetDrawColor( self.selectedColor )
+            self.selectedItem = i+1
         end
 
         local mat = self.items[i+1].iconMaterial
