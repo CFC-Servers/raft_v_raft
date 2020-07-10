@@ -29,6 +29,8 @@ net.Receive( "RVR_Party_createParty", function()
     party.createPartyCallback = nil
 end )
 
+-- TODO: Add some way to trigger a manual update, or trigger updates in a timer
+
 net.Receive( "RVR_Party_updateClient", function()
     local id = net.ReadInt( 32 )
     local partyExists = net.ReadBool()

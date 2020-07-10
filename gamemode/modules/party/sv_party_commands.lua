@@ -1,6 +1,8 @@
 RVR.Party = RVR.Party or {}
 local party = RVR.Party
 
+-- TODO: Remove ChatPrints, replace with networked events for easier localisation and replacement action (like main menu)
+
 local function invitePlayer( caller, ply )
     local partyData = caller:GetParty()
 
