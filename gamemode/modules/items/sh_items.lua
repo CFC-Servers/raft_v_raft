@@ -64,7 +64,7 @@ items.items = {
     },
     {
         type = "water",
-        displayName = "Bottle of water",
+        displayName = "Water bottle",
         description = "A non-brand bottle of water, how convenient!",
         maxCount = 5,
         model = "models/rvr/items/water_bottle.mdl",
