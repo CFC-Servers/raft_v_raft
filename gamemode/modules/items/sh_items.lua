@@ -67,11 +67,13 @@ items.items = {
         displayName = "Water bottle",
         description = "A non-brand bottle of water, how convenient!",
         maxCount = 5,
-        model = "models/rvr/items/water_bottle.mdl",
+        model = "models/rvr/items/bottle.mdl",
         icon = "materials/rvr/items/water_bottle.png",
         stackable = true,
         consumable = true,
         water = 60,
+        viewModelOffset = Vector( 3, 15, -14 ),
+        viewModelAng = Angle( 15, -15, 0 ),
     },
 }
 
