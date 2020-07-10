@@ -56,41 +56,35 @@ function SWEP:PrimaryAttack()
 
     local itemData = RVR.Items.getItemData( itemType )
 
-    if itemData and itemData.consumable then
-        if not itemData:canConsume( self.Owner ) then return end
+    if not itemData or not itemData.consumable then return end
+    if not itemData:canConsume( self.Owner ) then return end
 
-        local owner = self.Owner
+    local owner = self.Owner
 
-        hook.Add( "RVR_Inventory_CanChangeHotbarSelected", "RVR_HeldItemConsume" .. owner:EntIndex(), function( ply, idx )
-            if ply ~= owner then return end
-            return false
-        end )
+    local hookID = "RVR_HeldItemConsume" .. owner:EntIndex()
 
+    hook.Add( "RVR_Inventory_CanChangeHotbarSelected", hookID, function( ply, idx )
+        if ply ~= owner then return end
+        return false
+    end )
+
+    timer.Simple( self.Cooldown, function()
+        hook.Remove( "RVR_Inventory_CanChangeHotbarSelected", hookID )
+    end )
+
+    if SERVER then
         timer.Simple( self.Cooldown, function()
-            hook.Remove( "RVR_Inventory_CanChangeHotbarSelected", "RVR_HeldItemConsume" .. owner:EntIndex() )
+            local inv = owner.RVR_Inventory
+            RVR.Inventory.consumeInSlot( owner, inv.HotbarSelected, 1 )
         end )
 
-        if SERVER then
-            timer.Simple( self.Cooldown, function()
-                local inv = owner.RVR_Inventory
-                local slotData = RVR.Inventory.getSlot( owner, inv.HotbarSelected )
-
-                slotData.count = slotData.count - 1
-                if slotData.count == 0 then
-                    slotData = nil
-                end
-
-                RVR.Inventory.setSlot( owner, inv.HotbarSelected, slotData, { owner } )
-            end )
-
-            timer.Simple( self.Cooldown * 0.5, function()
-                itemData:onConsume( owner )
-            end )
-        else
-            self.consumeAnimStart = SysTime()
-            timer.Simple( self.Cooldown, function()
-                self.consumeAnimStart = nil
-            end )
-        end
+        timer.Simple( self.Cooldown * 0.5, function()
+            itemData:onConsume( owner )
+        end )
+    else
+        self.consumeAnimStart = SysTime()
+        timer.Simple( self.Cooldown, function()
+            self.consumeAnimStart = nil
+        end )
     end
 end

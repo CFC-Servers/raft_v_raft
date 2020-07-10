@@ -131,6 +131,30 @@ function inv.getSlot( ent, position )
     return slot and table.Copy( slot )
 end
 
+function inv.consumeInSlot( ent, position, count )
+    local slotData = RVR.Inventory.getSlot( ent, position )
+
+    if not slotData then
+        return false, "No items in slot"
+    end
+
+    if slotData.count < count then
+        return false, "Not enough items in slot"
+    end
+
+    slotData.count = slotData.count - count
+    if slotData.count == 0 then
+        slotData = nil
+    end
+
+    local plys
+    if type( ent ) == "Player" then
+        plys = { ent }
+    end
+
+    RVR.Inventory.setSlot( ent, position, slotData, plys )
+end
+
 function inv.slotCanContain( ent, position, item )
     if not ent.RVR_Inventory then return false end
 
