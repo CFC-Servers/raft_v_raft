@@ -5,21 +5,27 @@ party.idCounter = party.idCounter or 0
 -- TODO: extract to config
 party.inviteLifetime = 30
 
+party.JOIN_MODE_PUBLIC = 0
+party.JOIN_MODE_STEAM_FRIENDS = 1
+party.JOIN_MODE_INVITE_ONLY = 2
+
 util.AddNetworkString( "RVR_Party_updateClient" )
+util.AddNetworkString( "RVR_Party_createParty" )
+util.AddNetworkString( "RVR_Party_updateFriends" )
 
 local function updateClientPartyData( id )
     local partyData = party.getParty( id )
 
     net.Start( "RVR_Party_updateClient" )
-    net.WriteUInt( id, 32 )
-    net.WriteBool( tobool( partyData ) )
-    if partyData then
-        net.WriteTable( partyData )
-    end
+        net.WriteUInt( id, 32 )
+        net.WriteBool( tobool( partyData ) )
+        if partyData then
+            net.WriteTable( partyData )
+        end
     net.Broadcast()
 end
 
-function party.createParty( partyName, owner, tag, isPublic )
+function party.createParty( partyName, owner, tag, color, joinMode )
     for id, partyData in pairs( party.parties ) do
         if partyData.name == partyName then
             return nil, "Party with name " .. partyName .. " already exists"
@@ -37,6 +43,10 @@ function party.createParty( partyName, owner, tag, isPublic )
         return nil, "Tag must be 4 characters"
     end
 
+    if #partyName < 5 or tonumber( partyName ) then
+        return nil, "Invalid party name, must be at least 5 characters and contain at least one non-numeric character"
+    end
+
     local id = party.idCounter
     party.idCounter = party.idCounter + 1
     local partyData = {
@@ -45,7 +55,8 @@ function party.createParty( partyName, owner, tag, isPublic )
         members = { owner },
         id = id,
         tag = tag,
-        public = tobool( isPublic ),
+        color = color,
+        joinMode = joinMode,
         invites = {},
     }
 
@@ -140,7 +151,12 @@ function party.attemptJoin( id, ply )
         return false, "Player already in party"
     end
 
-    if partyData.public then
+    if partyData.joinMode == party.JOIN_MODE_PUBLIC then
+        party.addMember( id, ply )
+        return true
+    end
+
+    if partyData.joinMode == party.JOIN_MODE_STEAM_FRIENDS and partyData.owner:IsFriendsWith( ply ) then
         party.addMember( id, ply )
         return true
     end
@@ -192,6 +208,12 @@ function plyMeta:SetParty( partyData )
     self:SetPartyID( partyData.id )
 end
 
+function plyMeta:IsFriendsWith( ply )
+    if not self.RVR_Friends then return false end
+
+    return table.HasValue( RVR_Friends, ply )
+end
+
 hook.Add( "PlayerDisconnected", "RVR_Party", function( ply )
     local id = ply:GetPartyID()
     if not id then return end
@@ -201,4 +223,26 @@ hook.Add( "PlayerDisconnected", "RVR_Party", function( ply )
     for _, partyData in pairs( party.parties ) do
         partyData.invites[ply] = nil
     end
+end )
+
+net.Receive( "RVR_Party_createParty", function( len, ply )
+    local name = net.ReadString()
+    local tag = net.ReadString()
+    local color = net.ReadColor()
+    local joinMode = net.ReadUInt( 2 )
+
+    if joinMode > 2 then return end
+
+    local success, err = party.createParty( name, ply, tag, color, joinMode )
+
+    net.Start( "RVR_Party_createParty" )
+        net.WriteBool( success )
+        if not success then
+            net.WriteString( err )
+        end
+    net.Send( ply )
+end )
+
+net.Receive( "RVR_Party_updateFriends", function( len, ply )
+    ply.RVR_Friends = net.ReadTable()
 end )
