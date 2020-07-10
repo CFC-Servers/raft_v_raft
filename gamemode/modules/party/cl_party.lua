@@ -1,6 +1,9 @@
 RVR.Party = RVR.Party or {}
 local party = RVR.Party
 
+-- TODO: Move to config
+local targetIDRange = 100
+
 function party.tryCreateParty( name, tag, color, joinMode, callback )
     if joinMode < 0 or joinMode > 2 then return end
     if party.createPartyCallback then return end
@@ -37,8 +40,10 @@ net.Receive( "RVR_Party_updateClient", function()
     if partyExists then
         local partyData = net.ReadTable()
         party.parties[id] = partyData
+        hook.Run( "RVR_Party_PartyChanged", id, partyData )
     else
         party.parties[id] = nil
+        hook.Run( "RVR_Party_PartyChanged", id )
     end
 end )
 
@@ -128,4 +133,52 @@ if hook.Run( "RVR_ShouldOverrideAddText" ) ~= false then
 
         party.oldAddText( unpack( out ) )
     end
+end
+
+local function drawShadowedText( text, font, x, y, col )
+    draw.SimpleText( text, font, x + 1, y + 1, Color( 0, 0, 0, 120 ) )
+    draw.SimpleText( text, font, x + 2, y + 2, Color( 0, 0, 0, 50 ) )
+    draw.SimpleText( text, font, x, y, col )
+end
+
+-- TODO: Move to hud module perhaps?
+function GM:HUDDrawTargetID()
+
+    local trace = LocalPlayer():GetEyeTrace()
+    local aimEnt = trace.Entity
+
+    if type( aimEnt ) ~= "Player" then return end
+
+    if LocalPlayer():GetShootPos():Distance( trace.HitPos ) > targetIDRange then return end
+
+    local text = aimEnt:Nick()
+
+    local font = "TargetID"
+
+    surface.SetFont( font )
+    local nameW = surface.GetTextSize( text )
+
+    local x, y = gui.MousePos()
+
+    if x == 0 and y == 0 then
+        x = ScrW() / 2
+        y = ScrH() / 2
+    end
+
+    y = y + 50
+
+    local nameX = x - nameW / 2
+    local nameY = y
+
+    drawShadowedText( text, font, nameX, nameY, team.GetColor( aimEnt:Team() ) )
+
+    local partyData = aimEnt:GetParty()
+    if not partyData then return end
+
+    text = partyData.name
+    local partyW, partyH = surface.GetTextSize( text )
+    local partyX = x - partyW / 2
+    local partyY = y - partyH - 5
+
+    drawShadowedText( text, font, partyX, partyY, partyData.color )
 end

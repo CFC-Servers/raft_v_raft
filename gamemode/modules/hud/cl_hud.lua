@@ -30,6 +30,8 @@ local stats = {
 }
 
 function GM:HUDPaint()
+    hook.Run( "HUDDrawTargetID" )
+
     local barHeight = ScrH() * 0.04
 
     local hudHeight = barHeight * #stats
@@ -69,6 +71,8 @@ function GM:HUDPaint()
         surface.SetMaterial( stat.material )
         surface.DrawTexturedRect( x + 8, barY + 2, barHeight - 5, barHeight - 5 )
     end
+
+    hook.Run( "DrawDeathNotice", 0.85, 0.04 )
 end
 
 local isHidden = { ["CHudHealth"] = true, ["CHudBattery"] = true, ["CHudAmmo"] = true, ["CHudSecondaryAmmo"] = true }
