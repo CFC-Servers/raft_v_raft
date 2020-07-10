@@ -59,3 +59,44 @@ end
 
 hook.Add( "InitPostEntity", "RVR_Party_sendFriendData", sendFriendData )
 hook.Add( "PlayerConnect", "RVR_Party_sendFriendData", sendFriendData )
+
+hook.Add( "PreDrawHalos", "RVR_Party", function()
+    local members = {}
+    local ownParty = LocalPlayer():GetPartyID()
+
+    if not ownParty then return end
+    for _, ply in pairs( player.GetAll() ) do
+        if ply ~= LocalPlayer() and ply:GetPartyID() == ownParty then
+            table.insert( members, ply )
+        end
+    end
+
+    halo.Add( members, Color( 0, 255, 0 ), 5, 5, 2 )
+end )
+
+local function drawNameLabel( ply )
+    local me = LocalPlayer()
+
+    local ang = ( ply:GetShootPos() - me:GetShootPos() ):Angle()
+    local textAng = Angle( 0, ang.yaw, 0 )
+
+    local pos = ply:GetShootPos() + Vector( 0, 0, 30 )
+    local text = ply:Nick()
+
+    cam.Start3D2D( pos, textAng, 0.2 )
+        surface.SetFont( "ChatFont" )
+        local tw, th = surface.GetTextSize( text )
+        draw.SimpleText( text, "ChatFont", -tw / 2, -th / 2, Color( 0, 255, 0 ) ) -- try TEXT_ALIGN_CENTER
+    cam.End3D2D()
+end
+
+hook.Add( "PostDrawOpaqueRenderables", "RVR_Party", function()
+    local ownParty = LocalPlayer():GetPartyID()
+
+    if not ownParty then return end
+    for _, ply in pairs( player.GetAll() ) do
+        if ply ~= LocalPlayer() and ply:GetPartyID() == ownParty then
+            drawNameLabel( ply )
+        end
+    end
+end )
