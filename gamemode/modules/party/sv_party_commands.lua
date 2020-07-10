@@ -15,7 +15,7 @@ local function invitePlayer( caller, ply )
     if success then
         -- TODO: Only print if player isnt in main menu, otherwise alert client
         ply:ChatPrint( "You've been invited to " .. partyData.name ..
-            ". Use /join " .. partyData.id .. " within " .. party.inviteLifetime .. " seconds to respond.\n" ..
+            ". Use !party_join " .. partyData.name .. " within " .. GAMEMODE.Config.Party.INVITE_LIFETIME .. " seconds to respond.\n" ..
             "WARNING: Accepting an invite will make you leave your current party, along with any items you have" )
         return "Invited " .. ply:Nick() .. " to " .. partyData.name
     end
@@ -24,7 +24,7 @@ local function invitePlayer( caller, ply )
 end
 
 local function joinParty( caller, partyData )
-    local success, err = party.attemptJoin( caller, partyData )
+    local success, err = party.attemptJoin( partyData.id, caller )
 
     if success then
         return "Successfully joined " .. partyData.name
@@ -57,14 +57,17 @@ local function kickPlayer( caller, ply )
     end
 
     if ply == caller then
-        return "You can't kick yourself, if you want to leave a party, use /leave"
+        return "You can't kick yourself, if you want to leave a party, use !leave"
     end
 
     if not table.HasValue( partyData.members, ply ) then
         return "This player is not in your party"
     end
 
-    party.removeMember( partyData.id, ply )
+    local success, err = party.removeMember( partyData.id, ply )
+    if not success then
+        return "Failed: " .. err
+    end
 
     return "Successfully kicked " .. ply:Nick() .. " from your party"
 end
@@ -74,13 +77,33 @@ local function createParty( caller, name, tag, color, joinMode )
         return "Invalid join mode, must be 0 (PUBLIC), 1 (STEAM_FRIENDS), or 2 (INVITE_ONLY)"
     end
 
-    local success, err = party.createParty( name, ply, tag, color, joinMode )
+    local success, err = party.createParty( name, caller, tag, color, joinMode )
 
     if success then
         return "Successfully created party " .. name
     end
 
     return "Failed to create party: " .. err
+end
+
+local function setJoinMode( caller, mode )
+    local partyData = caller:GetParty()
+
+    if not partyData then
+        return "You're not in a party"
+    end
+
+    if caller ~= partyData.owner then
+        return "Only the party owner can set the join mode"
+    end
+
+    local success, err = party.setJoinMode( partyData.id, mode )
+
+    if not success then
+        return err
+    end
+
+    return "Successfully set the party mode to " .. party.joinModeStrs[mode]
 end
 
 hook.Add( "RVR_ModulesLoaded", "RVR_Party_commands", function()
@@ -148,7 +171,7 @@ hook.Add( "RVR_ModulesLoaded", "RVR_Party_commands", function()
     end )
 
     RVR.Commands.register(
-        "invite",
+        "party_invite",
         { "Player" },
         { "player" },
         RVR_USER_ALL,
@@ -157,7 +180,7 @@ hook.Add( "RVR_ModulesLoaded", "RVR_Party_commands", function()
     )
 
     RVR.Commands.register(
-        "kick",
+        "party_kick",
         { "Player" },
         { "player" },
         RVR_USER_ALL,
@@ -166,7 +189,7 @@ hook.Add( "RVR_ModulesLoaded", "RVR_Party_commands", function()
     )
 
     RVR.Commands.register(
-        "join",
+        "party_join",
         { "Party" },
         { "party" },
         RVR_USER_ALL,
@@ -175,7 +198,7 @@ hook.Add( "RVR_ModulesLoaded", "RVR_Party_commands", function()
     )
 
     RVR.Commands.register(
-        "leave",
+        "party_leave",
         {},
         {},
         RVR_USER_ALL,
@@ -184,7 +207,16 @@ hook.Add( "RVR_ModulesLoaded", "RVR_Party_commands", function()
     )
 
     RVR.Commands.register(
-        "create_party",
+        "party_set_mode",
+        { "Join mode" },
+        { "int" },
+        RVR_USER_ALL,
+        setJoinMode,
+        "Sets the joining mode of a party. 0:public, 1:steam friends, 2:invite only"
+    )
+
+    RVR.Commands.register(
+        "party_create",
         { "Name", "Tag", "Color", "Join mode" },
         { "string", "string", "color", "int" },
         RVR_USER_ADMIN,

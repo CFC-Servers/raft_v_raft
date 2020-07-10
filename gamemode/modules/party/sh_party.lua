@@ -28,3 +28,10 @@ function plyMeta:GetParty()
 
     return party.getParty( id )
 end
+
+function plyMeta:GetPartyTag()
+    local partyData = self:GetParty()
+    if not partyData then return nil end
+
+    return partyData.tag
+end

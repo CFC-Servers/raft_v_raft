@@ -8,6 +8,12 @@ party.JOIN_MODE_PUBLIC = 0
 party.JOIN_MODE_STEAM_FRIENDS = 1
 party.JOIN_MODE_INVITE_ONLY = 2
 
+party.joinModeStrs = {
+    [0] = "public",
+    [1] = "steam-friends only",
+    [2] = "invite only",
+}
+
 util.AddNetworkString( "RVR_Party_updateClient" )
 util.AddNetworkString( "RVR_Party_createParty" )
 util.AddNetworkString( "RVR_Party_updateFriends" )
@@ -44,6 +50,10 @@ function party.createParty( partyName, owner, tag, color, joinMode )
 
     if #partyName < 5 or tonumber( partyName ) then
         return nil, "Invalid party name, must be at least 5 characters and contain at least one non-numeric character"
+    end
+
+    if color.a ~= 255 then
+        return nil, "Party color alpha must be 255 (ff)"
     end
 
     local id = party.idCounter
@@ -85,6 +95,35 @@ function party.removeParty( id )
     return true
 end
 
+function party.broadcastMessage( id, msg )
+    local partyData = party.getParty( id )
+
+    if not partyData then
+        return false, "Party with id " .. id .. " does not exist"
+    end
+
+    for _, member in pairs( partyData.members ) do
+        member:ChatPrint( msg )
+    end
+
+    return true
+end
+
+function party.setJoinMode( id, mode )
+    local partyData = party.getParty( id )
+
+    if not partyData then
+        return false, "Party with id " .. id .. " does not exist"
+    end
+
+    if mode < 0 or mode > 2 then
+        return false, "Invalid join mode"
+    end
+
+    partyData.joinMode = mode
+    party.broadcastMessage( partyData.id, "Party join mode has been set to " .. party.joinModeStrs[mode] )
+end
+
 -- TODO: Drop inventory, switch to spectator
 function party.removeMember( id, ply )
     local partyData = party.getParty( id )
@@ -98,8 +137,9 @@ function party.removeMember( id, ply )
     end
 
     ply:SetPartyID( nil )
-
     table.RemoveByValue( partyData.members, ply )
+
+    party.broadcastMessage( partyData.id, ply:Nick() .. " has left the party." )
 
     if #partyData.members == 0 then
         party.removeParty( id )
@@ -109,9 +149,7 @@ function party.removeMember( id, ply )
     if partyData.owner == ply then
         partyData.owner = partyData.members[1]
 
-        for _, member in pairs( partyData.members ) do
-            member:ChatPrint( "The owner ( " .. ply:Nick() .. " has left this party, " .. partyData.owner:Nick() .. " is the new owner." )
-        end
+        party.broadcastMessage( partyData.id, "The owner ( " .. ply:Nick() .. " has left this party, " .. partyData.owner:Nick() .. " is the new owner." )
     end
 
     updateClientPartyData( id )
@@ -139,7 +177,10 @@ function party.addMember( id, ply )
         party.removeMember( ply:GetPartyID(), ply )
     end
 
-    table.insert( partyData.member, ply )
+    party.broadcastMessage( partyData.id, ply:Nick() .. " has joined the party!" )
+
+    ply:SetPartyID( id )
+    table.insert( partyData.members, ply )
 
     updateClientPartyData( id )
 
@@ -203,6 +244,8 @@ function party.invite( id, inviter, ply )
 
     -- TODO: Add cooldown
     partyData.invites[ply] = CurTime()
+
+    return true
 end
 
 local plyMeta = FindMetaTable( "Player" )
@@ -221,7 +264,7 @@ end
 function plyMeta:IsFriendsWith( ply )
     if not self.RVR_Friends then return false end
 
-    return table.HasValue( RVR_Friends, ply )
+    return table.HasValue( self.RVR_Friends, ply )
 end
 
 hook.Add( "PlayerDisconnected", "RVR_Party", function( ply )
@@ -255,4 +298,9 @@ end )
 
 net.Receive( "RVR_Party_updateFriends", function( len, ply )
     ply.RVR_Friends = net.ReadTable()
+end )
+
+hook.Add( "PlayerInitialSpawn", "RVR_Party_updateFriends", function()
+    net.Start( "RVR_Party_updateFriends" )
+    net.Broadcast()
 end )
