@@ -35,3 +35,7 @@ function plyMeta:GetPartyTag()
 
     return partyData.tag
 end
+
+function plyMeta:IsInSameParty( ply )
+    return self:GetPartyID() == ply:GetPartyID()
+end
