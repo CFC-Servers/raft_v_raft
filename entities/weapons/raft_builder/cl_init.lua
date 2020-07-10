@@ -15,27 +15,6 @@ function SWEP:Initialize()
     self.yaw = 0
 
     self.radial = RVR.newRadialMenu()
-    local rad = self.radial
-    rad:AddItem("Option 1", Material("rvr/icons/food.png"), function()
-        print("1")
-    end)
-    rad:AddItem("Option 2", Material("rvr/icons/food.png"), function()
-        print("2")
-    end)
-    rad:AddItem("Option  3", Material("rvr/icons/food.png"), function()
-        print("3")
-    end)
-    rad:AddItem("Option 4", Material("rvr/icons/food.png"), function()
-        print("4")
-    end)
-
-    rad:AddItem("Option 5", Material("rvr/icons/food.png"), function()
-        print("1")
-    end)
-    rad:AddItem("Option 6", Material("rvr/icons/food.png"), function()
-        print("2")
-    end)
-
 end
 
 function SWEP:SetSelectedClass( cls )
