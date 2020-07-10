@@ -71,6 +71,8 @@ local function kickPlayer( caller, ply )
         return "Failed: " .. err
     end
 
+    ply:ChatPrint( "You have been kicked from " .. partyData.name )
+
     return "Successfully kicked " .. ply:Nick() .. " from your party"
 end
 
