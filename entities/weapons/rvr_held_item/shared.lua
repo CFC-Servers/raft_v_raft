@@ -43,7 +43,6 @@ function SWEP:Initialize()
     end )
 end
 
--- Empty to remove default behaviour, don't remove >:(
 function SWEP:PrimaryAttack()
     self:SetNextPrimaryFire( CurTime() + self.Cooldown )
 
@@ -58,7 +57,7 @@ function SWEP:PrimaryAttack()
     local itemData = RVR.Items.getItemData( itemType )
 
     if itemData and itemData.consumable then
-        if not itemData.canConsume( self.Owner ) then return end
+        if not itemData:canConsume( self.Owner ) then return end
 
         local owner = self.Owner
 
@@ -85,7 +84,7 @@ function SWEP:PrimaryAttack()
             end )
 
             timer.Simple( self.Cooldown * 0.5, function()
-                itemData.onConsume( owner )
+                itemData:onConsume( owner )
             end )
         else
             self.consumeAnimStart = SysTime()

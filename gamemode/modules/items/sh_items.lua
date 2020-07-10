@@ -81,34 +81,34 @@ local config = GM.Config.Hunger
 
 for k, item in pairs( items.items ) do
     if item.consumable and ( item.food or item.water or item.health ) then
-        function item.onConsume( ply )
-            if item.food then
-                ply:AddFood( item.food )
+        function item:onConsume( ply )
+            if self.food then
+                ply:AddFood( self.food )
             end
 
-            if item.water then
-                ply:AddWater( item.water )
+            if self.water then
+                ply:AddWater( self.water )
             end
 
-            if item.health then
-                if item.health < 0 then
-                    ply:TakeDamage( -item.health, ply, ply )
+            if self.health then
+                if self.health < 0 then
+                    ply:TakeDamage( -self.health, ply, ply )
                 else
-                    ply:SetHealth( math.Clamp( ply:Health() + item.health, 0, 100 ) )
+                    ply:SetHealth( math.Clamp( ply:Health() + self.health, 0, 100 ) )
                 end
             end
         end
 
-        function item.canConsume( ply )
-            if item.food and ply:GetFood() <= config.MAX_FOOD - 1 then
+        function item:canConsume( ply )
+            if self.food and ply:GetFood() <= config.MAX_FOOD - 1 then
                 return true
             end
 
-            if item.water and ply:GetWater() <= config.MAX_WATER - 1 then
+            if self.water and ply:GetWater() <= config.MAX_WATER - 1 then
                 return true
             end
 
-            if item.health and ( item.health < 0 or ply:Health() <= 99 ) then
+            if self.health and ( self.health < 0 or ply:Health() <= 99 ) then
                 return true
             end
 
