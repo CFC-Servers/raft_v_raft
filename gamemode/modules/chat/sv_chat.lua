@@ -1,4 +1,6 @@
-function RVR.canHear( listener, speaker )
+RVR.Chat = RVR.Chat or {}
+
+function RVR.Chat.canHear( listener, speaker )
     if not listener:Alive() or not speaker:Alive() then
         return false
     end
@@ -6,7 +8,7 @@ function RVR.canHear( listener, speaker )
     local speakerPos = speaker:GetPos()
     local listenerPos = listener:GetPos()
 
-    if listenerPos:Distance( speakerPos ) > GAMEMODE.Config.Chat.CHAT_DISTANCE then
+    if listenerPos:DistToSqr( speakerPos ) > GAMEMODE.Config.Chat.CHAT_DISTANCE ^ 2 then
         return false
     end
     
@@ -14,11 +16,6 @@ function RVR.canHear( listener, speaker )
 end
 
 function GM:PlayerCanSeePlayersChat( text, teamOnly, listener, speaker )
-    if teamOnly then
-        -- TODO check party system?
-        return false
-    end
-    
     return RVR.canHear( listener, speaker )
 end
 
