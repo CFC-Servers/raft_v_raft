@@ -15,6 +15,14 @@ function SWEP:Initialize()
     self.yaw = 0
 
     self.radial = RVR.newRadialMenu()
+    
+    for _, placeable in pairs( self.Placeables ) do 
+        local cls = basechlass.Get( placeable.class )
+        
+        self.radial:AddItem( cls.PrintName, Material(), function()
+            self:SetSelectedClass( self.class )
+        end )
+    end
 end
 
 function SWEP:SetSelectedClass( cls )
