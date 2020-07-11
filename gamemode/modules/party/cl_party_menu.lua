@@ -9,8 +9,8 @@ local aspectRatio = bgMat:Height() / ( bgMat:Width() * 1.2 )
 local buttonBgMat = Material( "rvr/backgrounds/party_menu_dropdown_background.png" )
 local buttonAspectRatio = buttonBgMat:Height() / buttonBgMat:Width()
 
-local dropDownEnabledMat = Material( "rvr/icons/craftingmenu_dropdownclosed.png" )
-local dropDownDisabledMat = Material( "rvr/icons/craftingmenu_dropdownopen.png" )
+local dropDownEnabledMat = Material( "rvr/icons/craftingmenu_dropdownopen.png" )
+local dropDownDisabledMat = Material( "rvr/icons/craftingmenu_dropdownclosed.png" )
 
 local yellow = Color( 188, 162, 105 )
 local brown = Color( 91, 56, 34 )
