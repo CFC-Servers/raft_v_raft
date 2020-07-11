@@ -35,8 +35,8 @@ function inv.openPlayerInventory( inventory )
     end
 
     local invScroller = vgui.Create( "RVR_InventoryScroller", frame )
-    invScroller:SetSize( w * 0.435, h * 0.397 )
-    invScroller:SetPos( w * 0.533, h * 0.481 )
+    invScroller:SetSize( w * 0.435, h * 0.536 )
+    invScroller:SetPos( w * 0.533, h * 0.345 )
     invScroller:SetSlotsPerRow( 4 )
     invScroller:SetInventory( inventory, config.PLAYER_HOTBAR_SLOTS + 1, inventory.MaxSlots )
 
@@ -69,6 +69,7 @@ function inv.openPlayerInventory( inventory )
     icon:SetPos( w * 0.1, h * 0.15 )
     icon:SetSize( w * 0.24, h * 0.74 )
     icon:SetModel( LocalPlayer():GetModel() )
+    icon:SetMouseInputEnabled( false )
 
     -- Go far away and zoom in, to give less of a "fish-eye" effect
     icon:SetCamPos( Vector( 100, 0, 35 ) )

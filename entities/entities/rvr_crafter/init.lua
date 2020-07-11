@@ -20,15 +20,9 @@ function ENT:Initialize()
         physObj:EnableMotion( true )
     end
 
-    -- Give entity an inventory
-    self.RVR_Inventory = {
-        Inventory = {},
-        MaxSlots = self.InventorySize,
-        InventoryType = "Box",
-        Name = self.InventoryName,
-    }
+    RVR.Crafting.makeCrafter( self, self.CrafterName, self.Tier, self.CrafterType )
 end
 
 function ENT:Use( activator, caller )
-    RVR.Inventory.playerOpenInventory( caller, self )
+    RVR.Crafting.openMenu( caller, self )
 end

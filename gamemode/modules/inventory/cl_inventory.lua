@@ -226,7 +226,7 @@ function inv.makeHotbar()
     local w, h = ScrW(), ScrH()
 
     local slotCount = config.PLAYER_HOTBAR_SLOTS
-    local innerHotbarWidth = w * 0.5
+    local innerHotbarWidth = w * 0.45
 
     local horizontalPadding = 0.05
     local verticalPadding = 0.1
@@ -295,6 +295,7 @@ function inv.setHotbarSlot( newIndex )
 end
 
 hook.Add( "InitPostEntity", "RVR_Inventory_HotbarSetup", inv.makeHotbar )
+hook.Add( "OnScreenSizeChanged", "RVR_Inventory_HotbarSetup", inv.makeHotbar )
 
 if GAMEMODE then
     inv.makeHotbar()
@@ -329,13 +330,6 @@ hook.Add( "CreateMove", "RVR_Inventory_HotbarSelect", function()
 
     inv.setHotbarSlot( nextSlot )
     prevSlotChange = RealTime()
-end )
-
-net.Receive( "RVR_Inventory_OnPickup", function()
-    local itemData = net.ReadTable()
-    local count = net.ReadUInt( 16 )
-
-    -- TODO: Show this infomation somehow - Separate card
 end )
 
 -- Hide default weapon selection
