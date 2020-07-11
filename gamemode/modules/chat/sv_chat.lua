@@ -16,9 +16,9 @@ function RVR.Chat.canHear( listener, speaker )
 end
 
 function GM:PlayerCanSeePlayersChat( text, teamOnly, listener, speaker )
-    return RVR.canHear( listener, speaker )
+    return RVR.Chat.canHear( listener, speaker )
 end
 
 function GM:PlayerCanHearPlayersVoice( listener, speaker )
-    return RVR.canHear( listener, speaker ), GAMEMODE.Config.Chat.VOICE_3D
+    return RVR.Chat.canHear( listener, speaker ), GAMEMODE.Config.Chat.VOICE_3D
 end
