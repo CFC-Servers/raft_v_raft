@@ -17,10 +17,11 @@ function SWEP:Initialize()
     self.radial = RVR.newRadialMenu()
     
     for _, placeable in pairs( self.Placeables ) do 
-        local cls = basechlass.Get( placeable.class )
+        local clsName = placeable.class
+        local cls = baseclass.Get( clsName )
         
-        self.radial:AddItem( cls.PrintName, Material(), function()
-            self:SetSelectedClass( self.class )
+        self.radial:AddItem( cls.PrintName, Material("rvr/icons/food.png"), function()
+            self:SetSelectedClass( clsName )
         end )
     end
 end

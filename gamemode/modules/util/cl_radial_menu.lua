@@ -27,7 +27,8 @@ function radialMeta:AddItem( name, material, callback )
 end
 
 function radialMeta:RunSelected()
-    local item  = self.items[self.selectedItem]
+    if not self.selectedItem then return end
+    local item = self.items[self.selectedItem]
     item.callback()
 end
 
@@ -53,21 +54,25 @@ function radialMeta:Paint()
     end
 end
 
+function radialMeta:hookIdentifier()
+    return "RVR_RadialMenu_"..tostring(self)
+end
+
 function radialMeta:Open()
-    hook.Add( "HUDPaint", "RVR_RadialMenu_"..tostring(self), function()
+    hook.Add( "HUDPaint", self:hookIdentifier(), function()
         self:Paint()
     end )
 end
 
 function radialMeta:Close()
-    hook.Remove( "HUDPaint", "RVR_RadialMenu_"..tostring(self) )
+    hook.Remove( "HUDPaint", self:hookIdentifier() )
 end
 
-function radialMeta:DrawButton( start, size, mat )
-    draw.NoTexture()
-
-    local centerx, centery = ScrW() / 2, ScrH() / 2
-
+function radialMeta:DrawSegment( start, size )
+    if self.pointCache[start] then
+        return surface.DrawPoly( self.pointCache[start] )
+    end
+    local centerx, centery = ScrW() / 2, ScrH() / 2  
     local points = {}
 
     for a = size+start, start, -1 do
@@ -76,14 +81,29 @@ function radialMeta:DrawButton( start, size, mat )
 
     table.insert( points, newPoint( centerx, centery, start, self.innerRadius ) )
     table.insert( points, newPoint( centerx, centery, start+size, self.innerRadius ) )
-
+    self.pointCache[start] = points
     surface.DrawPoly( points )
+end
+
+function radialMeta:DrawButton( start, size, mat )
+    draw.NoTexture()
+
+    local centerx, centery = ScrW() / 2, ScrH() / 2
+    local segmentAmount = ( start + size ) / self.segmentSize
+    segmentAmount = math.floor( segmentAmount )
+    local segmentSize = math.ceil( size / segmentAmount )
+
+    for i=0, segmentAmount-1 do
+
+        local segmentStart = start + segmentSize * i
+        self:DrawSegment( segmentStart, segmentSize )    
+    end
 
     surface.SetMaterial( mat )
 
     local pos = newPoint( centerx, centery, start + size / 2, self.iconRadius )
 
-    local iconSize = size * 2
+    local iconSize = size * 1.2
     surface.DrawTexturedRect( pos.x - iconSize / 2, pos.y - iconSize / 2, iconSize, iconSize )
 end
 
@@ -93,9 +113,10 @@ function RVR.newRadialMenu()
         color         = Color( 188, 162, 105, 255 ),
         selectedColor = Color( 255, 162, 105, 255 ),
         outerRadius   = 300,
-        innerRadius   = 200,
-        iconRadius    = 250,
-
+        innerRadius   = 175,
+        iconRadius    = 230,
+        segmentSize   = 5,
+        pointCache    = {},
     }
 
     setmetatable(r, radialMeta)
