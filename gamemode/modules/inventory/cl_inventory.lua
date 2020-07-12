@@ -226,12 +226,15 @@ function inv.makeHotbar()
     local w, h = ScrW(), ScrH()
 
     local slotCount = config.PLAYER_HOTBAR_SLOTS
-    local innerHotbarWidth = w * 0.45
+    local innerHotbarWidth = w * 0.48
 
     local horizontalPadding = 0.05
-    local verticalPadding = 0.1
+    local verticalPadding = 0.15
 
-    local slotSize = innerHotbarWidth / slotCount
+    local slotSizeWithPadding = innerHotbarWidth / slotCount
+    local slotPadding = slotSizeWithPadding * 0.12
+    local slotSize = slotSizeWithPadding - slotPadding
+
     local innerHotbarHeight = slotSize
 
     local hotbarHeight = innerHotbarHeight * ( 1 + verticalPadding * 2 )
@@ -259,7 +262,7 @@ function inv.makeHotbar()
 
         local slot = vgui.Create( "RVR_ItemSlot", hotbar.frame )
         slot:SetSize( slotSize, slotSize )
-        slot:SetPos( offsetX + ( k - 1 ) * slotSize, offsetY )
+        slot:SetPos( offsetX + ( k - 1 ) * slotSizeWithPadding + slotPadding * 0.5, offsetY + slotPadding * 0.25 )
         slot:SetLocationData( LocalPlayer(), k )
 
         hotbar.slots[k] = slot
