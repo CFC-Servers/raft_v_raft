@@ -313,3 +313,10 @@ hook.Add( "PlayerCanSeePlayersChat", "RVR_Party_chat", function( text, isTeam, l
 
     return speakerPartyID == listener:GetPartyID()
 end )
+
+hook.Add( "PlayerShouldTakeDamage", "RVR_Party_friendlyFire", function( ply, attacker )
+    if GAMEMODE.Config.Party.ALLOW_FRIENDLY_FIRE then return end
+    if ply:IsInSameParty( ply, attacker ) then
+        return false
+    end
+end )

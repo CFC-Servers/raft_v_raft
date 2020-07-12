@@ -112,7 +112,10 @@ function party.reloadMenu()
         label:SetTextColor( isOwner and yellow or brown )
         label:SetText( v:Nick() )
 
-        if not isOwner and not selfIsOwner then continue end
+        local isSelf = v == LocalPlayer()
+
+        if not isOwner and not selfIsOwner and not isSelf then continue end
+        local leaveButton = isSelf and not isOwner
 
         local icon = vgui.Create( "DImage", playerPanel )
         icon:Dock( RIGHT )
@@ -132,9 +135,13 @@ function party.reloadMenu()
 
                 self:Remove()
 
-                net.Start( "RVR_Party_kickPlayer" )
-                net.WriteEntity( v )
-                net.SendToServer()
+                if leaveButton then
+                    RunConsoleCommand( "say", "!party_leave" )
+                else
+                    net.Start( "RVR_Party_kickPlayer" )
+                    net.WriteEntity( v )
+                    net.SendToServer()
+                end
             end
         end
     end

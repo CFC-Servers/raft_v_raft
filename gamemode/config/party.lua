@@ -5,3 +5,4 @@ local config = GM.Config.Party
 
 config.INVITE_LIFETIME = 30
 config.MAX_PLAYERS = 4
+config.ALLOW_FRIENDLY_FIRE = false
