@@ -1,4 +1,4 @@
-ENT.Base = "raft_platform"
+ENT.Base = "raft_piece_base"
 ENT.PrintName = "Raft Platform"
 ENT.Model = "models/rvr/raft/raft_platform.mdl"
 ENT.PreviewPos = Vector( 150, 0, -30 )
