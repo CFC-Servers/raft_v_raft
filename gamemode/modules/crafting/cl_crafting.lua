@@ -467,7 +467,7 @@ function cft.populateRecipePanel( panel, recipe )
         local itemSlot = vgui.Create( "RVR_ItemSlot", ingredPanel )
         itemSlot:ConvertToGhost()
         itemSlot:SetItemData( RVR.Items.getItemData( ingredient ), 1 )
-        itemSlot:SetImage( "rvr/backgrounds/craftingmenu_ingredient.png" )
+        itemSlot:SetImage( "rvr/backgrounds/dark_slot_background.png" )
         itemSlot:Dock( TOP )
 
         function itemSlot:PerformLayout()
