@@ -332,13 +332,6 @@ hook.Add( "CreateMove", "RVR_Inventory_HotbarSelect", function()
     prevSlotChange = RealTime()
 end )
 
-net.Receive( "RVR_Inventory_OnPickup", function()
-    local itemData = net.ReadTable()
-    local count = net.ReadUInt( 16 )
-
-    -- TODO: Show this infomation somehow - Separate card
-end )
-
 -- Hide default weapon selection
 hook.Add( "HUDShouldDraw", "RVR_Inventory_HideWeapons", function( name )
     if name == "CHudWeaponSelection" then
