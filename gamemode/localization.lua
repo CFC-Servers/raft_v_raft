@@ -2,8 +2,9 @@ RVR = RVR or {}
 RVR.Localization = {}
 local L = RVR.Localization
 
+local lang = ( GAMEMODE or GM ).Config.Localization.LANGUAGE
+
 L.Localize = function( key, ... )
-    local lang = GAMEMODE.Config.Localization.LANGUAGE
     if not L[key] then
         error( "Localization key " .. key .. " doesn't exist" )
     end
@@ -22,6 +23,11 @@ end )
 L.storage = {
     en = "Storage",
     fr = "Espace de rangement"
+}
+
+L.mediumStorage = {
+    en = "Medium Storage",
+    fr = "<UNKNOWN>"
 }
 
 -- Error messages
@@ -53,4 +59,59 @@ L.cantGiveLessThanOne = {
 L.itemTypeDoesNotExist = {
     en = "Item type %s does not exist",
     fr = "L'item de type %s n'éxiste pas"
+}
+
+L.invalidInt = {
+    en = "Invalid integer: %s",
+    fr = "<UNKNOWN>"
+}
+
+L.invalidFloat = {
+    en = "Invalid float: %s",
+    fr = "<UNKNOWN>"
+}
+
+L.invalidBool = {
+    en = "Invalid boolean: %s",
+    fr = "<UNKNOWN>"
+}
+
+L.notAimingAtPlayer = {
+    en = "Not currently aiming at a player!",
+    fr = "<UNKNOWN>"
+}
+
+L.invalidPlayer = {
+    en = "Invalid player: %s",
+    fr = "<UNKNOWN>"
+}
+
+L.multiplePlayerMatch = {
+    en = "\"%s\" matches multiple players:\n%s",
+    fr = "<UNKNOWN>"
+}
+
+L.missingArgumentAndUsage = {
+    en = "Missing argument. Usage: %s",
+    fr = "<UNKNOWN>"
+}
+
+L.insufficientUserGroup = {
+    en = "You need to be %s to use this command",
+    fr = "<UNKNOWN>"
+}
+
+L.description = {
+    en = "Description",
+    fr = "<UNKNOWN>"
+}
+
+L.unknownCommand = {
+    en = "Command \"%s\" does not exist",
+    fr = "<UNKNOWN>"
+}
+
+L.commandsInConsole = {
+    en = "Look in console for a list of commands.",
+    fr = "<UNKNOWN>"
 }

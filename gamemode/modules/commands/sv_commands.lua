@@ -5,6 +5,8 @@ include( "sh_commands.lua" )
 RVR.Commands = RVR.Commands or {}
 local commands = RVR.Commands
 
+local L = RVR.Localization.Localize
+
 commands.commands = {}
 commands.types = {}
 
@@ -20,7 +22,7 @@ commands.addType( "int", function( arg )
     local num = tonumber( arg )
 
     if not num or num % 1 ~= 0 then
-        return nil, "Invalid integer: " .. arg
+        return nil, L( "invalidInt", arg )
     end
 
     return num
@@ -30,7 +32,7 @@ commands.addType( "float", function( arg )
     local num = tonumber( arg )
 
     if not num then
-        return "Invalid float: " .. arg
+        return nil, L( "invalidFloat", arg )
     end
 
     return num
@@ -55,7 +57,7 @@ commands.addType( "bool", function( arg )
         return booleanValues[arg]
     end
 
-    return nil, "Invalid boolean: " .. arg
+    return nil, L( "invalidBool", arg )
 end )
 
 commands.addType( "string", function( arg )
@@ -75,7 +77,7 @@ commands.addType( "player", function( arg, ply )
             return target
         end
 
-        return nil, "Not currently aiming at a player!"
+        return nil, L "notAimingAtPlayer"
     end
 
     local isSteamID = string.find( arg, "STEAM_" )
@@ -86,7 +88,7 @@ commands.addType( "player", function( arg, ply )
         if ply then
             return ply
         else
-            return nil, "Invalid player: " .. arg
+            return nil, L( "invalidPlayer", arg )
         end
     end
 
@@ -105,12 +107,12 @@ commands.addType( "player", function( arg, ply )
     end
 
     if #selectedPlayers > 1 then
-        return nil, "\"" .. arg .. "\" matches multiple players:" .. playerList
+        return nil, L( "multiplePlayerMatch", arg, playerList )
     elseif #selectedPlayers == 1 then
         return selectedPlayers[1]
     end
 
-    return nil, "Invalid player: " .. arg
+    return nil, L( "invalidPlayer", arg )
 end )
 
 function commands.checkArguments( argNames, argTypes, args, ply )
@@ -123,7 +125,7 @@ function commands.checkArguments( argNames, argTypes, args, ply )
             commandHelp = commandHelp .. argName .. ":" .. argType .. " "
         end
 
-        return nil, "Missing argument. Usage " .. commandHelp
+        return nil, L( "missingArgumentAndUsage", commandHelp )
     end
 
     local newArgs = {}
@@ -149,7 +151,7 @@ local function processCommand( ply, command, args )
     if not commandInfo then return end
 
     if not RVR.isUserGroup( ply, commandInfo.userGroup ) then
-        return "You need to be " .. RVR.getGroupName( commandInfo.userGroup ) .. " to use this command"
+        return L( "insufficentUserGroup", RVR.getGroupName( commandInfo.userGroup ) )
     end
 
     local newArgs, errorMsg = commands.checkArguments( commandInfo.argNames, commandInfo.argTypes, args, ply )
@@ -197,7 +199,7 @@ function commands.register( names, argNames, argTypes, userGroup, func, desc )
         local description = getUsage( name, argNames, argTypes )
 
         if desc then
-            description = description .. "\nDescription: " .. desc
+            description = description .. "\n" .. L( "description" ) .. ": " .. desc
         end
 
         commands.commands[name] = {
@@ -223,7 +225,7 @@ local function onPlayerSay( ply, text )
     if msg then
         ply:ChatPrint( msg )
     end
-    
+
     if validCommand then
         return ""
     end
@@ -246,7 +248,7 @@ local function onRunConsoleCommand( len, ply )
     end
 
     if not validCommand then
-        ply:PrintMessage( HUD_PRINTCONSOLE, "Command \"" .. command .. "\" does not exist" )
+        ply:PrintMessage( HUD_PRINTCONSOLE, L( "unknownCommand", command ) )
     end
 end
 
@@ -255,7 +257,7 @@ net.Receive( "RVR_Commands_runConsoleCommand", onRunConsoleCommand )
 local function initializeBaseCommands()
     commands.register( "usage", { "command" }, { "string" }, RVR_USER_ALL, function( ply, command )
         if not commands.commands[command] then
-            return "Help: Command \"" .. command .. "\" does not exist"
+            return "Help: " .. L( "unknownCommand", command )
         end
 
         return commands.commands[command].description
@@ -276,7 +278,7 @@ local function initializeBaseCommands()
 
         ply:PrintMessage( HUD_PRINTCONSOLE, "------------------------------" )
 
-        ply:ChatPrint( "Look in console for a list of commands." )
+        ply:ChatPrint( L "commandInConsole" )
     end, "Prints a list of all available commands in console" )
 end
 
