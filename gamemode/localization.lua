@@ -3,9 +3,20 @@ RVR.Localization = {}
 local L = RVR.Localization
 
 L.Localize = function( key, ... )
-    local lang = GAMEMODE.Config.Localization.Language
+    local lang = GAMEMODE.Config.Localization.LANGUAGE
+    if not L[key] then
+        error( "Localization key " .. key .. " doesn't exist" )
+    end
+    if not L[key][lang] then
+        error( "Language " .. lang .. " is invalid!" )
+    end
     return string.format( L[key][lang], ... )
 end
+
+-- Call a generic localization to trigger an error if language is invalid
+hook.Add( "Initialize", "RVR_LocalizationCheck", function()
+    L.Localize( "storage" )
+end )
 
 -- Words
 L.storage = {
