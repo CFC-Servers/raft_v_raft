@@ -20,7 +20,7 @@ function SWEP:Initialize()
         local clsName = placeable.class
         local cls = baseclass.Get( clsName )
         
-        local mat =  RVR.Util.getModelTexture(cls.Model, Vector( 100, 0, -5 ), Angle( -45, 0, 0 ) ) 
+        local mat = RVR.Util.getModelTexture( cls.Model, cls.PreviewPos, cls.PreviewAngle )
         self.radial:AddItem( cls.PrintName, mat, function()
             self:SetSelectedClass( clsName )
         end )
