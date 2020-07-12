@@ -87,7 +87,11 @@ function radialMeta:DrawSelected()
     end
     surface.DrawPoly( points )
 
-    draw.DrawText(item.name, "RVR_RadialMenu_Title", centerx, ScrH() * 0.4, self.titleColor, TEXT_ALIGN_CENTER)
+    draw.DrawText( item.name, "RVR_RadialMenu_Title", centerx, ScrH() * 0.4, self.titleColor, TEXT_ALIGN_CENTER)
+
+    surface.SetMaterial( item.iconMaterial )
+    local iconSize = 100
+    surface.DrawTexturedRect( centerx - iconSize / 2, ScrH() * 0.47 - iconSize / 2, iconSize, iconSize )
 end
 
 function radialMeta:DrawSegment( start, size )
