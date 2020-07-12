@@ -3,7 +3,7 @@ ENT.PrintName = "Raft Platform"
 ENT.Model = "models/rvr/raft/raft_platform.mdl"
 ENT.PreviewPos = Vector( 150, 0, -30 )
 
-DEFINE_BASECLASS("raft_base")
+DEFINE_BASECLASS("raft_piece_base")
 
 function ENT.IsValidPlacement(piece, dir)
     if piece:GetClass() == "raft_foundation" then
