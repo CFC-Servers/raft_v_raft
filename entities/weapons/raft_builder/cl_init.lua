@@ -145,8 +145,8 @@ function SWEP:SecondaryAttack()
         if key == IN_ATTACK2 then
             self.radial:RunSelected()
             self.radial:Close()    
+            gui.EnableScreenClicker( false )
         end
-        gui.EnableScreenClicker( false )
     end)
 end
 

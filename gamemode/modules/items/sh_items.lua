@@ -42,6 +42,8 @@ items.items = {
     {
         type = "raft_builder",
         displayName = "Raft Builder",
+        description = "Build rafts uwu",
+        model = "models/weapons/w_crwobar.mdl",
         swep = "raft_builder",
         maxCount = 1,
         stackable = false,
