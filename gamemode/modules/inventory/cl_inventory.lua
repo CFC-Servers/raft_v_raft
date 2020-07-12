@@ -259,10 +259,12 @@ function inv.makeHotbar()
     local offsetX = ( hotbarWidth - innerHotbarWidth ) * 0.5
 
     for k = 1, slotCount do
+        local x = offsetX + ( k - 1 ) * slotSizeWithPadding + slotPadding * 0.5
+        local y = offsetY + slotPadding * 0.25
 
         local slot = vgui.Create( "RVR_ItemSlot", hotbar.frame )
         slot:SetSize( slotSize, slotSize )
-        slot:SetPos( offsetX + ( k - 1 ) * slotSizeWithPadding + slotPadding * 0.5, offsetY + slotPadding * 0.25 )
+        slot:SetPos( x, y )
         slot:SetLocationData( LocalPlayer(), k )
 
         hotbar.slots[k] = slot
