@@ -102,6 +102,14 @@ hook.Add( "PlayerBindPress", "RVR_Inventory", function( _, bind, pressed )
         net.SendToServer()
 
         return true
+    elseif bind == "+dropitem" then
+        local heldWeapon = LocalPlayer():GetActiveWeapon()
+        if not IsValid( heldWeapon ) then return end
+
+        net.Start( "RVR_Inventory_DropItem" )
+        net.SendToServer()
+
+        return true
     elseif string.StartWith( bind, "slot" ) then
         -- Set selected slot
         local slotNum = tonumber( string.sub( bind, 5 ) )

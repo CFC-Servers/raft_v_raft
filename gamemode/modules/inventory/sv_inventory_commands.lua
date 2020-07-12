@@ -1,4 +1,4 @@
-local function giveItem( caller, target, item, count )
+function RVR.Commands.giveItem( caller, target, item, count )
     if count < 1 then
         return "Cannot give less than 1 item, what are you expecting to happen?"
     end
@@ -13,8 +13,8 @@ local function giveItem( caller, target, item, count )
     return "Only able to fit " .. amount .. " of " .. count .. " items in inventory."
 end
 
-local function giveSingle( caller, target, item )
-    return giveItem( caller, target, item, 1 )
+function RVR.Commands.giveSingle( caller, target, item )
+    return RVR.Commands.giveItem( caller, target, item, 1 )
 end
 
 hook.Add( "RVR_ModulesLoaded", "RVR_Inventory_AddCommands", function()
@@ -44,7 +44,7 @@ hook.Add( "RVR_ModulesLoaded", "RVR_Inventory_AddCommands", function()
         { "Target", "Item", "Count" },
         { "player", "item", "int" },
         RVR_USER_ADMIN,
-        giveItem,
+        RVR.Commands.giveItem,
         "Gives a player item(s)"
     )
 
@@ -53,7 +53,7 @@ hook.Add( "RVR_ModulesLoaded", "RVR_Inventory_AddCommands", function()
         { "Target", "Item" },
         { "player", "item" },
         RVR_USER_ADMIN,
-        giveSingle,
+        RVR.Commands.giveSingle,
         "Gives a player an item"
     )
 end )
