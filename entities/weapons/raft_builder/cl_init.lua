@@ -20,7 +20,8 @@ function SWEP:Initialize()
         local clsName = placeable.class
         local cls = baseclass.Get( clsName )
         
-        self.radial:AddItem( cls.PrintName, Material("rvr/icons/food.png"), function()
+        local mat =  RVR.Util.getModelTexture(cls.Model, Vector( 100, 0, -5 ), Angle( -45, 0, 0 ) ) 
+        self.radial:AddItem( cls.PrintName, mat, function()
             self:SetSelectedClass( clsName )
         end )
     end
