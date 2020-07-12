@@ -2,6 +2,7 @@ RVR.Party = RVR.Party or {}
 local party = RVR.Party
 
 util.AddNetworkString( "RVR_Party_kickPlayer" )
+util.AddNetworkString( "RVR_Party_invitePlayer" )
 
 -- TODO: Remove ChatPrints, replace with networked events for easier localisation and replacement action (like main menu)
 
@@ -81,6 +82,13 @@ net.Receive( "RVR_Party_kickPlayer", function( len, caller )
     if type( ply ) ~= "Player" then return end
 
     kickPlayer( caller, ply )
+end )
+
+net.Receive( "RVR_Party_invitePlayer", function( len, caller )
+    local ply = net.ReadEntity()
+    if type( ply ) ~= "Player" then return end
+
+    invitePlayer( caller, ply )
 end )
 
 local function createParty( caller, name, tag, color, joinMode )

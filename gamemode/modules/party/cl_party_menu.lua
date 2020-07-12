@@ -34,16 +34,18 @@ function party.reloadMenu()
 
     if not partyData then return end
 
+    local partyFull = #partyData.members == GAMEMODE.Config.Party.MAX_PLAYERS
+
     local topMargin = 5
     local w = ScrW() * 0.17
     local elemH = w * aspectRatio
-    local h = ( elemH + topMargin ) * ( #partyData.members + 0.5 )
+    local h = ( elemH + topMargin ) * ( #partyData.members + ( partyFull and 0.5 or 1 ) )
 
     party.menu = vgui.Create( "DFrame" )
     party.menu:SetTitle( "" )
     party.menu:ShowCloseButton( false )
     party.menu:SetDraggable( false )
-    party.menu:SetPos( 0, ScrH() * 0.4 )
+    party.menu:SetPos( 0, ScrH() * 0.35 )
     party.menu:SetSize( w, h )
     party.menu:DockPadding( 0, 0, 0, 0 )
     party.menu.Paint = nil
@@ -65,7 +67,7 @@ function party.reloadMenu()
         party.menuEnabled = not party.menuEnabled
     end
 
-    local containerH = ( elemH + topMargin ) * #partyData.members
+    local containerH = ( elemH + topMargin ) * ( #partyData.members + ( partyFull and 0 or 0.5 ) )
 
     local superContainer = vgui.Create( "DPanel", party.menu )
     superContainer:Dock( TOP )
@@ -135,5 +137,47 @@ function party.reloadMenu()
                 net.SendToServer()
             end
         end
+    end
+
+    if partyFull then return end
+
+    local buttonH = ( elemH + topMargin ) * 0.5 - 10
+    local horizontalPadding = ( w - buttonH ) * 0.5
+
+    local inviteBtn = vgui.Create( "DButton", container )
+    inviteBtn:SetText( "" )
+    inviteBtn:Dock( TOP )
+    inviteBtn:DockMargin( horizontalPadding, 0, horizontalPadding, 10 )
+
+    function inviteBtn:PerformLayout()
+        self:SetTall( self:GetWide() )
+    end
+
+    local plusWidth = 4
+    function inviteBtn:Paint( _w, _h )
+        local offset = ( _w - plusWidth ) * 0.5
+        surface.SetDrawColor( brown )
+        surface.DrawRect( offset, 0, plusWidth, _h )
+        surface.DrawRect( 0, offset, _w, plusWidth )
+    end
+
+    function inviteBtn:DoClick()
+        local inviteMenu = DermaMenu()
+        local someoneAdded = false
+        for _, ply in pairs( player.GetHumans() ) do
+            if not ply:IsInSameParty( LocalPlayer() ) then
+                inviteMenu:AddOption( ply:Nick(), function()
+                    net.Start( "RVR_Party_invitePlayer" )
+                    net.WriteEntity( ply )
+                    net.SendToServer()
+                end )
+                someoneAdded = true
+            end
+        end
+
+        if not someoneAdded then
+            inviteMenu:AddOption( "There's no players to add!" )
+        end
+        inviteMenu:Open()
     end
 end

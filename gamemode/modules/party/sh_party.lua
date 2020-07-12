@@ -37,5 +37,5 @@ function plyMeta:GetPartyTag()
 end
 
 function plyMeta:IsInSameParty( ply )
-    return tobool( self:GetPartyID() ) and self:GetPartyID() == ply:GetPartyID()
+    return self:GetPartyID() ~= nil and self:GetPartyID() == ply:GetPartyID()
 end
