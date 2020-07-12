@@ -11,6 +11,30 @@ local function summonCommandCallback( ply )
     raft:AddOwnerID( ply:SteamID() )
 end
 
+local function placeWallCallback( ply, piece, class, yaw )
+    local raft = piece:GetRaft()
+    if not raft then return end
+
+    if not  raft:CanBuild( ply ) then
+        ply:PrintMessage( HUD_PRINTCONSOLE, "you do not hav epermission to build on this raft" )
+        return
+    end
+
+    local success, itemsMissing = RVR.Inventory.checkItems( ply.RVR_Inventory, piece:GetRequiredItems() )
+    if not success then
+        -- TODO print itemsMissing in a human readable format
+        ply:PrintMessage( HUD_PRINTCONSOLE, "missing required items" )
+        return
+    end
+
+    local _,  err = RVR.placeWall( piece, class, yaw )
+    if err ~= nil then
+        return "Couldn't place  wall: " .. err
+    end
+
+    local success, itemsMissing = RVR.Inventory.tryTakeItems( ply, piece:GetRequiredItems() )
+end
+
 local function expandCallback( ply, piece, class, x, y ,z, yaw )
     local raft = piece:GetRaft()
     if not raft then return end
@@ -33,7 +57,7 @@ local function expandCallback( ply, piece, class, x, y ,z, yaw )
         return "Couldn't place raft piece: " .. err
     end
 
-    local success, itemsMissing = RVR.Inventory.tryTakeItems( ply, required )
+    local success, itemsMissing = RVR.Inventory.tryTakeItems( ply, piece:GetRequiredItems() )
 end
 
 local function deleteCallback( ply, piece )
@@ -61,4 +85,5 @@ hook.Add( "RVR_ModulesLoaded", "RvR_MakeRaftCommands", function()
 
     RVR.Commands.register( "delete_piece", {"piece"}, {"entity"}, RVR_USER_SUPERADMIN, deleteCallback, "delete a raft piece" )
     RVR.Commands.register( "list_rafts", {}, {}, RVR_USER_ALL, listRafts, "list rafts in raftLookup table" )
+    RVR.Commands.register( "place_wall", {"piece", "class",  "yaw"}, {"entity", "string", "int"}, RVR_USER_ALL, placeWallCallback, "place a  wall" )
 end)

@@ -31,3 +31,7 @@ function ENT:GetRequiredItems()
         { item = RVR.Items.getItemData( "nail" ), count = 5 },
     }
 end
+
+function ENT:GetWallOrigin()
+    return Vector(0, 0, 109)
+end

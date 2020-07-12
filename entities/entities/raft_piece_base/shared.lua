@@ -31,7 +31,7 @@ end
 
 function ENT:ToRaftDir( dir )
     local copy = Vector( dir.x, dir.y, dir.z )
-    
+ 
     local rotationOffset = self:GetRaftRotationOffset()
 
     copy:Rotate( rotationOffset )
@@ -66,4 +66,8 @@ function ENT:SetupDataTables()
         self:SetRaftGridPosition( Vector(0,0,0) )
         self:SetRaftRotationOffset( Angle(0,0,0) )
     end
+end
+
+function ENT:GetWallOrigin()
+    return Vector(0, 0, 18)
 end

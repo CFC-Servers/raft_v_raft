@@ -41,3 +41,17 @@ function RVR.expandRaft( piece, class, dir, rotation )
     raft:AddPiece( raft:GetPosition( piece ) + dir, newEnt )
     return newEnt, nil
 end
+
+function RVR.placeWall( piece, class, yaw )
+    local pos = piece:GetWallOrigin()
+    piece.walls = piece.walls or {}
+
+    if IsValid( piece.walls[yaw] ) then return nil, "Wall already exists" end
+    print(class,wall)
+    local newEnt = ents.Create( class )
+    newEnt:Spawn()
+    newEnt:SetPos( piece:LocalToWorld( pos ) )
+    newEnt:SetAngles( piece:LocalToWorldAngles( Angle( 0, yaw, 0 ) ) )
+    piece.walls[yaw] = newEnt
+    return newEnt
+end

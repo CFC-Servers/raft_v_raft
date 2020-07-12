@@ -115,12 +115,11 @@ function radialMeta:DrawButton( start, size, mat )
     draw.NoTexture()
 
     local centerx, centery = ScrW() / 2, ScrH() / 2
-    local segmentAmount = ( start + size ) / self.segmentSize
+    local segmentAmount = ( size ) / self.segmentSize
     segmentAmount = math.floor( segmentAmount )
     local segmentSize = math.ceil( size / segmentAmount )
 
     for i=0, segmentAmount-1 do
-
         local segmentStart = start + segmentSize * i
         self:DrawSegment( segmentStart, segmentSize )    
     end

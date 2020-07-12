@@ -39,11 +39,35 @@ end
 
 function SWEP:Think()
     local ent = self:GetAimEntity()
-    if not ent or not ent.IsRaft then
-        return self.ghost:SetColor( GHOST_INVIS )
+    if not ent or not ent.IsRaft then return self.ghost:SetColor( GHOST_INVIS ) end
+    
+    if self.selectedClassTable.IsRaft then
+        return self:PiecePreview()
     end
+    
+    if self.selectedClassTable.IsWall then
+        return self:WallPreview()
+    end
+end
 
+function SWEP:WallPreview()
+    local ent = self:GetAimEntity()
+    local pos = ent:GetWallOrigin()
+ 
+    self.ghost:SetColor( GHOST_COLOR )
+
+    self.ghost:SetModel( self.selectedClassTable.Model )
+    self.ghost:SetColor( GHOST_COLOR )
+
+    self.ghost:SetPos( ent:LocalToWorld( pos ) )
+    self.ghost:SetAngles( ent:LocalToWorldAngles( Angle( 0, self.yaw, 0 ) ) )
+end
+
+function SWEP:PiecePreview()
+    local ent = self:GetAimEntity()
+     
     local localDir = self:GetPlacementDirection()
+
     if not localDir then
         return self.ghost:SetColor( GHOST_INVIS )
     end
@@ -55,7 +79,7 @@ function SWEP:Think()
 
     local targetPosition = raft:GetPosition( ent ) + dir
 
-    if raft:GetPiece( targetPosition ) then return end
+    if not self.selectedClassTable.IsWall and raft:GetPiece( targetPosition ) then return end
 
     if not self.selectedClassTable.IsValidPlacement( ent, dir ) then return end
 
@@ -86,14 +110,13 @@ end
 
 function SWEP:GetPlacementDirection()
     local ent = self:GetAimEntity()
-
-    if not ent then return end
+    if not ent then return end 
     if not ent.IsRaft then return end
 
     if self.selectedClass == "raft_platform" or self.selectedClass == "raft_stairs" then
         return Vector( 0, 0, 1 )
     end
-
+    
     local ply = self:GetOwner()
 
     local pos = ply:GetAimVector() + ent:GetPos()
@@ -118,7 +141,12 @@ function SWEP:PrimaryAttack()
 
     local ent = self:GetAimEntity()
     if not ent or not ent.IsRaft then return end
-
+    
+    print(self.yaw)
+    if self.selectedClassTable.IsWall then
+        RunConsoleCommand( "rvr", "place_wall", ent:EntIndex(), self.selectedClass, self.yaw )
+    end
+    
     local localDir = self:GetPlacementDirection()
     if not localDir then return end
 
@@ -157,5 +185,5 @@ function SWEP:Reload()
     if CurTime() <= nextReload then return end
     nextReload = CurTime() + INPUT_DELAY
 
-    self.yaw = self.yaw % 360 + 90
+    self.yaw = ( self.yaw + 90 ) % 360 
 end

@@ -26,4 +26,10 @@ SWEP.Placeables = {
     {
         class = "raft_stairs",
     },
+    {
+        class = "raft_wall",
+    },
+    {
+        class = "raft_fence",
+    },
 }
