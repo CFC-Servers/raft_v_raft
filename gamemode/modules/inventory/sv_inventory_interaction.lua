@@ -9,6 +9,7 @@ util.AddNetworkString( "RVR_Inventory_CursorPut" )
 util.AddNetworkString( "RVR_Inventory_CursorDrop" )
 util.AddNetworkString( "RVR_Inventory_UpdateSlot" )
 util.AddNetworkString( "RVR_Inventory_OnPickup" )
+util.AddNetworkString( "RVR_Inventory_DropItem" )
 util.AddNetworkString( "RVR_Inventory_RequestPlayerUpdate" )
 util.AddNetworkString( "RVR_Inventory_SetHotbarSelected" )
 
@@ -161,6 +162,15 @@ net.Receive( "RVR_Inventory_CursorDrop", function( len, ply )
     inv.dropItem( ply, -1, count )
 end )
 
+net.Receive( "RVR_Inventory_DropItem", function( _, ply )
+    if not ply.RVR_Inventory then return end
+
+    local selectedItem = ply.RVR_Inventory.HotbarSelected
+    if not selectedItem then return end
+
+    inv.dropItem( ply, selectedItem, 1 )
+end )
+
 net.Receive( "RVR_Inventory_Open", function( len, ply )
     inv.playerOpenInventory( ply, ply )
 end )
@@ -185,3 +195,4 @@ net.Receive( "RVR_Inventory_SetHotbarSelected", function( len, ply )
 
     inv.setSelectedItem( ply, newIndex )
 end )
+
