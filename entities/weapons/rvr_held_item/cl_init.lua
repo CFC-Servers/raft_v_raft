@@ -54,13 +54,18 @@ function SWEP:GetViewModelPosition( eyePos, eyeAng )
     local viewModelOffset = self:GetViewModelOffset()
 
     if self.consumeAnimStart then
-        local tPassed = SysTime() - self.consumeAnimStart
-        local prog = tPassed / self.Cooldown
+        local timePassed = SysTime() - self.consumeAnimStart
+        local progress = timePassed / self.Cooldown
 
-        prog = math.Clamp( prog, 0, 1 )
+        -- 0 -> 0.25 -> 0.5 -> 0.75 -> 1
+        progress = math.Clamp( progress, 0, 1 )
 
-        local pingPonged = 0.5 - math.abs( 0.5 - prog )
+        -- 0 -> 0.25 -> 0.5 -> 0.25 -> 0
+        local pingPonged = 0.5 - math.abs( 0.5 - progress )
+        -- 0 -> 1 -> 1 -> 1 -> 0
         local clamped = math.Clamp( pingPonged * 4, 0, 1 )
+
+        -- moves -0.5 -> 0.5 in sine wave while clamped is 1, giving the "munching" effect
         local munch = 0
 
         if clamped == 1 then
