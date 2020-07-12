@@ -13,13 +13,6 @@ SWEP.DrawAmmo = false
 SWEP.Cooldown = 1
 
 function SWEP:SetupDataTables()
-    self:NetworkVar( "String", 0, "ItemModel" )
-    self:NetworkVar( "Angle", 0, "ViewModelAng" )
-    self:NetworkVar( "Vector", 0, "ViewModelOffset" )
-
-    self:NetworkVar( "Angle", 1, "WorldModelAng" )
-    self:NetworkVar( "Vector", 1, "WorldModelOffset" )
-
     self:NetworkVar( "String", 1, "ItemType" )
 end
 
@@ -28,8 +21,20 @@ function SWEP:Initialize()
 
     if not CLIENT then return end
 
-    -- Set up network var listener to update model when ItemModel set
-    self:NetworkVarNotify( "ItemModel", function( this, _, _, mdl )
+    -- Set up network var listener to update client data
+    self:NetworkVarNotify( "ItemType", function( this, _, _, itemType )
+        local itemData = RVR.Items.getItemData( itemType )
+        if not itemData then return end
+        this.itemData = itemData
+
+        local mdl = this.itemData.model
+        if not mdl then
+            local wep = weapons.Get( this.itemData.swep )
+
+            if not wep then return end
+            mdl = wep.Model
+        end
+
         this.WorldModel = mdl
 
         if not IsValid( self.WorldModelEnt ) then
@@ -76,10 +81,23 @@ function SWEP:PrimaryAttack()
         timer.Simple( self.Cooldown, function()
             local inv = owner.RVR_Inventory
             RVR.Inventory.consumeInSlot( owner, inv.HotbarSelected, 1 )
+
+            hook.Remove( "RVR_PreventInventory", hookID )
+            hook.Remove( "RVR_PreventCraftingMenu", hookID )
         end )
 
         timer.Simple( self.Cooldown * 0.5, function()
             itemData:onConsume( owner )
+        end )
+
+        hook.Add( "RVR_PreventInventory", hookID, function( ply, idx )
+            if ply ~= owner then return end
+            return true
+        end )
+
+        hook.Add( "RVR_PreventCraftingMenu", hookID, function( ply, idx )
+            if ply ~= owner then return end
+            return true
         end )
     else
         self.consumeAnimStart = SysTime()

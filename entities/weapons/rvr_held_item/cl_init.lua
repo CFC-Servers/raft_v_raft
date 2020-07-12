@@ -1,5 +1,41 @@
 include( "shared.lua" )
 
+function SWEP:GetItemModel()
+    return self.itemData and self.WorldModel or ""
+end
+
+function SWEP:GetViewModelOffset()
+    local offset = Vector( 5, 10, -5 )
+    if self.itemData and self.itemData.viewModelOffset then
+        offset = offset + self.itemData.viewModelOffset
+    end
+    return offset
+end
+
+function SWEP:GetViewModelAng()
+    local ang = Angle( 15, 0, 0 )
+    if self.itemData and self.itemData.viewModelAng then
+        ang = ang + self.itemData.viewModelAng
+    end
+    return ang
+end
+
+function SWEP:GetWorldModelOffset()
+    local offset = Vector( 5, -2.7, -3.4 )
+    if self.itemData and self.itemData.worldModelOffset then
+        offset = offset + self.itemData.worldModelOffset
+    end
+    return offset
+end
+
+function SWEP:GetWorldModelAng()
+    local ang = Angle( 180, 90, 0 )
+    if self.itemData and self.itemData.worldModelAng then
+        ang = ang + self.itemData.worldModelAng
+    end
+    return ang
+end
+
 function SWEP:ShouldDrawViewModel()
     return self:GetItemModel() ~= ""
 end

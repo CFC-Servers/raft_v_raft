@@ -72,8 +72,8 @@ items.items = {
         stackable = true,
         consumable = true,
         water = 60,
-        viewModelOffset = Vector( 3, 15, -14 ),
-        viewModelAng = Angle( 15, -15, 0 ),
+        viewModelOffset = Vector( -2, 5, -9 ),
+        viewModelAng = Angle( 0, -15, 0 ),
     },
 }
 
