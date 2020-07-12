@@ -1,6 +1,8 @@
 local leftBg = Material( "rvr/backgrounds/hud_background.png" )
 local rightBg = Material( "rvr/backgrounds/hud_background_main.png" )
 
+local targetIDRange = 100
+
 local config = GM.Config.Hunger
 local stats = {
     {
@@ -80,4 +82,38 @@ function GM:HUDShouldDraw( name )
     if isHidden[name] then return false end
 
     return self.BaseClass.HUDShouldDraw( self, name )
+end
+
+function GM:HUDDrawTargetID()
+    local trace = LocalPlayer():GetEyeTrace()
+    local aimEnt = trace.Entity
+
+    if type( aimEnt ) ~= "Player" then return end
+
+    if LocalPlayer():GetShootPos():Distance( trace.HitPos ) > targetIDRange then return end
+
+    local text = aimEnt:Nick()
+
+    local font = "TargetID"
+
+    surface.SetFont( font )
+    local nameW = surface.GetTextSize( text )
+
+    local x, y = gui.MousePos()
+
+    if x == 0 and y == 0 then
+        x = ScrW() / 2
+        y = ScrH() / 2
+    end
+
+    y = y + 50
+
+    local nameX = x - nameW / 2
+    local nameY = y
+
+    draw.SimpleText( text, font, nameX + 1, nameY + 1, Color( 0, 0, 0, 120 ) )
+    draw.SimpleText( text, font, nameX + 2, nameY + 2, Color( 0, 0, 0, 50 ) )
+    draw.SimpleText( text, font, nameX, nameY, team.GetColor( aimEnt:Team() ) )
+
+    hook.Run( "RVR_TargetID", aimEnt, x, y )
 end
