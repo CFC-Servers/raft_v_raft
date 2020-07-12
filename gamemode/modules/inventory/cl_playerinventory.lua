@@ -48,6 +48,8 @@ function inv.openPlayerInventory( inventory )
     local iconNames = { "hat", "shirt", "pants" }
     local slotSize = invScroller:GetSlotSize()
 
+    local equipMult = 1.08
+
     -- equipment slots indexes start at #hotbar + #inventory
     local equipmentSlotOffset = config.PLAYER_INVENTORY_SLOTS + config.PLAYER_HOTBAR_SLOTS
     for index = 1, 3 do
@@ -55,7 +57,7 @@ function inv.openPlayerInventory( inventory )
 
         local slot = vgui.Create( "RVR_ItemSlot", frame )
         slot:SetImage( "materials/rvr/backgrounds/equip_slot_" .. iconNames[index] .. ".png" )
-        slot:SetSize( slotSize * 1.2, slotSize * 1.2 )
+        slot:SetSize( slotSize * equipMult, slotSize * equipMult )
         slot:SetPos( w * eSlotXMult, h * ( eSlotYMult + yOffset ) )
         slot:SetLocationData( LocalPlayer(), equipmentSlotOffset + index )
 

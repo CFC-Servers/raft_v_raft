@@ -33,7 +33,7 @@ function PANEL:SetupContent()
     local rows = math.ceil( slotCount / slotsPerRow )
     local slotSize = ( scrollWidth * 0.94 ) / slotsPerRow
     self.slotSize = slotSize
-    local spacing = slotSize * 0.2
+    local spacing = slotSize * 0.3
 
     -- Panel placed within the scroller canvas to force the height to be what we want
     local canvasPanel = vgui.Create( "DPanel", self.scroller )
