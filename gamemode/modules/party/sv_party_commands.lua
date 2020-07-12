@@ -5,6 +5,7 @@ util.AddNetworkString( "RVR_Party_kickPlayer" )
 util.AddNetworkString( "RVR_Party_invitePlayer" )
 
 -- TODO: Remove ChatPrints, replace with networked events for easier localisation and replacement action (like main menu)
+-- ^ Will be done with the main menu, as not yet decided how this would look
 
 local function invitePlayer( caller, ply )
     local partyData = caller:GetParty()
