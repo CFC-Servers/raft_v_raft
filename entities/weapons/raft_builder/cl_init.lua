@@ -142,7 +142,7 @@ function SWEP:PrimaryAttack()
     local ent = self:GetAimEntity()
     if not ent or not ent.IsRaft then return end
     
-    print(self.yaw)
+ 
     if self.selectedClassTable.IsWall then
         RunConsoleCommand( "rvr", "place_wall", ent:EntIndex(), self.selectedClass, self.yaw )
     end
