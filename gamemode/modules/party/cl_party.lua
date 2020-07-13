@@ -67,7 +67,7 @@ hook.Add( "PreDrawHalos", "RVR_Party", function()
     if not ownParty then return end
     members = {}
     for _, member in pairs( ownParty.members ) do
-        if member:Alive() then
+        if IsValid( member ) and member:Alive() then
             table.insert( members, member )
         end
     end
