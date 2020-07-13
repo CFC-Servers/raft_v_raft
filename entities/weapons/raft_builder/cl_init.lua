@@ -15,11 +15,11 @@ function SWEP:Initialize()
     self.yaw = 0
 
     self.radial = RVR.newRadialMenu()
-    
-    for _, placeable in pairs( self.Placeables ) do 
+
+    for _, placeable in pairs( self.Placeables ) do
         local clsName = placeable.class
         local cls = baseclass.Get( clsName )
-        
+
         local mat = RVR.Util.getModelTexture( cls.Model, cls.PreviewPos, cls.PreviewAngle )
         self.radial:AddItem( cls.PrintName, mat, function()
             self:SetSelectedClass( clsName )
@@ -40,11 +40,11 @@ end
 function SWEP:Think()
     local ent = self:GetAimEntity()
     if not ent or not ent.IsRaft then return self.ghost:SetColor( GHOST_INVIS ) end
-    
+
     if self.selectedClassTable.IsRaft then
         return self:PiecePreview()
     end
-    
+
     if self.selectedClassTable.IsWall then
         return self:WallPreview()
     end
@@ -53,7 +53,7 @@ end
 function SWEP:WallPreview()
     local ent = self:GetAimEntity()
     local pos = ent:GetWallOrigin()
- 
+
     self.ghost:SetColor( GHOST_COLOR )
 
     self.ghost:SetModel( self.selectedClassTable.Model )
@@ -65,7 +65,7 @@ end
 
 function SWEP:PiecePreview()
     local ent = self:GetAimEntity()
-     
+
     local localDir = self:GetPlacementDirection()
 
     if not localDir then
@@ -110,13 +110,13 @@ end
 
 function SWEP:GetPlacementDirection()
     local ent = self:GetAimEntity()
-    if not ent then return end 
+    if not ent then return end
     if not ent.IsRaft then return end
 
     if self.selectedClass == "raft_platform" or self.selectedClass == "raft_stairs" then
         return Vector( 0, 0, 1 )
     end
-    
+
     local ply = self:GetOwner()
 
     local pos = ply:GetAimVector() + ent:GetPos()
@@ -141,12 +141,12 @@ function SWEP:PrimaryAttack()
 
     local ent = self:GetAimEntity()
     if not ent or not ent.IsRaft then return end
-    
- 
+
+
     if self.selectedClassTable.IsWall then
         RunConsoleCommand( "rvr", "place_wall", ent:EntIndex(), self.selectedClass, self.yaw )
     end
-    
+
     local localDir = self:GetPlacementDirection()
     if not localDir then return end
 
@@ -163,8 +163,8 @@ local nextSecondary = 0
 function SWEP:SecondaryAttack()
     if CurTime() <= nextSecondary then return end
     nextSecondary = CurTime() + INPUT_DELAY
-   
-    gui.EnableScreenClicker( true ) 
+
+    gui.EnableScreenClicker( true )
     timer.Simple(0, function()
         input.SetCursorPos( ScrW() / 2, ScrH() / 2)
     end)
@@ -173,7 +173,7 @@ function SWEP:SecondaryAttack()
     hook.Add("KeyRelease", "RVR_Raft_Builder_Release", function( player, key )
         if key == IN_ATTACK2 then
             self.radial:RunSelected()
-            self.radial:Close()    
+            self.radial:Close()
             gui.EnableScreenClicker( false )
         end
     end)
@@ -185,5 +185,56 @@ function SWEP:Reload()
     if CurTime() <= nextReload then return end
     nextReload = CurTime() + INPUT_DELAY
 
-    self.yaw = ( self.yaw + 90 ) % 360 
+    self.yaw = ( self.yaw + 90 ) % 360
+end
+
+local itemCountCache = {}
+local itemMaterialCache = {}
+local iconSizeMult = 1.1
+
+hook.Add( "RVR_InventoryCacheUpdate", "RVR_ItemCountCacheClear", function()
+    itemCountCache = {}
+end )
+
+function SWEP.drawItemRequirement( x, y, itemType, requirement, font )
+    local count
+    if itemCountCache[itemType] then
+        count = itemCountCache[itemType]
+    else
+        count = RVR.Inventory.selfGetItemCount( itemType )
+
+        itemCountCache[itemType] = count
+    end
+
+    local icon
+    if itemMaterialCache[itemType] then
+        icon = itemMaterialCache[itemType]
+    else
+        local itemData = RVR.Items.getItemData( itemType )
+        icon = Material( itemData.icon )
+
+        itemMaterialCache[itemType] = icon
+    end
+
+    local text = count .. "/" .. requirement
+
+    surface.SetFont( font )
+    local textW, textH = surface.GetTextSize( text )
+
+    local iconSize = textH * iconSizeMult
+
+    local w, h = textW + iconSize + 5, textH
+
+    surface.SetDrawColor( 255, 255, 255 )
+    surface.SetMaterial( icon )
+    surface.DrawTexturedRect( x - w * 0.5, y - iconSize * 0.5, iconSize, iconSize )
+
+    if count >= requirement then
+        surface.SetTextColor( 0, 255, 0 )
+    else
+        surface.SetTextColor( 255, 0, 0 )
+    end
+
+    surface.SetTextPos( x - w * 0.5 + iconSize + 5, y - textH * 0.5 )
+    surface.DrawText( text )
 end

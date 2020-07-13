@@ -6,7 +6,7 @@ ENT.PreviewAngle = Angle( 0, -135, 0 )
 
 function ENT.IsValidPlacement(piece, dir)
     if piece:GetClass() ~= "raft_foundation" and piece:GetClass() ~= "raft_platform" then
-        return false 
+        return false
     end
 
     return dir == Vector(0, 0, 1)

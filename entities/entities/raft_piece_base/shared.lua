@@ -17,7 +17,7 @@ end
 
 function ENT.IsValidPlacement(piece, dir)
     if dir.z ~= 0 then return end
-    
+
     if math.abs(dir.x) == math.abs(dir.y) then
         return false
     end
