@@ -138,7 +138,7 @@ if SERVER then
     util.AddNetworkString( "new_raft_owner" )
     util.AddNetworkString( "new_raft" )
     util.AddNetworkString( "new_raft_piece" )
-    util.AddNetworkString( "RVR_RequestRaftPieces" )
+    util.AddNetworkString( "request_raft_pieces" )
 
     net.Receive( "request_raft_pieces", function(ply)
         for _, raft in pairs( RVR.raftsList ) do
