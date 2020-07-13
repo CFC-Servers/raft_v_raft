@@ -2,13 +2,13 @@ local raftMeta = {}
 raftMeta.__index = raftMeta
 RVR.raftsList = {}
 
---  TODO when a player joins they need an updated list of rafts
+
 function raftMeta:AddPiece( position, ent )
     ent:SetRaftGridPosition( position )
     self.pieces[ent:EntIndex()] = ent
     self.grid[self.vectorIndex( position )] = ent:EntIndex()
 
-    net.Start("new_raft_piece")
+    net.Start("RVR_Raft_NewRaftPiece")
         net.WriteInt( self.id, 32 )
         net.WriteInt( ent:EntIndex(), 32 )
         net.WriteVector( position )
@@ -57,7 +57,7 @@ end
 function raftMeta:AddOwnerID( steamid )
     self.owners[steamid] = true
 
-    net.Start("new_raft_owner")
+    net.Start("RVR_Raft_NewRaftOwner")
         net.WriteInt( self.id, 32 )
         net.WriteString( steamid )
     net.Broadcast()
@@ -126,7 +126,7 @@ function RVR.newRaft( id )
     RVR.raftLookup[r.id] = r
     if not SERVER then return r end
 
-    net.Start( "new_raft" )
+    net.Start( "RVR_Raft_NewRaft" )
         net.WriteInt( r.id, 32 )
     net.Broadcast()
 
@@ -135,19 +135,19 @@ end
 
 
 if SERVER then
-    util.AddNetworkString( "new_raft_owner" )
-    util.AddNetworkString( "new_raft" )
-    util.AddNetworkString( "new_raft_piece" )
-    util.AddNetworkString( "request_raft_pieces" )
+    util.AddNetworkString( "RVR_Raft_NewRaftOwner" )
+    util.AddNetworkString( "RVR_Raft_NewRaft" )
+    util.AddNetworkString( "RVR_Raft_NewRaftPiece" )
+    util.AddNetworkString( "RVR_Raft_RequestRaftPieces" )
 
-    net.Receive( "request_raft_pieces", function( _, ply )
+    net.Receive( "RVR_Raft_NewRaftPiece", function( _, ply )
         for _, raft in pairs( RVR.raftLookup ) do 
-            net.Start("new_raft")
+            net.Start("RVR_Raft_NewRaft")
                 net.WriteInt(raft.id, 32)
             net.Send(ply)
 
             for index, piece in pairs( raft.pieces ) do
-                net.Start("new_raft_piece")
+                net.Start("RVR_Raft_NewRaftPiece")
                     net.WriteInt( raft.id, 32 )
                     net.WriteInt( index, 32 )
                     net.WriteVector( raft:GetPosition( piece ) )
@@ -158,12 +158,12 @@ if SERVER then
 end
 
 if CLIENT then
-    net.Receive("new_raft", function()
+    net.Receive("RVR_Raft_NewRaft", function()
         local id = net.ReadInt(32)
         RVR.newRaft(id)
     end)
 
-    net.Receive("new_raft_piece", function()
+    net.Receive("RVR_Raft_NewRaftPiece", function()
         local raftid = net.ReadInt( 32 )
         local entindex = net.ReadInt( 32 )
         local position = net.ReadVector()
@@ -178,12 +178,12 @@ if CLIENT then
          end)
     end)
 
-    net.Receive( "new_raft_owner", function()
+    net.Receive( "RVR_Raft_NewRaftOwner", function()
     -- TODO
     end)
 
     hook.Add( "InitPostEntity", "RVR_RequestRaftPieces", function()
-        net.Start( "request_raft_pieces" )
+        net.Start( "RVR_Raft_RequestRaftPieces" )
         net.SendToServer()
     end )
 end
