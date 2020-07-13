@@ -97,8 +97,9 @@ hook.Add( "PostDrawOpaqueRenderables", "RVR_Party", function()
 end )
 
 -- Allow other addons to prevent this, to do it themself
-if hook.Run( "RVR_ShouldOverrideAddText" ) ~= false then
+if GM.Config.Party.OVERRIDE_CHAT_ADD then
     party.oldAddText = party.oldAddText or chat.AddText
+
     function chat.AddText( ... )
         local out = {}
         local prevColor = Color( 255, 255, 255 )

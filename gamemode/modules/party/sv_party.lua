@@ -245,6 +245,14 @@ function party.invite( id, inviter, ply )
         return false, "Party is full"
     end
 
+    if inviter.RVR_Party_lastInvite then
+        if CurTime() - inviter.RVR_Party_lastInvite < GAMEMODE.Config.Party.INVITE_COOLDOWN then
+            return false, "Invite cooldown has not yet passed"
+        end
+    end
+
+    inviter.RVR_Party_lastInvite = CurTime()
+
     -- TODO: Add cooldown
     partyData.invites[ply] = CurTime()
 

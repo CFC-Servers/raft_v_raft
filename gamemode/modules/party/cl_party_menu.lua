@@ -153,18 +153,18 @@ function party.reloadMenu()
     local inviteBtn = vgui.Create( "DButton", container )
     inviteBtn:SetText( "" )
     inviteBtn:Dock( TOP )
-    inviteBtn:DockMargin( horizontalPadding, 0, horizontalPadding, 10 )
-
-    function inviteBtn:PerformLayout()
-        self:SetTall( self:GetWide() )
-    end
+    inviteBtn:DockMargin( 0, 0, 0, 10 )
+    inviteBtn:SetTall( buttonH )
 
     local plusWidth = 4
     function inviteBtn:Paint( _w, _h )
-        local offset = ( _w - plusWidth ) * 0.5
+        surface.SetDrawColor( 255, 255, 255 )
+        surface.SetMaterial( bgMat )
+        surface.DrawTexturedRect( 0, 0, _w, _h )
+
         surface.SetDrawColor( brown )
-        surface.DrawRect( offset, 0, plusWidth, _h )
-        surface.DrawRect( 0, offset, _w, plusWidth )
+        surface.DrawRect( ( _w - plusWidth ) * 0.5, 0, plusWidth, _h )
+        surface.DrawRect( horizontalPadding, ( _h - plusWidth ) * 0.5, buttonH, plusWidth )
     end
 
     function inviteBtn:DoClick()
