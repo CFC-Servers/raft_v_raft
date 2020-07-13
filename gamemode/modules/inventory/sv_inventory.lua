@@ -24,6 +24,37 @@ end
 
 hook.Add( "PlayerInitialSpawn", "RVR_SetupInventory", inv.setupPlayer )
 
+function inv.clearInventory( ent )
+    if not ent.RVR_Inventory then return end
+
+    ent.RVR_Inventory.Inventory = {}
+
+    if type( ent ) == "Player" then
+        ent.RVR_Inventory.CursorSlot = nil
+        ent.RVR_Inventory.HeadGear = nil
+        ent.RVR_Inventory.BodyGear = nil
+        ent.RVR_Inventory.FootGear = nil
+        ent.RVR_Inventory.HotbarSelected = 1
+
+        inv.fullPlayerUpdate( ent )
+    end
+end
+
+function inv.isEmpty( ent )
+    local entInv = ent.RVR_Inventory
+    if not entInv then return true end
+
+    if not table.IsEmpty( entInv.Inventory ) then return false end
+
+    if type( ent ) == "Player" then
+        if entInv.CursorSlot or entInv.HeadGear or entInv.BodyGear or entInv.FootGear then
+            return false
+        end
+    end
+
+    return true
+end
+
 function inv.tryTakeItems( ent, items )
     local inventory = ent.RVR_Inventory
 
@@ -179,44 +210,56 @@ function inv.slotCanContain( ent, position, item )
 end
 
 -- returns couldFitAll, amount
-function inv.attemptPickupItem( ply, item, count )
-    if not ply.RVR_Inventory then return false, 0 end
+function inv.attemptPickupItem( ent, item, count )
+    if not ent.RVR_Inventory then return false, 0 end
     count = count or 1
     local originalCount = count
 
+    if ent.RVR_Inventory.PreventAdding then return false, 0 end
+
+    local isPlayer = type( ent ) == "Player"
+    local plys
+    if isPlayer then
+        plys = { ent }
+    end
+
     local itemData = RVR.Items.getItemData( item.type )
 
-    for k = 1, ply.RVR_Inventory.MaxSlots do
-        local itemSlotData = inv.getSlot( ply, k )
+    for k = 1, ent.RVR_Inventory.MaxSlots do
+        local itemSlotData = inv.getSlot( ent, k )
         -- Can fit more
         if itemSlotData and inv.canItemsStack( itemSlotData.item, item ) and itemSlotData.count < itemData.maxCount then
             local canFit = itemData.maxCount - itemSlotData.count
             if canFit >= count then
                 itemSlotData.count = itemSlotData.count + count
-                inv.setSlot( ply, k, itemSlotData, { ply } )
+                inv.setSlot( ent, k, itemSlotData, plys )
 
-                inv.notifyItemPickup( ply, item, originalCount )
+                if isPlayer then
+                    inv.notifyItemPickup( ent, item, originalCount )
+                end
                 return true, originalCount
             else
                 itemSlotData.count = itemSlotData.count + canFit
-                inv.setSlot( ply, k, itemSlotData, { ply } )
+                inv.setSlot( ent, k, itemSlotData, plys )
 
                 count = count - canFit
             end
         end
     end
 
-    for k = 1, ply.RVR_Inventory.MaxSlots do
-        local itemSlotData = inv.getSlot( ply, k )
+    for k = 1, ent.RVR_Inventory.MaxSlots do
+        local itemSlotData = inv.getSlot( ent, k )
         -- Empty
         if not itemSlotData then
             if count <= itemData.maxCount then
-                inv.setSlot( ply, k, { item = item, count = count }, { ply } )
+                inv.setSlot( ent, k, { item = item, count = count }, plys )
 
-                inv.notifyItemPickup( ply, item, originalCount )
+                if isPlayer then
+                    inv.notifyItemPickup( ent, item, originalCount )
+                end
                 return true, originalCount
             else
-                inv.setSlot( ply, k, { item = item, count = itemData.maxCount }, { ply } )
+                inv.setSlot( ent, k, { item = item, count = itemData.maxCount }, plys )
                 count = count - itemData.maxCount
             end
         end
@@ -224,8 +267,8 @@ function inv.attemptPickupItem( ply, item, count )
 
     local amountPickedup = originalCount - count
 
-    if amountPickedup > 0 then
-        inv.notifyItemPickup( ply, item, amountPickedup )
+    if amountPickedup > 0 and isPlayer then
+        inv.notifyItemPickup( ent, item, amountPickedup )
     end
 
     return false, amountPickedup
@@ -294,6 +337,10 @@ function inv.moveItem( fromEnt, toEnt, fromPosition, toPosition, count )
 
     if not inv.slotCanContain( toEnt, toPosition, fromItem.item ) then
         return false, "Item cannot be placed here"
+    end
+
+    if toEnt.RVR_Inventory.PreventAdding then
+        return false, "This inventory cannot have items added to it"
     end
 
     if count > fromItem.count then
