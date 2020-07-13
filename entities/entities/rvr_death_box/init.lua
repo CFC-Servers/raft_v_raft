@@ -19,7 +19,9 @@ function ENT:Initialize()
 end
 
 function ENT:OnRemove()
-    timer.Remove( self.timerIdentifier )
+    if self.timerIdentifier then
+        timer.Remove( self.timerIdentifier )
+    end
 end
 
 function ENT:TakeFromPlayer( ply )
