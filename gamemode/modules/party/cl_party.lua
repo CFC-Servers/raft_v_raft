@@ -65,7 +65,13 @@ hook.Add( "PreDrawHalos", "RVR_Party", function()
     local ownParty = LocalPlayer():GetParty()
 
     if not ownParty then return end
-    halo.Add( ownParty.members, ownParty.color, 5, 5, 2 )
+    members = {}
+    for _, member in pairs( ownParty.members ) do
+        if member:Alive() then
+            table.insert( members, member )
+        end
+    end
+    halo.Add( members, ownParty.color, 5, 5, 2 )
 end )
 
 local function drawNameLabel( ply, textColor )
