@@ -324,7 +324,7 @@ end )
 
 hook.Add( "PlayerShouldTakeDamage", "RVR_Party_friendlyFire", function( ply, attacker )
     if GAMEMODE.Config.Party.ALLOW_FRIENDLY_FIRE then return end
-    if ply:IsInSameParty( ply, attacker ) then
+    if ply ~= attacker and ply:IsInSameParty( attacker ) then
         return false
     end
 end )
