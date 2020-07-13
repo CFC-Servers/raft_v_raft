@@ -68,6 +68,8 @@ function inv.setSlot( ent, position, itemData, plysToNotify )
 
     local isPlayer = type( ent ) == "Player"
 
+    local typeChanged = false
+
     if position < 0 then
         if isPlayer then
             ent.RVR_Inventory.CursorSlot = itemData
@@ -75,6 +77,11 @@ function inv.setSlot( ent, position, itemData, plysToNotify )
             return
         end
     elseif position > 0 and position <= inventory.MaxSlots then
+        if inventory.Inventory[position] and itemData then
+            typeChanged = inventory.Inventory[position].item.type ~= itemData.item.type
+        else
+            typeChanged = tobool( itemData ) ~= tobool( inventory.Inventory[position] )
+        end
         inventory.Inventory[position] = itemData
     elseif isPlayer and position > inventory.MaxSlots and position < inventory.MaxSlots + 3 then
         if position == inventory.MaxSlots + 1 then
@@ -88,7 +95,7 @@ function inv.setSlot( ent, position, itemData, plysToNotify )
         return
     end
 
-    if isPlayer and position == inventory.HotbarSelected then
+    if isPlayer and position == inventory.HotbarSelected and typeChanged then
         -- Refresh weapon
         inv.setSelectedItem( ent, inventory.HotbarSelected )
     end
@@ -122,6 +129,30 @@ function inv.getSlot( ent, position )
     end
 
     return slot and table.Copy( slot )
+end
+
+function inv.consumeInSlot( ent, position, count )
+    local slotData = RVR.Inventory.getSlot( ent, position )
+
+    if not slotData then
+        return false, "No items in slot"
+    end
+
+    if slotData.count < count then
+        return false, "Not enough items in slot"
+    end
+
+    slotData.count = slotData.count - count
+    if slotData.count == 0 then
+        slotData = nil
+    end
+
+    local plys
+    if type( ent ) == "Player" then
+        plys = { ent }
+    end
+
+    RVR.Inventory.setSlot( ent, position, slotData, plys )
 end
 
 function inv.slotCanContain( ent, position, item )
@@ -205,6 +236,8 @@ function inv.getSelectedItem( ply )
     if not ply.RVR_Inventory then return end
 
     local itemData = ply.RVR_Inventory.Inventory[ply.RVR_Inventory.HotbarSelected]
+    if not itemData then return end
+
     return itemData.item, itemData.count
 end
 
@@ -212,6 +245,8 @@ function inv.setSelectedItem( ply, idx )
     local config = GAMEMODE.Config.Inventory
     if not ply.RVR_Inventory then return end
     idx = math.Clamp( idx, 1, config.PLAYER_INVENTORY_SLOTS )
+
+    if hook.Run( "RVR_Inventory_CanChangeHotbarSelected", ply, idx ) == false then return end
 
     ply.RVR_Inventory.HotbarSelected = idx
 

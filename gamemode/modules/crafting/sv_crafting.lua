@@ -86,6 +86,8 @@ end
 function cft.openMenu( ply, ent )
     if not ent.RVR_Crafting then return end
 
+    if hook.Run( "RVR_PreventCraftingMenu", ply, ent ) then return end
+
     local craftData = { state = cft.STATE_WAITING }
 
     local output = ent.RVR_Crafting.output

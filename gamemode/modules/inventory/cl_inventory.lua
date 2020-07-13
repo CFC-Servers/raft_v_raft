@@ -226,12 +226,15 @@ function inv.makeHotbar()
     local w, h = ScrW(), ScrH()
 
     local slotCount = config.PLAYER_HOTBAR_SLOTS
-    local innerHotbarWidth = w * 0.45
+    local innerHotbarWidth = w * 0.48
 
     local horizontalPadding = 0.05
-    local verticalPadding = 0.1
+    local verticalPadding = 0.15
 
-    local slotSize = innerHotbarWidth / slotCount
+    local slotSizeWithPadding = innerHotbarWidth / slotCount
+    local slotPadding = slotSizeWithPadding * 0.12
+    local slotSize = slotSizeWithPadding - slotPadding
+
     local innerHotbarHeight = slotSize
 
     local hotbarHeight = innerHotbarHeight * ( 1 + verticalPadding * 2 )
@@ -256,10 +259,12 @@ function inv.makeHotbar()
     local offsetX = ( hotbarWidth - innerHotbarWidth ) * 0.5
 
     for k = 1, slotCount do
+        local x = offsetX + ( k - 1 ) * slotSizeWithPadding + slotPadding * 0.5
+        local y = offsetY + slotPadding * 0.25
 
         local slot = vgui.Create( "RVR_ItemSlot", hotbar.frame )
         slot:SetSize( slotSize, slotSize )
-        slot:SetPos( offsetX + ( k - 1 ) * slotSize, offsetY )
+        slot:SetPos( x, y )
         slot:SetLocationData( LocalPlayer(), k )
 
         hotbar.slots[k] = slot
@@ -278,6 +283,8 @@ function inv.setHotbarSlot( newIndex )
     if newIndex == hotbar.selectedSlot then return end
 
     if newIndex < 1 or newIndex > GAMEMODE.Config.Inventory.PLAYER_HOTBAR_SLOTS then return end
+
+    if hook.Run( "RVR_Inventory_CanChangeHotbarSelected", LocalPlayer(), newIndex ) == false then return end
 
     local prevSlot = hotbar.slots[hotbar.selectedSlot]
     if prevSlot then
@@ -320,7 +327,7 @@ hook.Add( "CreateMove", "RVR_Inventory_HotbarSelect", function()
         return
     end
 
-    if inv.openInventory or gui.IsGameUIVisible() then return end
+    if gui.IsGameUIVisible() or vgui.CursorVisible() then return end
 
     if hook.Run( "RVR_Inventory_HotbarCanScroll" ) == false then return end
 

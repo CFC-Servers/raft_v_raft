@@ -467,7 +467,7 @@ function cft.populateRecipePanel( panel, recipe )
         local itemSlot = vgui.Create( "RVR_ItemSlot", ingredPanel )
         itemSlot:ConvertToGhost()
         itemSlot:SetItemData( RVR.Items.getItemData( ingredient ), 1 )
-        itemSlot:SetImage( "rvr/backgrounds/craftingmenu_ingredient.png" )
+        itemSlot:SetImage( "rvr/backgrounds/dark_slot_background.png" )
         itemSlot:Dock( TOP )
 
         function itemSlot:PerformLayout()
@@ -760,12 +760,6 @@ function cft.updateCraftingHammers()
         end
     end
 end
-
-hook.Add( "RVR_Inventory_HotbarCanScroll", "RVR_Crafting_stopScroll", function()
-    if cft.openMenu then
-        return false
-    end
-end )
 
 function cft.closeCraftingMenu()
     cft.openMenu:Remove()
