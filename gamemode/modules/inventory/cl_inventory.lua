@@ -102,7 +102,8 @@ hook.Add( "PlayerBindPress", "RVR_Inventory", function( _, bind, pressed )
         net.SendToServer()
 
         return true
-    elseif bind == "+dropitem" then
+    elseif bind == "impulse 100" then
+        -- Drop item
         local heldWeapon = LocalPlayer():GetActiveWeapon()
         if not IsValid( heldWeapon ) then return end
 
