@@ -111,6 +111,8 @@ net.Receive( "RVR_Inventory_Close", function( len, ply )
 
     ply.RVR_Inventory_Open = nil
 
+    hook.Run( "RVR_Inventory_Close", ply, invEnt )
+
     if not ply.RVR_Inventory.CursorSlot then return end
     local cursorItemData = ply.RVR_Inventory.CursorSlot
 

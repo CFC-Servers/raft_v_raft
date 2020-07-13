@@ -21,3 +21,11 @@ hook.Add( "PlayerDeath", "RVR_RelayPlayerDeath", function( victim, inflictor, at
     deathBox:Spawn()
     deathBox:TakeFromPlayer( victim )
 end )
+
+hook.Add( "RVR_Inventory_Close", "RVR_PlayerDeath_DeleteEmptyBoxes", function( ply, ent )
+    if ent:GetClass() ~= "rvr_death_box" then return end
+
+    if RVR.Inventory.isEmpty( ent ) then
+        ent:Remove()
+    end
+end )

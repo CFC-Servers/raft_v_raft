@@ -3,6 +3,25 @@ AddCSLuaFile( "shared.lua" )
 
 include( "shared.lua" )
 
+function ENT:Initialize()
+    self.BaseClass.Initialize( self )
+
+    -- Set up despawn timer
+    local despawnTime = GAMEMODE.Config.PlayerDeath.DEATH_BOX_DESPAWN_TIME
+    if despawnTime > 0 then
+        self.timerIdentifier = "rvr_death_box_despawn_" .. self:EntIndex()
+        local this = self
+
+        timer.Create( self.timerIdentifier, despawnTime, 1, function()
+            if IsValid( this ) then this:Remove() end
+        end )
+    end
+end
+
+function ENT:OnRemove()
+    timer.Remove( self.timerIdentifier )
+end
+
 function ENT:TakeFromPlayer( ply )
     if not ply.RVR_Inventory then return end
 
@@ -21,7 +40,6 @@ function ENT:TakeFromPlayer( ply )
     end
 
     self.RVR_Inventory.MaxSlots = #self.RVR_Inventory.Inventory
-    -- TODO: Make this do something
     self.RVR_Inventory.PreventAdding = true
 
     RVR.Inventory.clearInventory( ply )
