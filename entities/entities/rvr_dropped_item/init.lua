@@ -48,7 +48,7 @@ function ENT:Setup( item, count )
     self:SetItemDisplayName( itemData.displayName )
     if itemData.model then
         self:SetModel( itemData.model )
-    elseif item.swep then
+    elseif itemData.swep then
         local wep = weapons.Get( itemData.swep )
         if wep.Model then
             self:SetModel( wep.Model )
