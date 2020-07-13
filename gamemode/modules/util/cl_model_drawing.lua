@@ -18,9 +18,9 @@ function RVR.Util.getModelTexture( model, pos, ang )
     render.PushRenderTarget( texture )
         render.OverrideAlphaWriteEnable( true, true )
         render.OverrideDepthEnable( true, true )
-        
+
         render.Clear( 0, 0, 0, 0, true )
-        
+
         cam.Start3D( Vector( 0, 0, 0 ), Angle(), nil, 0, 0, viewSize, viewSize )
             render.SuppressEngineLighting( true )
             render.SetLightingOrigin( ent:GetPos() )
@@ -31,19 +31,19 @@ function RVR.Util.getModelTexture( model, pos, ang )
             ent:DrawModel()
             render.SuppressEngineLighting( false )
         cam.End3D()
-        
+
         render.OverrideAlphaWriteEnable( false )
         render.OverrideDepthEnable( false )
     render.PopRenderTarget()
 
     ent:Remove()
-    
+
     local mat = CreateMaterial( "rvr_model_" .. model, "UnlitGeneric", {
         ['$basetexture'] = texture,
         ["$translucent"] = 1,
         ["$vertexcolor"] = 1
     } )
-    
+
     mat:SetTexture( "$basetexture", texture )
 
     mats[model] = mat

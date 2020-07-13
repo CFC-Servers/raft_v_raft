@@ -18,7 +18,7 @@ end
 function ENT.IsValidPlacement(piece, dir)
     if dir.z ~= 0 then return end
 
-    if math.abs(dir.x) == math.abs(dir.y) then
+    if math.abs( dir.x ) == math.abs( dir.y ) then
         return false
     end
 
@@ -31,7 +31,7 @@ end
 
 function ENT:ToRaftDir( dir )
     local copy = Vector( dir.x, dir.y, dir.z )
- 
+
     local rotationOffset = self:GetRaftRotationOffset()
 
     copy:Rotate( rotationOffset )
@@ -41,7 +41,7 @@ end
 
 function ENT:ToPieceDir( raftDir )
     local dir = Vector( raftDir.x, raftDir.y, raftDir.z )
-    
+
     local rotationOffset = self:GetRaftRotationOffset()
 
     dir:Rotate( -rotationOffset )
@@ -62,12 +62,12 @@ function ENT:SetupDataTables()
     self:NetworkVar( "Angle", 0, "RaftRotationOffset" )
 
     if SERVER then
-        self:SetRaftID(0)
-        self:SetRaftGridPosition( Vector(0,0,0) )
-        self:SetRaftRotationOffset( Angle(0,0,0) )
+        self:SetRaftID( 0 )
+        self:SetRaftGridPosition( Vector( 0, 0, 0 ) )
+        self:SetRaftRotationOffset( Angle( 0, 0, 0 ) )
     end
 end
 
 function ENT:GetWallOrigin()
-    return Vector(0, 0, 0)
+    return Vector( 0, 0, 0 )
 end

@@ -76,7 +76,7 @@ function radialMeta:Close()
     hook.Remove( "HUDPaint", self:hookIdentifier() )
 end
 
-function radialMeta:DrawSelected() 
+function radialMeta:DrawSelected()
     if not self.selectedItem then return end
     local item = self.items[self.selectedItem]
     local centerx, centery = ScrW() / 2, ScrH() / 2
@@ -100,7 +100,7 @@ function radialMeta:DrawSegment( start, size )
     if self.pointCache[start] then
         return surface.DrawPoly( self.pointCache[start] )
     end
-    local centerx, centery = ScrW() / 2, ScrH() / 2  
+    local centerx, centery = ScrW() / 2, ScrH() / 2
     local points = {}
 
     for a = size+start, start, -1 do
@@ -123,7 +123,7 @@ function radialMeta:DrawButton( start, size, mat )
 
     for i=0, segmentAmount-1 do
         local segmentStart = start + segmentSize * i
-        self:DrawSegment( segmentStart, segmentSize )    
+        self:DrawSegment( segmentStart, segmentSize )
     end
 
     surface.SetMaterial( mat )
