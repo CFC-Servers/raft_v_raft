@@ -185,6 +185,7 @@ function SWEP:SecondaryAttack()
             self.radial:RunSelected()
             self.radial:Close()
             gui.EnableScreenClicker( false )
+            hook.Remove( "KeyRelease", "RVR_Raft_Builder_Release" )
         end
     end)
 end
