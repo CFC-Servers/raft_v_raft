@@ -1,6 +1,6 @@
 local raftMeta = {}
 raftMeta.__index = raftMeta
-RVR.raftsList = {}
+RVR.raftsList = RVR.raftsList or {}
 
 --  TODO when a player joins they need an updated list of rafts
 function raftMeta:AddPiece( position, ent )
@@ -138,6 +138,23 @@ if SERVER then
     util.AddNetworkString( "new_raft_owner" )
     util.AddNetworkString( "new_raft" )
     util.AddNetworkString( "new_raft_piece" )
+    util.AddNetworkString( "RVR_RequestRaftPieces" )
+
+    net.Receive( "request_raft_pieces", function(ply)
+        for _, raft in pairs( RVR.raftsList ) do
+            net.Start("new_raft")
+                net.WriteInt(raft.id, 32)
+            net.Send(ply)
+
+            for index, piece in pairs( raft.pieces ) do
+                net.Start("new_raft_piece")
+                    net.WriteInt( raft.id, 32 )
+                    net.WriteInt( index, 32 )
+                    net.WriteVector( raft:GetPosition( piece ) )
+                net.Send(ply)
+            end
+        end
+    end )
 end
 
 if CLIENT then
@@ -164,4 +181,9 @@ if CLIENT then
     net.Receive( "new_raft_owner", function()
     -- TODO
     end)
+
+    hook.Add( "InitPostEntity", "RVR_RequestRaftPieces", function()
+        net.Start( "request_raft_pieces" )
+        net.SendToServer()
+    end )
 end
