@@ -128,7 +128,6 @@ function party.setJoinMode( id, mode )
     party.broadcastMessage( partyData.id, "Party join mode has been set to " .. party.joinModeStrs[mode] )
 end
 
--- TODO: Drop inventory, switch to spectator
 function party.removeMember( id, ply )
     local partyData = party.getParty( id )
 
@@ -161,7 +160,6 @@ function party.removeMember( id, ply )
     return true
 end
 
--- TODO: Teleport to raft
 function party.addMember( id, ply )
     local partyData = party.getParty( id )
 
