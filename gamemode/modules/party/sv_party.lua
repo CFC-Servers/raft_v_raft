@@ -2,8 +2,6 @@ RVR.Party = RVR.Party or {}
 local party = RVR.Party
 party.idCounter = party.idCounter or 0
 
--- TODO: Start player as spectator
-
 party.JOIN_MODE_PUBLIC = 0
 party.JOIN_MODE_STEAM_FRIENDS = 1
 party.JOIN_MODE_INVITE_ONLY = 2
