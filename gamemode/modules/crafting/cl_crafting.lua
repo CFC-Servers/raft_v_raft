@@ -761,12 +761,6 @@ function cft.updateCraftingHammers()
     end
 end
 
-hook.Add( "RVR_Inventory_HotbarCanScroll", "RVR_Crafting_stopScroll", function()
-    if cft.openMenu then
-        return false
-    end
-end )
-
 function cft.closeCraftingMenu()
     cft.openMenu:Remove()
     cft.openMenu = nil
