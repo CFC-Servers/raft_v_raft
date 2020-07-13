@@ -327,7 +327,7 @@ hook.Add( "CreateMove", "RVR_Inventory_HotbarSelect", function()
         return
     end
 
-    if inv.openInventory or gui.IsGameUIVisible() then return end
+    if gui.IsGameUIVisible() or vgui.CursorVisible() then return end
 
     if hook.Run( "RVR_Inventory_HotbarCanScroll" ) == false then return end
 
