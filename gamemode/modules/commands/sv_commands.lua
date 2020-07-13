@@ -223,7 +223,7 @@ local function onPlayerSay( ply, text )
     if msg then
         ply:ChatPrint( msg )
     end
-    
+
     if validCommand then
         return ""
     end

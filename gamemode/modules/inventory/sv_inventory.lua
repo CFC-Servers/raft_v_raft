@@ -236,6 +236,8 @@ function inv.getSelectedItem( ply )
     if not ply.RVR_Inventory then return end
 
     local itemData = ply.RVR_Inventory.Inventory[ply.RVR_Inventory.HotbarSelected]
+    if not itemData then return end
+
     return itemData.item, itemData.count
 end
 
