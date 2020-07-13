@@ -1,8 +1,6 @@
 local leftBg = Material( "rvr/backgrounds/hud_background.png" )
 local rightBg = Material( "rvr/backgrounds/hud_background_main.png" )
 
-local targetIDRange = 100
-
 local config = GM.Config.Hunger
 local stats = {
     {
@@ -90,7 +88,8 @@ function GM:HUDDrawTargetID()
 
     if type( aimEnt ) ~= "Player" then return end
 
-    if LocalPlayer():GetShootPos():Distance( trace.HitPos ) > targetIDRange then return end
+    local range = GAMEMODE.Config.HUD.TARGET_ID_RANGE
+    if LocalPlayer():GetShootPos():DistToSqr( trace.HitPos ) > range ^ 2 then return end
 
     local text = aimEnt:Nick()
 

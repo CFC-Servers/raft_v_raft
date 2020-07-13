@@ -69,9 +69,9 @@ hook.Add( "PreDrawHalos", "RVR_Party", function()
 end )
 
 local function drawNameLabel( ply, textColor )
-    local me = LocalPlayer()
+    local localPly = LocalPlayer()
 
-    local diff = me:GetShootPos() - ply:GetShootPos()
+    local diff = localPly:GetShootPos() - ply:GetShootPos()
     local textAng = Angle( 0, diff:Angle().yaw + 90, 90 )
     local dist = diff:Length()
 
@@ -81,9 +81,7 @@ local function drawNameLabel( ply, textColor )
     local text = ply:Nick()
 
     cam.Start3D2D( pos, textAng, scale )
-        surface.SetFont( "ChatFont" )
-        local tw, th = surface.GetTextSize( text )
-        draw.SimpleText( text, "ChatFont", -tw / 2, -th / 2, textColor ) -- try TEXT_ALIGN_CENTER
+        draw.SimpleText( text, "ChatFont", 0, 0, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
     cam.End3D2D()
 end
 

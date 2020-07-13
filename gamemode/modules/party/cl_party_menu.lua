@@ -81,7 +81,6 @@ function party.reloadMenu()
             self.prog = math.Clamp( self.prog - FrameTime() * 5, 0, 1 )
         end
 
-
         self:SetTall( self.prog * containerH )
     end
 
