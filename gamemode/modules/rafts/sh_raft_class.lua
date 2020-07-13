@@ -1,6 +1,6 @@
 local raftMeta = {}
 raftMeta.__index = raftMeta
-RVR.raftsList = RVR.raftsList or {}
+RVR.raftsList = {}
 
 --  TODO when a player joins they need an updated list of rafts
 function raftMeta:AddPiece( position, ent )
@@ -109,7 +109,7 @@ function raftMeta.vectorIndex( v )
 end
 
 local lastid = 0
-RVR.raftLookup = {}
+RVR.raftLookup = RVR.raftLookup or {}
 
 function RVR.newRaft( id )
     lastid = lastid + 1
@@ -140,8 +140,8 @@ if SERVER then
     util.AddNetworkString( "new_raft_piece" )
     util.AddNetworkString( "request_raft_pieces" )
 
-    net.Receive( "request_raft_pieces", function(ply)
-        for _, raft in pairs( RVR.raftsList ) do
+    net.Receive( "request_raft_pieces", function( _, ply )
+        for _, raft in pairs( RVR.raftLookup ) do 
             net.Start("new_raft")
                 net.WriteInt(raft.id, 32)
             net.Send(ply)
