@@ -58,6 +58,8 @@ function radialMeta:Paint()
 
         self:DrawButton( i * buttonSize, buttonSize, mat )
     end
+
+    self:customPaint()
 end
 
 function radialMeta:hookIdentifier()
@@ -145,6 +147,7 @@ function RVR.newRadialMenu()
         segmentSize   = 5,
         pointCache    = {},
         infoCircleRadius = 200,
+        customPaint = function() end
     }
 
     setmetatable(r, radialMeta)

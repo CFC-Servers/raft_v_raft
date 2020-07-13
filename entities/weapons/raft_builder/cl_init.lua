@@ -25,6 +25,16 @@ function SWEP:Initialize()
             self:SetSelectedClass( clsName )
         end )
     end
+    
+    local raftBuilder = self
+    function self.radial:customPaint()
+        draw.NoTexture()
+        if not raftBuilder.selectedClassTable then return end
+        local required = raftBuilder.selectedClassTable.GetRequiredItems()
+        for i, itemData in ipairs( required ) do
+            raftBuilder.drawItemRequirement( ScrW() / 2, ScrH() *0.48 + i * 40, itemData.item.type, itemData.count, "DermaLarge" )
+        end 
+    end
 end
 
 function SWEP:SetSelectedClass( cls )

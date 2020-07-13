@@ -33,5 +33,5 @@ function ENT:GetRequiredItems()
 end
 
 function ENT:GetWallOrigin()
-    return Vector(0, 0, 109)
+    return Vector(0, 0, 91)
 end

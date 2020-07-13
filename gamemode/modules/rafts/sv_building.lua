@@ -47,7 +47,7 @@ function RVR.placeWall( piece, class, yaw )
     piece.walls = piece.walls or {}
 
     if IsValid( piece.walls[yaw] ) then return nil, "Wall already exists" end
-    print(class,wall)
+
     local newEnt = ents.Create( class )
     newEnt:Spawn()
     newEnt:SetPos( piece:LocalToWorld( pos ) )

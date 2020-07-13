@@ -69,5 +69,5 @@ function ENT:SetupDataTables()
 end
 
 function ENT:GetWallOrigin()
-    return Vector(0, 0, 18)
+    return Vector(0, 0, 0)
 end

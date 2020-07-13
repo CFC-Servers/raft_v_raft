@@ -11,3 +11,7 @@ function ENT.IsValidPlacement(piece, dir)
 
     return dir == Vector(0, 0, 1)
 end
+
+function ENT:GetWallOrigin()
+    return Vector(0, 0, 0)
+end
