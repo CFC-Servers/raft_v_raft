@@ -82,19 +82,6 @@ items.items = {
         viewModelOffset = Vector( -2, 5, -9 ),
         viewModelAng = Angle( 0, -15, 0 ),
     },
-    {
-        type = "testwep",
-        displayName = "eee",
-        description = "ijhaiu",
-        stackable = false,
-        swep = "weapon_ar2",
-        model = "models/weapons/w_irifle.mdl",
-        icon = "materials/rvr/items/water_bottle.png",
-        hasDurability = true,
-        maxDurability = 1000,
-        durabilityUse = 50,
-        durabilityUseRandomRange = 50,
-    }
 }
 
 local config = GM.Config.Hunger
