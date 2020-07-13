@@ -322,17 +322,19 @@ end )
 
 hook.Add( "PlayerShouldTakeDamage", "RVR_Party_friendlyFire", function( ply, attacker )
     if GAMEMODE.Config.Party.ALLOW_FRIENDLY_FIRE then return end
-    if ply ~= attacker and ply:IsInSameParty( attacker ) then
+    if ply ~= attacker and type( attacker ) == "Player" and ply:IsInSameParty( attacker ) then
         return false
     end
 end )
 
 hook.Add( "PlayerInitialSpawn", "RVR_Party", function( ply )
     ply:KillSilent()
+    timer.Simple( 0.1, function()
+        ply:KillSilent()
+    end )
 end )
 
 hook.Add( "PlayerSpawn", "RVR_Party_PreventSpawn", function( ply )
-    if ply:Alive() then return end
     if hook.Run( "RVR_PlayerCanSpawn", ply ) ~= false then
         hook.Run( "RVR_SuccessfulPlayerSpawn", ply )
         return
