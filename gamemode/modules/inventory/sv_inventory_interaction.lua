@@ -168,7 +168,7 @@ net.Receive( "RVR_Inventory_DropItem", function( _, ply )
     local selectedItem = ply.RVR_Inventory.HotbarSelected
     if not selectedItem then return end
 
-    inv.dropItem( ply, selectedItem, 1 )
+    inv.dropItem( ply, selectedItem, ply:KeyDown( IN_DUCK ) and -1 or 1 )
 end )
 
 net.Receive( "RVR_Inventory_Open", function( len, ply )
@@ -195,4 +195,3 @@ net.Receive( "RVR_Inventory_SetHotbarSelected", function( len, ply )
 
     inv.setSelectedItem( ply, newIndex )
 end )
-
