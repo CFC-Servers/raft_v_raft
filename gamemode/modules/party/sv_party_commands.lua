@@ -16,15 +16,15 @@ local function invitePlayer( caller, ply )
 
     local success, err = party.invite( partyData.id, caller, ply )
 
-    if success then
-        -- TODO: Only print if player isnt in main menu, otherwise alert client
-        ply:ChatPrint( "You've been invited to " .. partyData.name ..
-            ". Use !party_join " .. partyData.name .. " within " .. GAMEMODE.Config.Party.INVITE_LIFETIME .. " seconds to respond.\n" ..
-            "WARNING: Accepting an invite will make you leave your current party, along with any items you have" )
-        return "Invited " .. ply:Nick() .. " to " .. partyData.name
+    if not success then
+        return "Failed to invite: " .. err
     end
 
-    return "Failed to invite: " .. err
+    -- TODO: Only print if player isnt in main menu, otherwise alert client
+    ply:ChatPrint( "You've been invited to " .. partyData.name ..
+        ". Use !party_join " .. partyData.name .. " within " .. GAMEMODE.Config.Party.INVITE_LIFETIME .. " seconds to respond.\n" ..
+        "WARNING: Accepting an invite will make you leave your current party, along with any items you have" )
+    return "Invited " .. ply:Nick() .. " to " .. partyData.name
 end
 
 local function joinParty( caller, partyData )
@@ -99,11 +99,11 @@ local function createParty( caller, name, tag, color, joinMode )
 
     local success, err = party.createParty( name, caller, tag, color, joinMode )
 
-    if success then
-        return "Successfully created party " .. name
+    if not success then
+        return "Failed to create party: " .. err
     end
 
-    return "Failed to create party: " .. err
+    return "Successfully created party " .. name
 end
 
 local function setJoinMode( caller, mode )
@@ -166,28 +166,6 @@ hook.Add( "RVR_ModulesLoaded", "RVR_Party_commands", function()
         end
 
         return nil, "Unrecognised party, use party ID, name, ^ or @"
-    end )
-
-    -- TODO: Move this to commands
-    RVR.Commands.addType( "color", function( str, caller )
-        if str[1] ~= "#" or ( #str ~= 7 and #str ~= 9 ) then
-            return nil, "Colors should be in hex, prefixed with a #, e.g. #FF0000 for red"
-        end
-
-        local r = tonumber( str:sub( 2, 3 ), 16 )
-        local g = tonumber( str:sub( 4, 5 ), 16 )
-        local b = tonumber( str:sub( 6, 7 ), 16 )
-        local a = 255
-
-        if #str > 7 then
-            a = tonumber( str:sub( 7, 8 ), 16 )
-        end
-
-        if r and g and b and a then
-            return Color( r, g, b, a )
-        end
-
-        return nil, "Invalid color string"
     end )
 
     RVR.Commands.register(

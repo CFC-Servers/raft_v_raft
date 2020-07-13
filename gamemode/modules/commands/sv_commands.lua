@@ -113,6 +113,27 @@ commands.addType( "player", function( arg, ply )
     return nil, "Invalid player: " .. arg
 end )
 
+RVR.Commands.addType( "color", function( str, caller )
+    if str[1] ~= "#" or ( #str ~= 7 and #str ~= 9 ) then
+        return nil, "Colors should be in hex, prefixed with a #, e.g. #FF0000 for red"
+    end
+
+    local r = tonumber( str:sub( 2, 3 ), 16 )
+    local g = tonumber( str:sub( 4, 5 ), 16 )
+    local b = tonumber( str:sub( 6, 7 ), 16 )
+    local a = 255
+
+    if #str > 7 then
+        a = tonumber( str:sub( 7, 8 ), 16 )
+    end
+
+    if r and g and b and a then
+        return Color( r, g, b, a )
+    end
+
+    return nil, "Invalid color string"
+end )
+
 function commands.checkArguments( argNames, argTypes, args, ply )
     if #args < #argTypes then
         local commandHelp = ""
