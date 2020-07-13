@@ -9,13 +9,20 @@ end
 
 -- Wrapper for now, allows adding metadata to item instances later
 function items.getItemInstance( itemType )
-    if not items.getItemData( itemType ) then
+    local itemData = items.getItemData( itemType )
+    if not itemData then
         error( "Item type " .. itemType .. " does not exist" )
     end
 
-    return {
+    local instance = {
         type = itemType
     }
+
+    if itemData.hasDurability then
+        instance.durability = itemData.maxDurability
+    end
+
+    return instance
 end
 
 -- Item structure in README
@@ -75,6 +82,19 @@ items.items = {
         viewModelOffset = Vector( -2, 5, -9 ),
         viewModelAng = Angle( 0, -15, 0 ),
     },
+    {
+        type = "testwep",
+        displayName = "eee",
+        description = "ijhaiu",
+        stackable = false,
+        swep = "weapon_ar2",
+        model = "models/weapons/w_irifle.mdl",
+        icon = "materials/rvr/items/water_bottle.png",
+        hasDurability = true,
+        maxDurability = 1000,
+        durabilityUse = 50,
+        durabilityUseRandomRange = 50,
+    }
 }
 
 local config = GM.Config.Hunger
@@ -118,5 +138,8 @@ for k, item in pairs( items.items ) do
 end
 
 for _, item in pairs( items.items ) do
-    util.PrecacheModel( item.model )
+    if item.model then
+        util.PrecacheModel( item.model )
+    end
+    item.maxCount = item.maxCount or 1
 end

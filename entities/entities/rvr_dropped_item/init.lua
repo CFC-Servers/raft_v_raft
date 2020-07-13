@@ -41,10 +41,19 @@ end
 
 -- Set dropped item information
 function ENT:Setup( item, count )
+    local itemData = RVR.Items.getItemData( item.type )
+
     self:SetAmount( count )
-    self:SetItemType( item.type )
-    self:SetItemDisplayName( item.displayName )
-    self:SetModel( item.model )
+    self:SetItemType( itemData.type )
+    self:SetItemDisplayName( itemData.displayName )
+    if itemData.model then
+        self:SetModel( itemData.model )
+    elseif item.swep then
+        local wep = weapons.Get( itemData.swep )
+        if wep.Model then
+            self:SetModel( wep.Model )
+        end
+    end
 
     self.item = item
 end

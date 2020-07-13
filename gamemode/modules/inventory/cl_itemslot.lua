@@ -29,6 +29,29 @@ function PANEL:Init()
         self:SetPos( pw - w - 13, ph - h - 5 )
     end
 
+    self.itemDurabilityBar = vgui.Create( "DPanel", self )
+
+    function self.itemDurabilityBar:PerformLayout()
+        local w, h = self:GetParent():GetSize()
+        self:SetSize( w * 0.8, 3 )
+        self:SetPos( w * 0.1, h * 0.9 )
+    end
+
+    local this = self
+
+    function self.itemDurabilityBar:Paint( w, h )
+        if not this.item then return end
+        if not this.item.hasDurability then return end
+
+        surface.SetDrawColor( 50, 50, 50 )
+        surface.DrawRect( 0, 0, w, h )
+        local durabilityProgress = this.item.durability / this.item.maxDurability
+        local color = HSVToColor( durabilityProgress * 120, 1, 1 )
+
+        surface.SetDrawColor( color )
+        surface.DrawRect( 0, 0, durabilityProgress * ( w - 1 ), h - 1 )
+    end
+
     self.toolTipPanel = vgui.Create( "RVR_ItemTooltip" )
     self.toolTipPanel:Hide()
 end
