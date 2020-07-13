@@ -152,3 +152,11 @@ hook.Add( "RVR_TargetID", "RVR_Party", function( ply, x, y )
     draw.SimpleText( text, font, partyX + 2, partyY + 2, Color( 0, 0, 0, 50 ) )
     draw.SimpleText( text, font, partyX, partyY, partyData.color )
 end )
+
+hook.Add( "CreateMove", "RVR_Party_PreventSpawn", function( cmd )
+    if LocalPlayer():Alive() then return end
+    if hook.Run( "RVR_PlayerCanSpawn", LocalPlayer() ) ~= false then return end
+
+    cmd:ClearButtons()
+    cmd:ClearMovement()
+end )

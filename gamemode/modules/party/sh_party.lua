@@ -39,3 +39,7 @@ end
 function plyMeta:IsInSameParty( ply )
     return self:GetPartyID() ~= nil and self:GetPartyID() == ply:GetPartyID()
 end
+
+hook.Add( "RVR_PlayerCanSpawn", "RVR_NoPartyRespawnPrevent", function( ply )
+    if not ply:GetPartyID() then return false end
+end )

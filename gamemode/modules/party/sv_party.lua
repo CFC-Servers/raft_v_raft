@@ -76,7 +76,10 @@ function party.createParty( partyName, owner, tag, color, joinMode )
 
     owner:SetPartyID( id )
 
+    hook.Run( "RVR_Party_PartyCreated", partyData )
+
     updateClientPartyData( id )
+
     return id, partyData
 end
 
@@ -253,7 +256,6 @@ function party.invite( id, inviter, ply )
 
     inviter.RVR_Party_lastInvite = CurTime()
 
-    -- TODO: Add cooldown
     partyData.invites[ply] = CurTime()
 
     return true
@@ -327,4 +329,33 @@ hook.Add( "PlayerShouldTakeDamage", "RVR_Party_friendlyFire", function( ply, att
     if ply ~= attacker and ply:IsInSameParty( attacker ) then
         return false
     end
+end )
+
+hook.Add( "PlayerInitialSpawn", "RVR_Party", function( ply )
+    ply:KillSilent()
+end )
+
+hook.Add( "PlayerSpawn", "RVR_Party_PreventSpawn", function( ply )
+    if ply:Alive() then return end
+    if hook.Run( "RVR_PlayerCanSpawn", ply ) ~= false then
+        hook.Run( "RVR_SuccessfulPlayerSpawn", ply )
+        return
+    end
+
+    ply:KillSilent()
+    timer.Simple( 0.1, function()
+        ply:KillSilent()
+    end )
+end )
+
+hook.Add( "RVR_SuccessfulPlayerSpawn", "RVR_Party_Raft_Spawn", function( ply )
+    local partyData = ply:GetParty()
+    if not partyData then return end -- This should never happen, but just to be sure.
+
+    --[[ Uncomment this whenever raft builder is implemented
+    local raftData = partyData.raft
+    local spawnPos = RVR.Raft.getSpawnPos( raftData )
+
+    ply:SetPos( spawnPos )
+    ]]
 end )
