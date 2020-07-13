@@ -141,11 +141,11 @@ hook.Add( "RVR_ModulesLoaded", "RVR_Party_commands", function()
             -- TODO: Support checking rafts to get their party
             if aimEnt and IsValid( aimEnt ) and ( aimEnt:IsPlayer() or aimEnt.IsRaft ) then
                 if aimEnt:IsPlayer() then
-                    local partyID = aimEnt:GetPartyID()
-                    if not partyID then
+                    local partyData = aimEnt:GetParty()
+                    if not partyData then
                         return nil, "Player not in a party"
                     end
-                    return partyID
+                    return partyData
                 else
                     -- TODO: Replace this with however we store the party owner on a raft
                     return nil, "Getting party from raft not yet supported :("
