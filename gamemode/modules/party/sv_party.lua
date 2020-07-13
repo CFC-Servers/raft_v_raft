@@ -51,7 +51,8 @@ function party.createParty( partyName, owner, tag, color, joinMode )
     local minLen = GAMEMODE.Config.Party.MIN_PARTY_NAME_LENGTH
     local maxLen = GAMEMODE.Config.Party.MAX_PARTY_NAME_LENGTH
     if #partyName < minLen or #partyName > maxLen or tonumber( partyName ) then
-        return nil, "Invalid party name, must be at least 5 characters and contain at least one non-numeric character"
+        return nil, "Invalid party name, must be between " .. minLen .. " and " ..
+            maxLen .. " characters and contain at least one non-numeric character"
     end
 
     if color.a ~= 255 then
