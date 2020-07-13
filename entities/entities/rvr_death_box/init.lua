@@ -3,6 +3,20 @@ AddCSLuaFile( "shared.lua" )
 
 include( "shared.lua" )
 
+hook.Add( "InitPostEntity", "RVR_FindWaterLevel", function()
+    local trace = util.TraceLine( {
+        start = Vector( 0, 0, 10000 ),
+        endpos = Vector( 0, 0, -10000000000 ),
+        mask = MASK_WATER,
+    } )
+
+    if trace.Hit then
+        RVR.waterSurfaceZ = trace.HitPos.z
+    else
+        RVR.waterSurfaceZ = 0
+    end
+end )
+
 function ENT:Initialize()
     self.BaseClass.Initialize( self )
 
@@ -15,6 +29,20 @@ function ENT:Initialize()
         timer.Create( self.timerIdentifier, despawnTime, 1, function()
             if IsValid( this ) then this:Remove() end
         end )
+    end
+
+    local depth = ( RVR.waterSurfaceZ or 0 ) - self:GetPos().z
+
+    if depth > GAMEMODE.Config.PlayerDeath.DEATH_BOX_ANCHOR_DEPTH then
+        local trace = util.TraceLine( {
+            start = self:GetPos(),
+            endpos = self:GetPos() - Vector( 0, 0, 100000000 ),
+            mask = MASK_NPCWORLDSTATIC,
+        } )
+
+        if not trace.Hit then return end
+        constraint.Rope( self, game.GetWorld(), 0, 0, Vector( 0, 0, 0 ),
+            trace.HitPos, trace.HitPos:Distance( self:GetPos() ), 0, 0, 2, "cable/rope" )
     end
 end
 
