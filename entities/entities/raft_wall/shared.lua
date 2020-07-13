@@ -10,6 +10,6 @@ ENT.PreviewAngle = Angle( -30, 45, -30 )
 function ENT:GetRequiredItems()
     return {
         { item = RVR.Items.getItemData( "wood" ), count = 5 },
-        { item = RVR.Items.getItemData( "nails" ), count = 5 },
+        { item = RVR.Items.getItemData( "nail" ), count = 5 },
     }
 end

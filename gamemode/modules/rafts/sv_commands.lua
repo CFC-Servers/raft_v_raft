@@ -13,14 +13,18 @@ end
 
 local function placeWallCallback( ply, piece, class, yaw )
     local raft = piece:GetRaft()
+    local clsTable = baseclass.Get(class)
+
     if not raft then return end
 
-    if not  raft:CanBuild( ply ) then
+    if not raft:CanBuild( ply ) then
         ply:PrintMessage( HUD_PRINTCONSOLE, "you do not hav epermission to build on this raft" )
         return
     end
+    
+    local required = clsTable:GetRequiredItems()
 
-    local success, itemsMissing = RVR.Inventory.checkItems( ply.RVR_Inventory, piece:GetRequiredItems() )
+    local success, itemsMissing = RVR.Inventory.checkItems( ply.RVR_Inventory, required )
     if not success then
         -- TODO print itemsMissing in a human readable format
         ply:PrintMessage( HUD_PRINTCONSOLE, "missing required items" )
@@ -32,18 +36,22 @@ local function placeWallCallback( ply, piece, class, yaw )
         return "Couldn't place  wall: " .. err
     end
 
-    local success, itemsMissing = RVR.Inventory.tryTakeItems( ply, piece:GetRequiredItems() )
+    local success, itemsMissing = RVR.Inventory.tryTakeItems( ply, required )
 end
 
 local function expandCallback( ply, piece, class, x, y ,z, yaw )
     local raft = piece:GetRaft()
     if not raft then return end
+
+    local clsTable = baseclass.Get(class)
+
     if not raft:CanBuild( ply ) then
         ply:PrintMessage( HUD_PRINTCONSOLE, "you do not have permissions to build on this raft" )
         return
     end
+    local required = clsTable:GetRequiredItems()
 
-    local success, itemsMissing = RVR.Inventory.checkItems( ply.RVR_Inventory, piece:GetRequiredItems() )
+    local success, itemsMissing = RVR.Inventory.checkItems( ply.RVR_Inventory, required )
     if not success then
         -- TODO print itemsMissing in a human readable format
         ply:PrintMessage( HUD_PRINTCONSOLE, "missing required items" )
@@ -57,7 +65,7 @@ local function expandCallback( ply, piece, class, x, y ,z, yaw )
         return "Couldn't place raft piece: " .. err
     end
 
-    local success, itemsMissing = RVR.Inventory.tryTakeItems( ply, piece:GetRequiredItems() )
+    local success, itemsMissing = RVR.Inventory.tryTakeItems( ply, required )
 end
 
 local function deleteCallback( ply, piece )
