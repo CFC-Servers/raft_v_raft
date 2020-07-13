@@ -145,7 +145,7 @@ function party.reloadMenu()
         end
     end
 
-    if partyFull then return end
+    if partyFull or not selfIsOwner then return end
 
     local buttonH = ( elemH + topMargin ) * 0.5 - 10
     local horizontalPadding = ( w - buttonH ) * 0.5
