@@ -21,7 +21,7 @@ local function updateClientPartyData( id )
 
     net.Start( "RVR_Party_updateClient" )
         net.WriteUInt( id, 32 )
-        net.WriteBool( tobool( partyData ) )
+        net.WriteBool( partyData ~= nil )
         if partyData then
             net.WriteTable( partyData )
         end
