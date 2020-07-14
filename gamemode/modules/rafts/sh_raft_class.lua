@@ -140,7 +140,7 @@ if SERVER then
     util.AddNetworkString( "RVR_Raft_NewRaftPiece" )
     util.AddNetworkString( "RVR_Raft_RequestRaftPieces" )
 
-    net.Receive( "RVR_Raft_NewRaftPiece", function( _, ply )
+    net.Receive( "RVR_Raft_RequestRaftPieces", function( _, ply )
         for _, raft in pairs( RVR.raftLookup ) do 
             net.Start("RVR_Raft_NewRaft")
                 net.WriteInt(raft.id, 32)
