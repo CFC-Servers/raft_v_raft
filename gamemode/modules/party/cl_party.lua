@@ -2,7 +2,7 @@ RVR.Party = RVR.Party or {}
 local party = RVR.Party
 
 function party.tryCreateParty( name, tag, color, joinMode, callback )
-    if joinMode < 0 or joinMode > 2 then return end
+    if not party.joinModeStrs[joinMode] then return end
     if party.createPartyCallback then return end
 
     net.Start( "RVR_Party_createParty" )

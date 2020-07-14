@@ -2,16 +2,6 @@ RVR.Party = RVR.Party or {}
 local party = RVR.Party
 party.idCounter = party.idCounter or 0
 
-party.JOIN_MODE_PUBLIC = 0
-party.JOIN_MODE_STEAM_FRIENDS = 1
-party.JOIN_MODE_INVITE_ONLY = 2
-
-party.joinModeStrs = {
-    [0] = "public",
-    [1] = "steam-friends only",
-    [2] = "invite only",
-}
-
 util.AddNetworkString( "RVR_Party_updateClient" )
 util.AddNetworkString( "RVR_Party_createParty" )
 util.AddNetworkString( "RVR_Party_updateFriends" )
@@ -120,7 +110,7 @@ function party.setJoinMode( id, mode )
         return false, "Party with id " .. id .. " does not exist"
     end
 
-    if mode < 0 or mode > 2 then
+    if not party.joinModeStrs[mode] then
         return false, "Invalid join mode"
     end
 

@@ -2,6 +2,16 @@ RVR.Party = RVR.Party or {}
 local party = RVR.Party
 party.parties = party.parties or {}
 
+party.JOIN_MODE_PUBLIC = 0
+party.JOIN_MODE_STEAM_FRIENDS = 1
+party.JOIN_MODE_INVITE_ONLY = 2
+
+party.joinModeStrs = {
+    [0] = "public",
+    [1] = "steam-friends only",
+    [2] = "invite only",
+}
+
 function party.getParty( id )
     return party.parties[id]
 end
