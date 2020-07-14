@@ -61,8 +61,22 @@ function SWEP:Think()
 end
 
 function SWEP:WallPreview()
-    local ent = self:GetAimEntity()
+    self.wallYaw = nil
+
+    local trace = self:GetOwner():GetEyeTrace()
+    local ent = trace.Entity
+    if not IsValid( ent ) then return end
     local pos = ent:GetWallOrigin()
+    
+    local localHitPos = ent:WorldToLocal( trace.HitPos )
+    localHitPos.z = 0
+    localHitPos:Normalize() 
+
+    localHitPos.x = math.Round(localHitPos.x)
+    localHitPos.y = math.Round(localHitPos.y)
+    if math.abs( localHitPos.x ) == math.abs( localHitPos.y ) then return end
+
+    self.wallYaw = localHitPos:Angle().yaw
 
     self.ghost:SetColor( GHOST_COLOR )
 
@@ -70,7 +84,7 @@ function SWEP:WallPreview()
     self.ghost:SetColor( GHOST_COLOR )
 
     self.ghost:SetPos( ent:LocalToWorld( pos ) )
-    self.ghost:SetAngles( ent:LocalToWorldAngles( Angle( 0, self.yaw, 0 ) ) )
+    self.ghost:SetAngles( ent:LocalToWorldAngles( Angle( 0, self.wallYaw, 0 ) ) )
 end
 
 function SWEP:PiecePreview()
@@ -152,9 +166,9 @@ function SWEP:PrimaryAttack()
     local ent = self:GetAimEntity()
     if not ent or not ent.IsRaft then return end
 
-
     if self.selectedClassTable.IsWall then
-        RunConsoleCommand( "rvr", "place_wall", ent:EntIndex(), self.selectedClass, self.yaw )
+        if self.wallYaw == nil then return end
+        RunConsoleCommand( "rvr", "place_wall", ent:EntIndex(), self.selectedClass, self.wallYaw )
     end
 
     local localDir = self:GetPlacementDirection()
