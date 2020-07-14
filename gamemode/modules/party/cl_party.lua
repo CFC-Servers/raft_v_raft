@@ -143,14 +143,14 @@ hook.Add( "RVR_TargetID", "RVR_Party", function( ply, x, y )
     local font = "TargetID"
     surface.SetFont( font )
 
-    local text = partyData.name
-    local partyW, partyH = surface.GetTextSize( text )
+    local partyName = partyData.name
+    local partyW, partyH = surface.GetTextSize( partyName )
     local partyX = x - partyW / 2
     local partyY = y - partyH - 5
 
-    draw.SimpleText( text, font, partyX + 1, partyY + 1, Color( 0, 0, 0, 120 ) )
-    draw.SimpleText( text, font, partyX + 2, partyY + 2, Color( 0, 0, 0, 50 ) )
-    draw.SimpleText( text, font, partyX, partyY, partyData.color )
+    draw.SimpleText( partyName, font, partyX + 1, partyY + 1, Color( 0, 0, 0, 120 ) )
+    draw.SimpleText( partyName, font, partyX + 2, partyY + 2, Color( 0, 0, 0, 50 ) )
+    draw.SimpleText( partyName, font, partyX, partyY, partyData.color )
 end )
 
 hook.Add( "CreateMove", "RVR_Party_PreventSpawn", function( cmd )

@@ -91,12 +91,12 @@ function GM:HUDDrawTargetID()
     local range = GAMEMODE.Config.HUD.TARGET_ID_RANGE
     if LocalPlayer():GetShootPos():DistToSqr( trace.HitPos ) > range ^ 2 then return end
 
-    local text = aimEnt:Nick()
+    local nickname = aimEnt:Nick()
 
     local font = "TargetID"
 
     surface.SetFont( font )
-    local nameW = surface.GetTextSize( text )
+    local nameW = surface.GetTextSize( nickname )
 
     local x, y = gui.MousePos()
 
@@ -110,9 +110,9 @@ function GM:HUDDrawTargetID()
     local nameX = x - nameW / 2
     local nameY = y
 
-    draw.SimpleText( text, font, nameX + 1, nameY + 1, Color( 0, 0, 0, 120 ) )
-    draw.SimpleText( text, font, nameX + 2, nameY + 2, Color( 0, 0, 0, 50 ) )
-    draw.SimpleText( text, font, nameX, nameY, team.GetColor( aimEnt:Team() ) )
+    draw.SimpleText( nickname, font, nameX + 1, nameY + 1, Color( 0, 0, 0, 120 ) )
+    draw.SimpleText( nickname, font, nameX + 2, nameY + 2, Color( 0, 0, 0, 50 ) )
+    draw.SimpleText( nickname, font, nameX, nameY, team.GetColor( aimEnt:Team() ) )
 
     hook.Run( "RVR_TargetID", aimEnt, x, y )
 end
