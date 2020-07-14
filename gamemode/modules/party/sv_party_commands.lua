@@ -4,9 +4,6 @@ local party = RVR.Party
 util.AddNetworkString( "RVR_Party_kickPlayer" )
 util.AddNetworkString( "RVR_Party_invitePlayer" )
 
--- TODO: Remove ChatPrints, replace with networked events for easier localisation and replacement action (like main menu)
--- ^ Will be done with the main menu, as not yet decided how this would look
-
 local function invitePlayer( caller, ply )
     local partyData = caller:GetParty()
 
@@ -20,7 +17,6 @@ local function invitePlayer( caller, ply )
         return "Failed to invite: " .. err
     end
 
-    -- TODO: Only print if player isnt in main menu, otherwise alert client
     ply:ChatPrint( "You've been invited to " .. partyData.name ..
         ". Use !party_join " .. partyData.name .. " within " .. GAMEMODE.Config.Party.INVITE_LIFETIME .. " seconds to respond.\n" ..
         "WARNING: Accepting an invite will make you leave your current party, along with any items you have" )

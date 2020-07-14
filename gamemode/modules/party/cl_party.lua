@@ -59,7 +59,7 @@ end
 
 hook.Add( "InitPostEntity", "RVR_Party_sendFriendData", sendFriendData )
 net.Receive( "RVR_Party_updateFriends", sendFriendData )
-timer.Create( "RVR_Party_updateFriends", 300, 0, sendFriendData ) -- TODO: discuss if this is good?
+timer.Create( "RVR_Party_updateFriends", 300, 0, sendFriendData )
 
 hook.Add( "PreDrawHalos", "RVR_Party", function()
     local ownParty = LocalPlayer():GetParty()
