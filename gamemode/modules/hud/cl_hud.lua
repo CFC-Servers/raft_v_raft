@@ -86,7 +86,7 @@ function GM:HUDDrawTargetID()
     local trace = LocalPlayer():GetEyeTrace()
     local aimEnt = trace.Entity
 
-    if type( aimEnt ) ~= "Player" then return end
+    if not aimEnt or not aimEnt:IsPlayer() then return end
 
     local range = GAMEMODE.Config.HUD.TARGET_ID_RANGE
     if LocalPlayer():GetShootPos():DistToSqr( trace.HitPos ) > range ^ 2 then return end

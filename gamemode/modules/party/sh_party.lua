@@ -51,5 +51,5 @@ function plyMeta:IsInSameParty( ply )
 end
 
 hook.Add( "RVR_PlayerCanSpawn", "RVR_NoPartyRespawnPrevent", function( ply )
-    if not ply:GetPartyID() then return false end
+    if not ply:GetPartyID() and not ply:IsAdmin() then return false end
 end )
