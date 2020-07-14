@@ -65,7 +65,11 @@ function SWEP:WallPreview()
 
     local trace = self:GetOwner():GetEyeTrace()
     local ent = trace.Entity
-    if not IsValid( ent ) then return end
+
+    if not IsValid( ent ) then
+        return self.ghost:SetColor( GHOST_INVIS ) 
+    end
+
     local pos = ent:GetWallOrigin()
     
     local localHitPos = ent:WorldToLocal( trace.HitPos )
@@ -74,7 +78,9 @@ function SWEP:WallPreview()
 
     localHitPos.x = math.Round(localHitPos.x)
     localHitPos.y = math.Round(localHitPos.y)
-    if math.abs( localHitPos.x ) == math.abs( localHitPos.y ) then return end
+    if math.abs( localHitPos.x ) == math.abs( localHitPos.y ) then 
+        return self.ghost:SetColor( GHOST_INVIS )
+    end
 
     self.wallYaw = localHitPos:Angle().yaw
 
@@ -97,18 +103,26 @@ function SWEP:PiecePreview()
     end
 
     local raft = ent:GetRaft()
-    if not raft then return end
+    if not raft then 
+        return self.ghost:SetColor( GHOST_INVIS )
+    end
 
     local dir = ent:ToRaftDir( localDir )
 
     local targetPosition = raft:GetPosition( ent ) + dir
 
-    if not self.selectedClassTable.IsWall and raft:GetPiece( targetPosition ) then return end
+    if not self.selectedClassTable.IsWall and raft:GetPiece( targetPosition ) then 
+        return self.ghost:SetColor( GHOST_INVIS )
+    end
 
-    if not self.selectedClassTable.IsValidPlacement( ent, dir ) then return end
+    if not self.selectedClassTable.IsValidPlacement( ent, dir ) then 
+        return self.ghost:SetColor( GHOST_INVIS )
+    end
 
     local size = RVR.getSizeFromDirection( ent, localDir )
-    if not size then return end
+    if not size then 
+        return self.ghost:SetColor( GHOST_INVIS )
+    end
 
     localDir = self.selectedClassTable.GetOffsetDir( ent, localDir )
 
