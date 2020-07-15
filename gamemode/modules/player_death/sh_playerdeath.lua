@@ -1,7 +1,7 @@
 RVR.PlayerDeath = RVR.PlayerDeath or {}
 local death = RVR.PlayerDeath
 
-hook.Add( "PlayerDeath", "RVR_Cooldown", function( ply )
+hook.Add( "RVR_PlayerDeath", "RVR_Cooldown", function( ply )
     if ply.RVR_NextRespawn then return end
 
     ply.RVR_NextRespawn = CurTime() + GAMEMODE.Config.PlayerDeath.RESPAWN_TIME

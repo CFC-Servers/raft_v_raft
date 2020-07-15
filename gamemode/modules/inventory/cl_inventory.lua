@@ -224,6 +224,17 @@ end )
 
 local hotbarBackgroundMat = Material( "rvr/backgrounds/player_hotbar_background.png" )
 
+hook.Add( "Think", "RVR_Hotbar_Show", function()
+    local frame = inv.hotbar and inv.hotbar.frame
+    if not frame then return end
+
+    local shouldDraw = hook.Run( "HUDShouldDraw", "RVR_Hotbar" ) and not gui.IsGameUIVisible()
+    if shouldDraw ~= frame.lastShouldDraw then
+        frame.lastShouldDraw = shouldDraw
+        frame:SetVisible( shouldDraw )
+    end
+end )
+
 -- Just builds the frame then makes some RVR_ItemSlots, nothing special
 function inv.makeHotbar()
     local config = GAMEMODE.Config.Inventory
@@ -255,6 +266,7 @@ function inv.makeHotbar()
     hotbar.frame:SetTitle( "" )
     hotbar.frame:ShowCloseButton( false )
     hotbar.frame.bgColor = Color( 100, 100, 100 )
+
     function hotbar.frame:Paint( _w, _h )
         surface.SetMaterial( hotbarBackgroundMat )
         surface.SetDrawColor( Color( 255, 255, 255 ) )
