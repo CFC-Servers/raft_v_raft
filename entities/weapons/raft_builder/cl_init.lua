@@ -67,24 +67,22 @@ function SWEP:WallPreview()
     local ent = trace.Entity
 
     if not IsValid( ent ) then
-        return self.ghost:SetColor( GHOST_INVIS ) 
+        return self.ghost:SetColor( GHOST_INVIS )
     end
 
     local pos = ent:GetWallOrigin()
-    
+
     local localHitPos = ent:WorldToLocal( trace.HitPos )
     localHitPos.z = 0
-    localHitPos:Normalize() 
+    localHitPos:Normalize()
 
     localHitPos.x = math.Round(localHitPos.x)
     localHitPos.y = math.Round(localHitPos.y)
-    if math.abs( localHitPos.x ) == math.abs( localHitPos.y ) then 
+    if math.abs( localHitPos.x ) == math.abs( localHitPos.y ) then
         return self.ghost:SetColor( GHOST_INVIS )
     end
 
     self.wallYaw = localHitPos:Angle().yaw
-
-    self.ghost:SetColor( GHOST_COLOR )
 
     self.ghost:SetModel( self.selectedClassTable.Model )
     self.ghost:SetColor( GHOST_COLOR )
@@ -103,7 +101,7 @@ function SWEP:PiecePreview()
     end
 
     local raft = ent:GetRaft()
-    if not raft then 
+    if not raft then
         return self.ghost:SetColor( GHOST_INVIS )
     end
 
@@ -111,24 +109,22 @@ function SWEP:PiecePreview()
 
     local targetPosition = raft:GetPosition( ent ) + dir
 
-    if not self.selectedClassTable.IsWall and raft:GetPiece( targetPosition ) then 
+    if not self.selectedClassTable.IsWall and raft:GetPiece( targetPosition ) then
         return self.ghost:SetColor( GHOST_INVIS )
     end
 
-    if not self.selectedClassTable.IsValidPlacement( ent, dir ) then 
+    if not self.selectedClassTable.IsValidPlacement( ent, dir ) then
         return self.ghost:SetColor( GHOST_INVIS )
     end
 
     local size = RVR.getSizeFromDirection( ent, localDir )
-    if not size then 
+    if not size then
         return self.ghost:SetColor( GHOST_INVIS )
     end
 
     localDir = self.selectedClassTable.GetOffsetDir( ent, localDir )
 
     -- update ghost position
-    self.ghost:SetColor( GHOST_COLOR )
-
     self.ghost:SetModel( self.selectedClassTable.Model )
     self.ghost:SetColor( GHOST_COLOR )
 
@@ -141,7 +137,7 @@ function SWEP:GetAimEntity()
     local trace = owner:GetEyeTrace()
     local ent = trace.Entity
 
-    if not IsValid( ent ) then return nil end
+    if not IsValid( ent ) then return end
 
     return ent
 end
@@ -149,7 +145,7 @@ end
 function SWEP:GetPlacementDirection()
     local ent = self:GetAimEntity()
     if not ent then return end
-    if not ent.IsRaft then return end
+    if not ( ent and ent.IsRaft ) then return end
 
     if self.selectedClass == "raft_platform" or self.selectedClass == "raft_stairs" then
         return Vector( 0, 0, 1 )
@@ -182,7 +178,7 @@ function SWEP:PrimaryAttack()
 
     if self.selectedClassTable.IsWall then
         if self.wallYaw == nil then return end
-        RunConsoleCommand( "rvr", "place_wall", ent:EntIndex(), self.selectedClass, self.wallYaw )
+        return RunConsoleCommand( "rvr", "place_wall", ent:EntIndex(), self.selectedClass, self.wallYaw )
     end
 
     local localDir = self:GetPlacementDirection()
@@ -202,17 +198,11 @@ function SWEP:SecondaryAttack()
     if CurTime() <= nextSecondary then return end
     nextSecondary = CurTime() + INPUT_DELAY
 
-    gui.EnableScreenClicker( true )
-    timer.Simple(0, function()
-        input.SetCursorPos( ScrW() / 2, ScrH() / 2)
-    end)
-
     self.radial:Open()
     hook.Add("KeyRelease", "RVR_Raft_Builder_Release", function( player, key )
         if key == IN_ATTACK2 then
             self.radial:RunSelected()
             self.radial:Close()
-            gui.EnableScreenClicker( false )
             hook.Remove( "KeyRelease", "RVR_Raft_Builder_Release" )
         end
     end)

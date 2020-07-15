@@ -2,7 +2,6 @@ local raftMeta = {}
 raftMeta.__index = raftMeta
 RVR.raftsList = {}
 
-
 function raftMeta:AddPiece( position, ent )
     ent:SetRaftGridPosition( position )
     self.pieces[ent:EntIndex()] = ent
@@ -37,11 +36,11 @@ end
 function raftMeta:GetNeighbors( piece )
     local neighbors = {}
 
-    for x=-1, 1 do
-        for y=-1, 1  do
-            for z=-1, 1 do
+    for x=-1, 1, 2 do
+        for y=-1, 1, 2  do
+            for z=-1, 1, 2 do
                 local pos = self:GetPosition( piece ) + Vector( x, y, z )
-                neighbors[#neighbors+1] = self:GetPiece( pos )
+                table.insert( neighbors, self:GetPiece( pos ) )
             end
         end
     end

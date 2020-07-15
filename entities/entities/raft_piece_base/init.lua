@@ -17,8 +17,8 @@ function ENT:OnRemove()
     self._removing = true
     if self._removing then return end
 
-    local neighbors = self.raft:GetNeighbors( self )
     local raft = self:GetRaft()
+    local neighbors = raft:GetNeighbors( self )
 
     for _, ent in pairs( neighbors ) do
         if not ent:ShouldExist() then

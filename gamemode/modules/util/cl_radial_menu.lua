@@ -67,12 +67,19 @@ function radialMeta:hookIdentifier()
 end
 
 function radialMeta:Open()
+    gui.EnableScreenClicker( true )
+
+    timer.Simple(0, function()
+        input.SetCursorPos( ScrW() / 2, ScrH() / 2)
+    end)
+
     hook.Add( "HUDPaint", self:hookIdentifier(), function()
         self:Paint()
     end )
 end
 
 function radialMeta:Close()
+    gui.EnableScreenClicker( false )
     hook.Remove( "HUDPaint", self:hookIdentifier() )
 end
 
