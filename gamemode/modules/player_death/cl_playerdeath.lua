@@ -71,3 +71,9 @@ hook.Add( "HUDPaint", "RVR_PlayerDeathScreen", function()
             radius * checkmarkSize * 2, radius * checkmarkSize * 2 )
     end
 end )
+
+hook.Add( "HUDPaintBackground", "RVR_PlayerDeathScreen", function()
+    if LocalPlayer():Alive() then return end
+    surface.SetDrawColor( 255, 0, 0, 70 )
+    surface.DrawRect( 0, 0, ScrW(), ScrH() )
+end )
