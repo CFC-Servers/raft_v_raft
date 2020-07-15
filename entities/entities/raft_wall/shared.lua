@@ -7,9 +7,15 @@ ENT.IsWall = true
 ENT.PreviewPos = Vector( 100, 0, -5 )
 ENT.PreviewAngle = Angle( -30, 45, -30 )
 
-function ENT:GetRequiredItems()
-    return {
-        { item = RVR.Items.getItemData( "wood" ), count = 5 },
-        { item = RVR.Items.getItemData( "nail" ), count = 5 },
-    }
+function ENT.GetRequiredItems()
+    local requirements = {}
+
+    for itemName, amount in pairs( GM.Config.Rafts.BUILDING_REQUIREMENTS[ENT.ClassName] ) do
+        table.insert(
+            requirements,
+            { item = RVR.items.getItemData( itemName ), count = amount }
+        )
+    end
+
+    return requirements
 end

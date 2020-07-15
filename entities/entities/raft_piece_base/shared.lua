@@ -49,11 +49,17 @@ function ENT:ToPieceDir( raftDir )
     return dir
 end
 
-function ENT:GetRequiredItems()
-    return {
-        { item = RVR.items.getItemData( "wood" ), count = 5 },
-        { item = RVR.items.getItemData( "nails" ), count = 5 },
-    }
+function ENT.GetRequiredItems()
+    local requirements = {}
+
+    for itemName, amount in pairs( GM.Config.Rafts.BUILDING_REQUIREMENTS[ENT.ClassName]) do
+        table.insert(
+            requirements,
+            { item = RVR.items.getItemData( itemName ), count = amount }
+        )
+    end
+
+    return requirements
 end
 
 function ENT:SetupDataTables()
