@@ -46,7 +46,7 @@ local function expandCallback( ply, piece, class, x, y ,z, yaw )
     local clsTable = baseclass.Get(class)
 
     if not raft:CanBuild( ply ) then
-        ply:PrintMessage( HUD_PRINTCONSOLE, "you do not have permissions to build on this raft" )
+        ply:PrintMessage( HUD_PRINTCONSOLE, "You do not have permissions to build on this raft" )
         return
     end
     local required = clsTable:GetRequiredItems()
