@@ -18,7 +18,7 @@ local function placeWallCallback( ply, piece, class, yaw )
     if not raft then return end
 
     if not raft:CanBuild( ply ) then
-        ply:PrintMessage( HUD_PRINTCONSOLE, "you do not hav epermission to build on this raft" )
+        ply:PrintMessage( HUD_PRINTCONSOLE, "You do not have permission to build on this raft" )
         return
     end
     
