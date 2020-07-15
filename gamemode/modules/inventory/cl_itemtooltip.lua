@@ -24,7 +24,7 @@ function PANEL:Init()
     self.foreground:DockMargin( 3, 3, 3, 3 )
 
     self.itemBackground = vgui.Create( "DImage", self.foreground )
-    self.itemBackground:SetImage( "rvr/backgrounds/craftingmenu_ingredient.png" )
+    self.itemBackground:SetImage( "rvr/backgrounds/dark_slot_background.png" )
     self.itemBackground:Dock( LEFT )
 
     function self.itemBackground:PerformLayout()

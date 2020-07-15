@@ -33,7 +33,11 @@ All item transactions are done by specifying actions to do on slots, rather than
      - `position` - Slot index, see above for special cases
      - `itemData` - `{ item = item, count = count }`
      - `plysToNotify` - Optional, should contain any players that could be looking at the inventory
-
+- `RVR.Inventory.consumeInSlot( ent, position, count )`
+     - `ent` - Entity to take item from
+     - `position` - Slot position to take from
+     - `count` - Number of items to take
+     - Returns: `success`, `error` - This function will fail and do nothing if the slot doesn't have `count` items in it
 - `RVR.Inventory.getSlot( ent, position )`
      - `ent` - Entity with the inventory
      - `position` - Slot index, see above for special cases

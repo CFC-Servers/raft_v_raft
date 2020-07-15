@@ -8,6 +8,7 @@ Creates a simple table for an item instance, currently just `{ type = itemType }
 ## Item structure
 - `type` - (string) Unique name for item
 - `displayName` - (string) Name used in menus
+- `description` - (string) Description
 - `maxCount` - (int) Max stack size in inventories
 - `model` - (string) Dropped item + held item model
 - `icon` - (string) Inventory icon
@@ -20,3 +21,8 @@ Creates a simple table for an item instance, currently just `{ type = itemType }
 - `viewModelAng` - (ang) clientside viewmodel angle
 - `worldModelOffset` - (vector) Clientside worldmodel offset
 - `worldModelAng` - (ang) clientside worldmodel angle
+- `consumable` - (bool) Can this item be consumed
+- `food` - (int) Food value of this item, requires consumable
+- `water` - (int) Water value of this item, requires consumable
+- `health` - (int) Health value of this item, requires consumable
+- `onConsume` - (function) What do when consume

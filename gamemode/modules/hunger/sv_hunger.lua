@@ -33,3 +33,25 @@ end
 
 timer.Create( "rvr_hunger_loss", config.DELAY, 0, hungerThink )
 timer.Create( "rvr_hunger_damage", config.DAMAGE_DELAY, 0, hungerDamageThink )
+
+local PlayerMeta = FindMetaTable( "Player" )
+
+function PlayerMeta:SetFood( n )
+    self:SetNWInt( "rvr_food", n )
+end
+
+function PlayerMeta:AddFood( n )
+    local food = self:GetNWInt( "rvr_food" )
+    food = math.Clamp( food + n, 0, config.MAX_FOOD )
+    self:SetNWInt( "rvr_food", food )
+end
+
+function PlayerMeta:SetWater( n )
+    self:SetNWInt( "rvr_water", n )
+end
+
+function PlayerMeta:AddWater(n)
+    local water = self:GetNWInt( "rvr_water" )
+    water = math.Clamp( water + n, 0, config.MAX_WATER )
+    self:SetNWInt( "rvr_water", water )
+end
