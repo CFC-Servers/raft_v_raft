@@ -1,5 +1,5 @@
 GM.Config = GM.Config or {}
-GM.Config.Rafts
+GM.Config.Rafts = {}
 
 local Config = GM.Config.Rafts
 Config.BUILDING_REQUIREMENTS = {

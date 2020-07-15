@@ -40,7 +40,7 @@ local function placeWallCallback( ply, piece, class, yaw )
         return "Couldn't place  wall: " .. err
     end
 
-    local success, itemsMissing = RVR.Inventory.tryTakeItems( ply, required )
+    RVR.Inventory.tryTakeItems( ply, required )
 end
 
 local function expandCallback( ply, piece, class, x, y ,z, yaw )

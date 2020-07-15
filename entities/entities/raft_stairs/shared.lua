@@ -1,6 +1,6 @@
 ENT.Base = "raft_platform"
-ENT.PrintName = "Raft Stars"
-ENT.Model = "models/rvr/raft/raft_stairs.mdl"
+ENT.PrintName = "Stairs"
+ENT.Model = "models/rvr/raft/stairs.mdl"
 ENT.PreviewPos = Vector( 100, 0, -30 )
 ENT.PreviewAngle = Angle( 0, -135, 0 )
 

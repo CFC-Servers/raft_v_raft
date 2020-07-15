@@ -65,12 +65,11 @@ function raftMeta:SetParty( party )
     self.partyID = party.ID
 end
 
-function raftMeta:SetpartyID( partyID )
+function raftMeta:SetPartyID( partyID )
     self.partyID = partyID
 end
 
 function raftMeta:CanBuild( ply )
-    if self:IsOwner( ply ) then return true end
     if ply:IsSuperAdmin() then return true end
 
     return ply:GetPartyID() == self.partyID

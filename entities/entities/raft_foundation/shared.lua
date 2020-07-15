@@ -1,6 +1,6 @@
 ENT.Base = "raft_piece_base"
-ENT.PrintName = "Raft Foundation"
-ENT.Model = "models/rvr/raft/raft_base.mdl"
+ENT.PrintName = "Foundation"
+ENT.Model = "models/rvr/raft/foundation.mdl"
 
 DEFINE_BASECLASS( "raft_piece_base" )
 
