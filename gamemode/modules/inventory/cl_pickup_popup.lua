@@ -11,7 +11,7 @@ local popupSpacing = 3
 local popupStart = ScrH() * 1
 local popupWindowHeight = ScrH() * 0.5
 local popupMaterial = Material( "rvr/backgrounds/item_pickup_popup_background.png" )
-local popupItemMaterial = Material( "rvr/backgrounds/craftingmenu_ingredient.png" )
+local popupItemMaterial = Material( "rvr/backgrounds/dark_slot_background.png" )
 
 local brown = Color( 91, 56, 34 )
 

@@ -30,6 +30,8 @@ local stats = {
 }
 
 function GM:HUDPaint()
+    hook.Run( "HUDDrawTargetID" )
+
     local barHeight = ScrH() * 0.04
 
     local hudHeight = barHeight * #stats
@@ -69,6 +71,8 @@ function GM:HUDPaint()
         surface.SetMaterial( stat.material )
         surface.DrawTexturedRect( x + 8, barY + 2, barHeight - 5, barHeight - 5 )
     end
+
+    hook.Run( "DrawDeathNotice", 0.85, 0.04 )
 end
 
 local isHidden = { ["CHudHealth"] = true, ["CHudBattery"] = true, ["CHudAmmo"] = true, ["CHudSecondaryAmmo"] = true }
@@ -76,4 +80,39 @@ function GM:HUDShouldDraw( name )
     if isHidden[name] then return false end
 
     return self.BaseClass.HUDShouldDraw( self, name )
+end
+
+function GM:HUDDrawTargetID()
+    local trace = LocalPlayer():GetEyeTrace()
+    local aimEnt = trace.Entity
+
+    if not aimEnt or not aimEnt:IsPlayer() then return end
+
+    local range = GAMEMODE.Config.HUD.TARGET_ID_RANGE
+    if LocalPlayer():GetShootPos():DistToSqr( trace.HitPos ) > range ^ 2 then return end
+
+    local nickname = aimEnt:Nick()
+
+    local font = "TargetID"
+
+    surface.SetFont( font )
+    local nameW = surface.GetTextSize( nickname )
+
+    local x, y = gui.MousePos()
+
+    if x == 0 and y == 0 then
+        x = ScrW() / 2
+        y = ScrH() / 2
+    end
+
+    y = y + 50
+
+    local nameX = x - nameW / 2
+    local nameY = y
+
+    draw.SimpleText( nickname, font, nameX + 1, nameY + 1, Color( 0, 0, 0, 120 ) )
+    draw.SimpleText( nickname, font, nameX + 2, nameY + 2, Color( 0, 0, 0, 50 ) )
+    draw.SimpleText( nickname, font, nameX, nameY, team.GetColor( aimEnt:Team() ) )
+
+    hook.Run( "RVR_TargetID", aimEnt, x, y )
 end

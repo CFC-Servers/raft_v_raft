@@ -102,6 +102,15 @@ hook.Add( "PlayerBindPress", "RVR_Inventory", function( _, bind, pressed )
         net.SendToServer()
 
         return true
+    elseif bind == "impulse 100" then
+        -- Drop item
+        local heldWeapon = LocalPlayer():GetActiveWeapon()
+        if not IsValid( heldWeapon ) then return end
+
+        net.Start( "RVR_Inventory_DropItem" )
+        net.SendToServer()
+
+        return true
     elseif string.StartWith( bind, "slot" ) then
         -- Set selected slot
         local slotNum = tonumber( string.sub( bind, 5 ) )
@@ -327,7 +336,7 @@ hook.Add( "CreateMove", "RVR_Inventory_HotbarSelect", function()
         return
     end
 
-    if inv.openInventory or gui.IsGameUIVisible() then return end
+    if gui.IsGameUIVisible() or vgui.CursorVisible() then return end
 
     if hook.Run( "RVR_Inventory_HotbarCanScroll" ) == false then return end
 
