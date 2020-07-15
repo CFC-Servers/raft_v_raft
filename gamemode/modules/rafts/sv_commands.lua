@@ -13,7 +13,7 @@ end
 
 local function placeWallCallback( ply, piece, class, yaw )
     local raft = piece:GetRaft()
-    local clsTable = baseclass.Get(class)
+    local clsTable = baseclass.Get( class )
 
     if not raft then return end
 
