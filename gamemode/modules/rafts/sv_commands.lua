@@ -1,4 +1,7 @@
 local function summonCommandCallback( ply )
+    local partyID = ply:GetPartyID()
+    if not partyID then return "You must be in a party" end
+
     local trace = util.TraceLine{
         start  = ply:EyePos(),
         endpos = ply:EyePos() + ply:EyeAngles():Forward() * 1000,
@@ -8,7 +11,8 @@ local function summonCommandCallback( ply )
 
     local pos = trace.HitPos
     local raft = RVR.createRaft( pos )
-    raft:AddOwnerID( ply:SteamID() )
+
+    raft:SetPartyID( partyID )
 end
 
 local function placeWallCallback( ply, piece, class, yaw )
@@ -21,7 +25,7 @@ local function placeWallCallback( ply, piece, class, yaw )
         ply:PrintMessage( HUD_PRINTCONSOLE, "You do not have permission to build on this raft" )
         return
     end
-    
+
     local required = clsTable:GetRequiredItems()
 
     local success, itemsMissing = RVR.Inventory.checkItems( ply.RVR_Inventory, required )

@@ -36,11 +36,14 @@ end
 function raftMeta:GetNeighbors( piece )
     local neighbors = {}
 
-    for x=-1, 1, 2 do
-        for y=-1, 1, 2  do
-            for z=-1, 1, 2 do
-                local pos = self:GetPosition( piece ) + Vector( x, y, z )
-                table.insert( neighbors, self:GetPiece( pos ) )
+    for x=-1, 1 do
+        for y=-1, 1 do
+            for z=-1, 1 do
+                local dir = Vector( x, y, z )
+                if dir:IsZero() then
+                    local pos = self:GetPosition( piece ) + dir
+                    table.insert( neighbors, self:GetPiece( pos ) )
+                end
             end
         end
     end
@@ -53,48 +56,24 @@ function raftMeta:GetPosition( piece )
 end
 
 -- ownership
-function raftMeta:AddOwnerID( steamid )
-    self.owners[steamid] = true
-
-    net.Start("RVR_Raft_NewRaftOwner")
-        net.WriteInt( self.id, 32 )
-        net.WriteString( steamid )
-    net.Broadcast()
+function raftMeta:GetParty()
+    if not self.partyID then return end
+    return party.getParty( self.partyID)
 end
 
-function raftMeta:AddOwner( ply )
-    self:AddOwnerID( ply:SteamID() )
+function raftMeta:SetParty( party )
+    self.partyID = party.ID
 end
 
-function raftMeta:RemoveOwnerID( steamid )
-    self.owners[steamid] = nil
-end
-
-function raftMeta:RemoveOwner( ply )
-    self:RemoveOwnerID( ply:SteamID() )
-end
-
-function raftMeta:IsOwner( ply )
-    return self.owners[ply:SteamID()] == true
-end
-
-function raftMeta:GetOwners()
-    local owners = {}
-    for steamid, isowner in pairs( self.owners ) do
-        local ply = player.GetBySteamID( steamid )
-        if ply and isowner then
-            owners[#owners+1] = ply
-        end
-    end
-
-    return owners
+function raftMeta:SetpartyID( partyID )
+    self.partyID = partyID
 end
 
 function raftMeta:CanBuild( ply )
     if self:IsOwner( ply ) then return true end
     if ply:IsSuperAdmin() then return true end
 
-    return false
+    return ply:GetPartyID() == self.partyID
 end
 
 -- util
