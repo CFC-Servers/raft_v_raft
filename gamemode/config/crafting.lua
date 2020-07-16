@@ -2,6 +2,7 @@ GM.Config = GM.Config or {}
 GM.Config.Crafting = GM.Config.Crafting or {}
 
 local config = GM.Config.Crafting
+
 --[[
 
 Recipe structure
@@ -25,7 +26,6 @@ recipe = {
     tier = (optional) Minimum crafter tier required, defaults to 1
     timeToCraft = Time in seconds this craft takes (non-zero)
 }
-
 ]]
 
 config.RECIPES = {
@@ -38,25 +38,25 @@ config.RECIPES = {
                 count = 4,
                 ingredients = {
                     nail = 5,
-                    wood = 3,
+                    wood = 3
                 },
-                timeToCraft = 120,
+                timeToCraft = 120
             },
             {
                 item = "wood",
                 ingredients = {
-                    nail = 5,
+                    nail = 5
                 },
-                timeToCraft = 3,
+                timeToCraft = 3
             },
             {
                 item = "wood",
                 ingredients = {
-                    nail = 5,
+                    nail = 5
                 },
-                timeToCraft = 3,
-            },
-        },
+                timeToCraft = 3
+            }
+        }
     },
     {
         name = "Tools",
@@ -67,38 +67,38 @@ config.RECIPES = {
                 ingredients = {
                     nail = 5
                 },
-                timeToCraft = 3,
-            },
-        },
+                timeToCraft = 3
+            }
+        }
     },
     {
         name = "Food",
         icon = "rvr/icons/craftingmenu_category_weapons.png",
-        recipes = {},
+        recipes = {}
     },
     {
         name = "Resources",
         icon = "rvr/icons/craftingmenu_category_resources.png",
-        recipes = {},
+        recipes = {}
     },
     {
         name = "Equipment",
         icon = "rvr/icons/craftingmenu_category_armor.png",
-        recipes = {},
+        recipes = {}
     },
     {
         name = "Navigation",
         icon = "rvr/icons/craftingmenu_category_navigation.png",
-        recipes = {},
+        recipes = {}
     },
     {
         name = "Furniture",
         icon = "rvr/icons/craftingmenu_category_furniture.png",
-        recipes = {},
+        recipes = {}
     },
     {
         name = "Other",
         icon = "rvr/icons/craftingmenu_category_other.png",
-        recipes = {},
-    },
+        recipes = {}
+    }
 }
