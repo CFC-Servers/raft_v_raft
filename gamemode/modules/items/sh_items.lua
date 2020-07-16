@@ -28,7 +28,7 @@ items.items = {
         maxCount = 10,
         model = "models/rvr/items/plank.mdl",
         icon = "materials/rvr/items/wood.png",
-        stackable = true,
+        stackable = true
     },
     {
         type = "nail",
@@ -37,7 +37,7 @@ items.items = {
         maxCount = 25,
         model = "models/rvr/items/nail.mdl",
         icon = "materials/rvr/items/nail.png",
-        stackable = true,
+        stackable = true
     },
     {
         type = "tuna",
@@ -49,7 +49,7 @@ items.items = {
         stackable = true,
         consumable = true,
         food = 10,
-        health = -5,
+        health = -5
     },
     {
         type = "cooked_tuna",
@@ -60,7 +60,7 @@ items.items = {
         icon = "materials/rvr/items/cooked_tuna.png",
         stackable = true,
         consumable = true,
-        food = 30,
+        food = 30
     },
     {
         type = "water",
@@ -73,8 +73,8 @@ items.items = {
         consumable = true,
         water = 60,
         viewModelOffset = Vector( -2, 5, -9 ),
-        viewModelAng = Angle( 0, -15, 0 ),
-    },
+        viewModelAng = Angle( 0, -15, 0 )
+    }
 }
 
 local config = GM.Config.Hunger

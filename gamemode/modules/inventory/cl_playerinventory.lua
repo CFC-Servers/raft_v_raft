@@ -12,7 +12,9 @@ function inv.openPlayerInventory( inventory )
     frame:SetDraggable( false )
     frame:ShowCloseButton( false )
     frame:CenterHorizontal()
+
     local x = frame:GetPos()
+
     frame:SetPos( x, 0.3 * ( ScrH() - h ) )
     frame:MakePopup()
 
@@ -30,6 +32,7 @@ function inv.openPlayerInventory( inventory )
     closeButton:SetPos( w * 0.91, h * 0.05 )
     closeButton:SetSize( 50, 50 )
     closeButton:SetImage( "materials/rvr/icons/player_inventory_close.png" )
+
     function closeButton:DoClick()
         frame:Close()
     end
@@ -45,13 +48,18 @@ function inv.openPlayerInventory( inventory )
     local eSlotYMult = 0.19
     local eSlotYSpacing = 0.25
 
-    local iconNames = { "hat", "shirt", "pants" }
-    local slotSize = invScroller:GetSlotSize()
+    local iconNames = {
+        "hat",
+        "shirt",
+        "pants"
+    }
 
+    local slotSize = invScroller:GetSlotSize()
     local equipMult = 1.08
 
     -- equipment slots indexes start at #hotbar + #inventory
     local equipmentSlotOffset = config.PLAYER_INVENTORY_SLOTS + config.PLAYER_HOTBAR_SLOTS
+
     for index = 1, 3 do
         local yOffset = ( index - 1 ) * eSlotYSpacing
 
@@ -62,6 +70,7 @@ function inv.openPlayerInventory( inventory )
         slot:SetLocationData( LocalPlayer(), equipmentSlotOffset + index )
 
         local itemInfo = inventory.Inventory[equipmentSlotOffset + index]
+
         if itemInfo then
             slot:SetItemData( itemInfo.item, itemInfo.count )
         end
@@ -83,7 +92,8 @@ function inv.openPlayerInventory( inventory )
     icon:SetColor( Color( 0, 0, 0 ) )
 
     -- Disable default behaviour
-    function icon:LayoutEntity( entity ) end
+    function icon:LayoutEntity( entity )
+    end
 
     return frame
 end

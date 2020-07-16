@@ -3,6 +3,7 @@ local moduleDir = GM.FolderName .. "/gamemode/modules/"
 local _, modules = file.Find( moduleDir .. "*", "LUA" )
 
 print( "[RVR] Loading modules..." )
+
 for _, moduleName in pairs( modules ) do
     local path = moduleDir .. moduleName .. "/"
     local files, _ = file.Find( path .. "*.lua", "LUA" )
@@ -11,6 +12,7 @@ for _, moduleName in pairs( modules ) do
 
     for _, fileName in pairs( files ) do
         local fullPath = path .. fileName
+
         if CLIENT then
             include( fullPath )
         elseif string.StartWith( fileName, "sh_" ) then
@@ -32,6 +34,7 @@ for _, moduleName in pairs( modules ) do
 
     if SERVER then
         local realmStr
+
         if isServer and isClient then
             realmStr = "shared"
         elseif isServer then
@@ -49,6 +52,7 @@ for _, moduleName in pairs( modules ) do
         print( "[RVR] Loaded module: " .. moduleName )
     end
 end
+
 print( "[RVR] Finished loading modules" )
 
 hook.Run( "RVR_ModulesLoaded" )

@@ -10,8 +10,8 @@ local cursorSlotSize = 60
 net.Receive( "RVR_Inventory_Open", function()
     local inventory = net.ReadTable()
     local isSelf = net.ReadBool()
-
     local plyInventory = inventory
+
     if not isSelf then
         plyInventory = net.ReadTable()
     end
@@ -46,6 +46,7 @@ net.Receive( "RVR_Inventory_Open", function()
     function inv.openInventory:OnKeyCodePressed( key )
         local menuKey = input.GetKeyCode( input.LookupBinding( "+menu" ) )
         local useKey = input.GetKeyCode( input.LookupBinding( "+use" ) )
+
         if key == menuKey or key == useKey then
             inv.closeInventory()
         end
@@ -58,6 +59,7 @@ net.Receive( "RVR_Inventory_UpdateSlot", function()
     local position = net.ReadInt( 8 )
     local hasSlotData = net.ReadBool()
     local slotData
+
     if hasSlotData then
         slotData = net.ReadTable()
     end
@@ -70,6 +72,7 @@ net.Receive( "RVR_Inventory_UpdateSlot", function()
         else
             inv.clearCursorItemData()
         end
+
         return
     end
 
@@ -178,7 +181,9 @@ hook.Add( "PostRenderVGUI", "RVR_Inventory_DrawCursorItem", function()
 
     -- Item count
     local countText = tostring( inv.cursorItemCount )
+
     surface.SetFont( "DermaLarge" )
+
     local tw, th = surface.GetTextSize( countText )
     local tx = x + cursorSlotSize - tw - 1
     local ty = y + cursorSlotSize - th + 5
@@ -246,6 +251,7 @@ function inv.makeHotbar()
     hotbar.frame:SetTitle( "" )
     hotbar.frame:ShowCloseButton( false )
     hotbar.frame.bgColor = Color( 100, 100, 100 )
+
     function hotbar.frame:Paint( _w, _h )
         surface.SetMaterial( hotbarBackgroundMat )
         surface.SetDrawColor( Color( 255, 255, 255 ) )
@@ -281,9 +287,7 @@ function inv.setHotbarSlot( newIndex )
     local hotbar = inv.hotbar
 
     if newIndex == hotbar.selectedSlot then return end
-
     if newIndex < 1 or newIndex > GAMEMODE.Config.Inventory.PLAYER_HOTBAR_SLOTS then return end
-
     if hook.Run( "RVR_Inventory_CanChangeHotbarSelected", LocalPlayer(), newIndex ) == false then return end
 
     local prevSlot = hotbar.slots[hotbar.selectedSlot]
