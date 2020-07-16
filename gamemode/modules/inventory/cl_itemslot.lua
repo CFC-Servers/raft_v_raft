@@ -22,8 +22,8 @@ function PANEL:Init()
 
     function self.itemCountLabel:PerformLayout()
         self:SizeToContents()
-        local pw, ph = self:GetParent():GetSize()
 
+        local pw, ph = self:GetParent():GetSize()
         local w, h = self:GetSize()
 
         self:SetPos( pw - w - 13, ph - h - 5 )
@@ -66,9 +66,11 @@ function PANEL:OnMousePressed( code )
         -- taking item from slot
 
         local count = self.itemCount
+        
         if code == MOUSE_RIGHT then
             count = math.ceil( count / 2 )
         end
+
         net.Start( "RVR_Inventory_CursorHold" )
             net.WriteEntity( self.parentEnt )
             net.WriteInt( self.slotPosition, 8 )

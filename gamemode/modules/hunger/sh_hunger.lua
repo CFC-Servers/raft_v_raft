@@ -7,4 +7,3 @@ end
 function PlayerMeta:GetWater()
     return self:GetNWInt( "rvr_water" )
 end
-

@@ -6,7 +6,7 @@ local backgroundMat = Material( "rvr/backgrounds/generic_menu_background.png" )
 surface.CreateFont( "RVR_BoxInventoryHeader", {
     font = "Bungee Regular",
     size = ScrH() * 0.08,
-    weight = 700,
+    weight = 700
 } )
 
 function inv.openBoxInventory( boxInventory, playerInventory )
@@ -20,6 +20,7 @@ function inv.openBoxInventory( boxInventory, playerInventory )
     frame:SetDraggable( false )
     frame:ShowCloseButton( false )
     frame:CenterHorizontal()
+
     local x = frame:GetPos()
     frame:SetPos( x, 0.3 * ( ScrH() - h ) )
     frame:MakePopup()

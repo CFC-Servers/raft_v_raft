@@ -26,7 +26,7 @@ end
 
 local function onConsoleCommand( ply, cmd, args, argsStr )
     net.Start( "RVR_Commands_runConsoleCommand" )
-    net.WriteString( argsStr )
+        net.WriteString( argsStr )
     net.SendToServer()
 end
 
