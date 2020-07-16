@@ -25,7 +25,7 @@ function ENT:Initialize()
         Inventory = {},
         MaxSlots = self.InventorySize,
         InventoryType = "Box",
-        Name = self.InventoryName,
+        Name = self.InventoryName
     }
 end
 
