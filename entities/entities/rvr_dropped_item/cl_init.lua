@@ -41,7 +41,7 @@ function ENT:Draw()
             pos = { 0, -10 },
             color = Color( 255, 255, 255, opacity ),
             font = "ChatFont",
-            xalign = TEXT_ALIGN_CENTER,
+            xalign = TEXT_ALIGN_CENTER
         } )
     cam.End3D2D()
 end
