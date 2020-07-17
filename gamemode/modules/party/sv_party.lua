@@ -3,7 +3,9 @@ local party = RVR.Party
 party.idCounter = party.idCounter or 0
 
 util.AddNetworkString( "RVR_Party_updateClient" )
+util.AddNetworkString( "RVR_Party_inviteSent" )
 util.AddNetworkString( "RVR_Party_createParty" )
+util.AddNetworkString( "RVR_Party_joinParty" )
 util.AddNetworkString( "RVR_Party_updateFriends" )
 
 local function updateClientPartyData( id )
@@ -28,9 +30,9 @@ function party.createParty( partyName, owner, tag, color, joinMode )
         end
     end
 
-    if owner:GetPartyID() then
-        return nil, "Player " .. owner:Nick() .. " already in a party"
-    end
+    -- if owner:GetPartyID() then
+    --     return nil, "Player " .. owner:Nick() .. " already in a party"
+    -- end
 
     if #tag ~= 4 then
         return nil, "Tag must be 4 characters"
@@ -116,6 +118,10 @@ function party.setJoinMode( id, mode )
 
     partyData.joinMode = mode
     party.broadcastMessage( partyData.id, "Party join mode has been set to " .. party.joinModeStrs[mode] )
+
+    updateClientPartyData( id )
+
+    return true
 end
 
 function party.removeMember( id, ply )
@@ -244,6 +250,10 @@ function party.invite( id, inviter, ply )
 
     partyData.invites[ply] = CurTime()
 
+    net.Start( "RVR_Party_inviteSent" )
+        net.WriteUInt( id, 32 )
+    net.Send( ply )
+
     return true
 end
 
@@ -287,7 +297,22 @@ net.Receive( "RVR_Party_createParty", function( len, ply )
 
     local success, err = party.createParty( name, ply, tag, color, joinMode )
 
+    print( success, err )
+
     net.Start( "RVR_Party_createParty" )
+        net.WriteBool( success )
+        if not success then
+            net.WriteString( err )
+        end
+    net.Send( ply )
+end )
+
+net.Receive( "RVR_Party_joinParty", function( len, ply )
+    local id = net.ReadUInt( 32 )
+
+    local success, err = party.attemptJoin( id, ply )
+
+    net.Start( "RVR_Party_joinParty" )
         net.WriteBool( success )
         if not success then
             net.WriteString( err )
