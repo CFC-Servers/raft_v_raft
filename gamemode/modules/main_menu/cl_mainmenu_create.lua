@@ -309,7 +309,8 @@ function mainMenu.createPartyCreateMenu()
 
             if success then
                 mainMenu.closeMenu()
-                -- TODO: spawn and such
+                net.Start( "RVR_MainMenu_SpawnSelf" )
+                net.SendToServer()
             else
                 if errType == "name" or errType == "tag" then
                     mainMenu.errorLabels[errType]:SetError( "Already taken" )

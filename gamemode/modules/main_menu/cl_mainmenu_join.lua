@@ -20,7 +20,11 @@ hook.Add( "RVR_Party_gotInvite", "RVR_MainMenu_UpdateList", function( id )
     timer.Simple( GAMEMODE.Config.Party.INVITE_LIFETIME + 0.5, mainMenu.refreshJoinPartyList )
 end )
 
-hook.Add( "RVR_Party_PartyChanged", "RVR_MainMenu_UpdateList", mainMenu.refreshJoinPartyList )
+hook.Add( "RVR_Party_PartyChanged", "RVR_MainMenu_UpdateList", function()
+    if not mainMenu.awaitingReply then
+        mainMenu.refreshJoinPartyList()
+    end
+end )
 
 net.Receive( "RVR_Party_joinParty", function()
     if not mainMenu.awaitingReply then return end
@@ -30,7 +34,8 @@ net.Receive( "RVR_Party_joinParty", function()
 
     if success then
         mainMenu.closeMenu()
-        -- TODO: spawn and such
+        net.Start( "RVR_MainMenu_SpawnSelf" )
+        net.SendToServer()
     else
         mainMenu.refreshJoinPartyList()
     end
