@@ -88,11 +88,11 @@ function radialMeta:DrawSelected()
     local item = self.items[self.selectedItem]
     local centerx, centery = ScrW() / 2, ScrH() / 2
 
-    surface.SetDrawColor(self.infoCircleColor)
+    surface.SetDrawColor( self.infoCircleColor )
     draw.NoTexture()
     local points = {}
     for a=360, 0, -1 do
-        table.insert(points, newPoint(centerx, centery, a, self.infoCircleRadius) )
+        table.insert( points, newPoint( centerx, centery, a, self.infoCircleRadius ) )
     end
     surface.DrawPoly( points )
 
