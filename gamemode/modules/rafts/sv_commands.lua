@@ -16,8 +16,11 @@ local function summonCommandCallback( ply )
 end
 
 local function placeWallCallback( ply, piece, class, yaw )
+    if yaw < 0 or yaw % 90 ~= 0 then return "Invalid yaw" end
+ 
     local raft = piece:GetRaft()
     local clsTable = baseclass.Get( class )
+    if not clsTable.IsWall then return "You can only place walls" end
 
     if not raft then return end
 
@@ -44,10 +47,13 @@ local function placeWallCallback( ply, piece, class, yaw )
 end
 
 local function expandCallback( ply, piece, class, x, y ,z, yaw )
+    if yaw < 0 or yaw % 90 ~= 0 then return "Invalid yaw" end
+
     local raft = piece:GetRaft()
     if not raft then return end
 
     local clsTable = baseclass.Get(class)
+    if not clsTable.IsRaft then return "You can only place raft pieces" end
 
     if not raft:CanBuild( ply ) then
         ply:PrintMessage( HUD_PRINTCONSOLE, "You do not have permissions to build on this raft" )
