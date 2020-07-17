@@ -62,7 +62,7 @@ function radialMeta:Paint()
     self:customPaint()
 end
 
-function radialMeta:hookIdentifier()
+function radialMeta:GetHookIdentifier()
     return "RVR_RadialMenu_" .. tostring( self )
 end
 
@@ -73,14 +73,14 @@ function radialMeta:Open()
         input.SetCursorPos( ScrW() / 2, ScrH() / 2)
     end)
 
-    hook.Add( "HUDPaint", self:hookIdentifier(), function()
+    hook.Add( "HUDPaint", self:GetHookIdentifier(), function()
         self:Paint()
     end )
 end
 
 function radialMeta:Close()
     gui.EnableScreenClicker( false )
-    hook.Remove( "HUDPaint", self:hookIdentifier() )
+    hook.Remove( "HUDPaint", self:GetHookIdentifier() )
 end
 
 function radialMeta:DrawSelected()
