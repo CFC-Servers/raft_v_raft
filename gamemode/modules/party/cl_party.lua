@@ -20,13 +20,14 @@ net.Receive( "RVR_Party_createParty", function()
     if not party.createPartyCallback then return end
 
     local success = net.ReadBool()
-    local err
+    local err, errType
 
     if not success then
         err = net.ReadString()
+        errType = net.ReadString()
     end
 
-    party.createPartyCallback( success, err )
+    party.createPartyCallback( success, err, errType )
     party.createPartyCallback = nil
 end )
 
