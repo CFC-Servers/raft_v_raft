@@ -29,49 +29,53 @@ local stats = {
     },
 }
 
+local function drawStats()
+    local barHeight = ScrH() * 0.04
+
+    local hudHeight = barHeight * #stats
+    local leftBgWidth = hudHeight * ( 128 / 300 )
+
+    local x = 5
+    local y = ScrH() - hudHeight - 5
+
+    surface.SetDrawColor( Color( 255, 255, 255 ) )
+
+    surface.SetMaterial( leftBg )
+    surface.DrawTexturedRect( x, y, leftBgWidth, hudHeight )
+
+    local rightBgWidth = hudHeight * 1.7
+
+    local bgSpacing = 2
+
+    surface.SetMaterial( rightBg )
+    surface.DrawTexturedRect( x + leftBgWidth + bgSpacing, y, rightBgWidth, hudHeight )
+
+    for i, stat in ipairs( stats ) do
+        local prog = stat.get() / stat.max
+        prog = math.Clamp( prog, 0, 1 )
+
+        local barWidth = ( rightBgWidth - 10 ) * prog
+
+        local barX = x + leftBgWidth + bgSpacing + 5
+        local barY = y + ( i - 1 ) * barHeight
+
+        local col = stat.color
+        local darkCol = Color( col.r * 0.8, col.g * 0.8, col.b * 0.8 )
+        draw.RoundedBox( 5, barX, barY + 5, barWidth, barHeight - 10, darkCol )
+
+        draw.RoundedBox( 5, barX + 2, barY + 7, barWidth - 4, barHeight - 14, col )
+
+        surface.SetDrawColor( Color( 255, 255, 255 ) )
+        surface.SetMaterial( stat.material )
+        surface.DrawTexturedRect( x + 8, barY + 2, barHeight - 5, barHeight - 5 )
+    end
+end
+
 function GM:HUDPaint()
     hook.Run( "HUDDrawTargetID" )
 
     if hook.Run( "HUDShouldDraw", "RVR_Stats" ) then
-        local barHeight = ScrH() * 0.04
-
-        local hudHeight = barHeight * #stats
-        local leftBgWidth = hudHeight * ( 128 / 300 )
-
-        local x = 5
-        local y = ScrH() - hudHeight - 5
-
-        surface.SetDrawColor( Color( 255, 255, 255 ) )
-
-        surface.SetMaterial( leftBg )
-        surface.DrawTexturedRect( x, y, leftBgWidth, hudHeight )
-
-        local rightBgWidth = hudHeight * 1.7
-
-        local bgSpacing = 2
-
-        surface.SetMaterial( rightBg )
-        surface.DrawTexturedRect( x + leftBgWidth + bgSpacing, y, rightBgWidth, hudHeight )
-
-        for i, stat in ipairs( stats ) do
-            local prog = stat.get() / stat.max
-            prog = math.Clamp( prog, 0, 1 )
-
-            local barWidth = ( rightBgWidth - 10 ) * prog
-
-            local barX = x + leftBgWidth + bgSpacing + 5
-            local barY = y + ( i - 1 ) * barHeight
-
-            local col = stat.color
-            local darkCol = Color( col.r * 0.8, col.g * 0.8, col.b * 0.8 )
-            draw.RoundedBox( 5, barX, barY + 5, barWidth, barHeight - 10, darkCol )
-
-            draw.RoundedBox( 5, barX + 2, barY + 7, barWidth - 4, barHeight - 14, col )
-
-            surface.SetDrawColor( Color( 255, 255, 255 ) )
-            surface.SetMaterial( stat.material )
-            surface.DrawTexturedRect( x + 8, barY + 2, barHeight - 5, barHeight - 5 )
-        end
+        drawStats()
     end
 
     hook.Run( "DrawDeathNotice", 0.85, 0.04 )
