@@ -128,7 +128,7 @@ function radialMeta:DrawButton( start, size, mat )
     segmentAmount = math.floor( segmentAmount )
     local segmentSize = math.ceil( size / segmentAmount )
 
-    for i=0, segmentAmount-1 do
+    for i = 0, segmentAmount - 1 do
         local segmentStart = start + segmentSize * i
         self:DrawSegment( segmentStart, segmentSize )
     end
