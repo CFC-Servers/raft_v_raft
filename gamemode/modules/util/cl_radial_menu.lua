@@ -49,7 +49,7 @@ function radialMeta:Paint()
     for i=0, buttonCount - 1 do
         surface.SetDrawColor( self.color )
 
-        if aimAng > i * buttonSize  and aimAng < buttonSize + i * buttonSize  then
+        if aimAng > i * buttonSize and aimAng < buttonSize + i * buttonSize then
             surface.SetDrawColor( self.selectedColor )
             self.selectedItem = i + 1
         end
@@ -62,8 +62,8 @@ function radialMeta:Paint()
     self:customPaint()
 end
 
-function radialMeta:hookIdentifier()
-    return "RVR_RadialMenu_" .. tostring(self)
+function radialMeta:GetHookIdentifier()
+    return "RVR_RadialMenu_" .. tostring( self )
 end
 
 function radialMeta:Open()
@@ -73,14 +73,14 @@ function radialMeta:Open()
         input.SetCursorPos( ScrW() / 2, ScrH() / 2)
     end)
 
-    hook.Add( "HUDPaint", self:hookIdentifier(), function()
+    hook.Add( "HUDPaint", self:GetHookIdentifier(), function()
         self:Paint()
     end )
 end
 
 function radialMeta:Close()
     gui.EnableScreenClicker( false )
-    hook.Remove( "HUDPaint", self:hookIdentifier() )
+    hook.Remove( "HUDPaint", self:GetHookIdentifier() )
 end
 
 function radialMeta:DrawSelected()
@@ -88,11 +88,11 @@ function radialMeta:DrawSelected()
     local item = self.items[self.selectedItem]
     local centerx, centery = ScrW() / 2, ScrH() / 2
 
-    surface.SetDrawColor(self.infoCircleColor)
+    surface.SetDrawColor( self.infoCircleColor )
     draw.NoTexture()
     local points = {}
     for a=360, 0, -1 do
-        table.insert(points, newPoint(centerx, centery, a, self.infoCircleRadius) )
+        table.insert( points, newPoint( centerx, centery, a, self.infoCircleRadius ) )
     end
     surface.DrawPoly( points )
 
@@ -128,7 +128,7 @@ function radialMeta:DrawButton( start, size, mat )
     segmentAmount = math.floor( segmentAmount )
     local segmentSize = math.ceil( size / segmentAmount )
 
-    for i=0, segmentAmount-1 do
+    for i = 0, segmentAmount - 1 do
         local segmentStart = start + segmentSize * i
         self:DrawSegment( segmentStart, segmentSize )
     end
