@@ -217,7 +217,7 @@ function inv.attemptPickupItem( ent, item, count )
 
     if ent.RVR_Inventory.PreventAdding then return false, 0 end
 
-    local isPlayer = type( ent ) == "Player"
+    local isPlayer = ent:IsPlayer()
     local plys
     if isPlayer then
         plys = { ent }

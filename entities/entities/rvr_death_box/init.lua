@@ -26,7 +26,7 @@ function ENT:Initialize()
         self.timerIdentifier = "rvr_death_box_despawn_" .. self:EntIndex()
         local this = self
 
-        timer.Create( self.timerIdentifier, despawnTime, 1, function()
+        timer.Create( this.timerIdentifier, despawnTime, 1, function()
             if IsValid( this ) then this:Remove() end
         end )
     end
