@@ -63,7 +63,7 @@ function radialMeta:Paint()
 end
 
 function radialMeta:hookIdentifier()
-    return "RVR_RadialMenu_" .. tostring(self)
+    return "RVR_RadialMenu_" .. tostring( self )
 end
 
 function radialMeta:Open()
