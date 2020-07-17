@@ -21,18 +21,9 @@ local function updateClientPartyData( id )
 end
 
 function party.createParty( partyName, owner, tag, color, joinMode )
-    for id, partyData in pairs( party.parties ) do
-        if partyData.name == partyName then
-            return nil, "Party with name " .. partyName .. " already exists"
-        end
-        if partyData.tag == tag then
-            return nil, "Party with tag " .. tag .. " already exists"
-        end
+    if owner:GetPartyID() then
+        return nil, "Player " .. owner:Nick() .. " already in a party"
     end
-
-    -- if owner:GetPartyID() then
-    --     return nil, "Player " .. owner:Nick() .. " already in a party"
-    -- end
 
     if #tag ~= 4 then
         return nil, "Tag must be 4 characters"
@@ -47,6 +38,15 @@ function party.createParty( partyName, owner, tag, color, joinMode )
 
     if color.a ~= 255 then
         return nil, "Party color alpha must be 255 (ff)"
+    end
+
+    for id, partyData in pairs( party.parties ) do
+        if partyData.name == partyName then
+            return nil, "Party with name " .. partyName .. " already exists", "name"
+        end
+        if partyData.tag == tag then
+            return nil, "Party with tag " .. tag .. " already exists", "tag"
+        end
     end
 
     local id = party.idCounter
@@ -295,14 +295,14 @@ net.Receive( "RVR_Party_createParty", function( len, ply )
 
     if joinMode > 2 then return end
 
-    local success, err = party.createParty( name, ply, tag, color, joinMode )
-
-    print( success, err )
+    local success, err, errType = party.createParty( name, ply, tag, color, joinMode )
+    errType = errType or "generic"
 
     net.Start( "RVR_Party_createParty" )
         net.WriteBool( success )
         if not success then
             net.WriteString( err )
+            net.WriteString( errType )
         end
     net.Send( ply )
 end )
