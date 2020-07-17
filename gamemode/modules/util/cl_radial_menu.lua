@@ -49,7 +49,7 @@ function radialMeta:Paint()
     for i=0, buttonCount - 1 do
         surface.SetDrawColor( self.color )
 
-        if aimAng > i * buttonSize  and aimAng < buttonSize + i * buttonSize  then
+        if aimAng > i * buttonSize and aimAng < buttonSize + i * buttonSize then
             surface.SetDrawColor( self.selectedColor )
             self.selectedItem = i + 1
         end
