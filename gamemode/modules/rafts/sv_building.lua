@@ -1,7 +1,7 @@
 function RVR.createRaft( position )
     local raft = RVR.newRaft()
 
-    local ent = ents.Create( "raft_foundation")
+    local ent = ents.Create( "raft_foundation" )
     ent:Spawn()
     ent:SetPos( position )
     ent:SetRaft( raft )

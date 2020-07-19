@@ -1,5 +1,5 @@
 AddCSLuaFile()
-AddCSLuaFile("cl_init.lua")
+AddCSLuaFile( "cl_init.lua" )
 
 SWEP.PrintName = "Raft Builder"
 SWEP.HoldType = "melee"

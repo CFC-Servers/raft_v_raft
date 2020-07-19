@@ -15,7 +15,7 @@ function ENT:GetRaft( raft )
     return RVR.raftLookup[self:GetRaftID()]
 end
 
-function ENT.IsValidPlacement(piece, dir)
+function ENT.IsValidPlacement( piece, dir )
     if dir.z ~= 0 then return end
 
     if math.abs( dir.x ) == math.abs( dir.y ) then
@@ -52,7 +52,7 @@ end
 function ENT:GetRequiredItems()
     local requirements = {}
 
-    for itemName, amount in pairs( GAMEMODE.Config.Rafts.BUILDING_REQUIREMENTS[self.ClassName]) do
+    for itemName, amount in pairs( GAMEMODE.Config.Rafts.BUILDING_REQUIREMENTS[self.ClassName] ) do
         table.insert(
             requirements,
             {

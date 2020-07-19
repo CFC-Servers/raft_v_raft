@@ -2,7 +2,7 @@ surface.CreateFont( "RVR_RadialMenu_Title", {
     font = "Bungee Regular",
     size = 30,
     weight = 500,
-})
+} )
 
 local function getCursorAng()
     local x, y = input.GetCursorPos()
@@ -24,7 +24,7 @@ function radialMeta:AddItem( name, material, callback )
     local item = {
         name = name,
         iconMaterial = material,
-        callback     = callback,
+        callback = callback,
     }
 
     table.insert( self.items, item )
@@ -46,7 +46,7 @@ function radialMeta:Paint()
     local buttonCount = #self.items
     local buttonSize = math.ceil( 360 / buttonCount )
 
-    for i=0, buttonCount - 1 do
+    for i = 0, buttonCount - 1 do
         surface.SetDrawColor( self.color )
 
         if aimAng > i * buttonSize and aimAng < buttonSize + i * buttonSize then
@@ -54,7 +54,7 @@ function radialMeta:Paint()
             self.selectedItem = i + 1
         end
 
-        local mat = self.items[i+1].iconMaterial
+        local mat = self.items[i + 1].iconMaterial
 
         self:DrawButton( i * buttonSize, buttonSize, mat )
     end
@@ -69,9 +69,9 @@ end
 function radialMeta:Open()
     gui.EnableScreenClicker( true )
 
-    timer.Simple(0, function()
-        input.SetCursorPos( ScrW() / 2, ScrH() / 2)
-    end)
+    timer.Simple( 0, function()
+        input.SetCursorPos( ScrW() / 2, ScrH() / 2 )
+    end )
 
     hook.Add( "HUDPaint", self:GetHookIdentifier(), function()
         self:Paint()
@@ -91,12 +91,12 @@ function radialMeta:DrawSelected()
     surface.SetDrawColor( self.infoCircleColor )
     draw.NoTexture()
     local points = {}
-    for a=360, 0, -1 do
+    for a = 360, 0, -1 do
         table.insert( points, newPoint( centerx, centery, a, self.infoCircleRadius ) )
     end
     surface.DrawPoly( points )
 
-    draw.DrawText( item.name, "RVR_RadialMenu_Title", centerx, ScrH() * 0.4, self.titleColor, TEXT_ALIGN_CENTER)
+    draw.DrawText( item.name, "RVR_RadialMenu_Title", centerx, ScrH() * 0.4, self.titleColor, TEXT_ALIGN_CENTER )
 
     surface.SetMaterial( item.iconMaterial )
     local iconSize = 100
@@ -110,12 +110,12 @@ function radialMeta:DrawSegment( start, size )
     local centerx, centery = ScrW() / 2, ScrH() / 2
     local points = {}
 
-    for a = size+start, start, -1 do
+    for a = size + start, start, -1 do
         table.insert( points, newPoint( centerx, centery, a, self.outerRadius ) )
     end
 
     table.insert( points, newPoint( centerx, centery, start, self.innerRadius ) )
-    table.insert( points, newPoint( centerx, centery, start+size, self.innerRadius ) )
+    table.insert( points, newPoint( centerx, centery, start + size, self.innerRadius ) )
     self.pointCache[start] = points
     surface.DrawPoly( points )
 end
@@ -143,20 +143,20 @@ end
 
 function RVR.newRadialMenu()
     local r = {
-        items         = {},
-        color         = Color( 188, 162, 105, 255 ),
+        items = {},
+        color = Color( 188, 162, 105, 255 ),
         selectedColor = Color( 255, 162, 105, 255 ),
         infoCircleColor = Color( 149, 130, 90, 100 ),
         titleColor = Color( 30, 30, 30, 255 ),
-        outerRadius   = 300,
-        innerRadius   = 175,
-        iconRadius    = 230,
-        segmentSize   = 5,
-        pointCache    = {},
+        outerRadius = 300,
+        innerRadius = 175,
+        iconRadius = 230,
+        segmentSize = 5,
+        pointCache = {},
         infoCircleRadius = 200,
         customPaint = function() end
     }
 
-    setmetatable(r, radialMeta)
+    setmetatable( r, radialMeta )
     return r
 end

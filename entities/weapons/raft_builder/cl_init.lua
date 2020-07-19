@@ -1,4 +1,4 @@
-include("shared.lua")
+include( "shared.lua" )
 
 local abs = math.abs
 
@@ -35,7 +35,7 @@ function SWEP:Initialize()
         local required = class:GetRequiredItems()
 
         for i, itemData in ipairs( required ) do
-            raftBuilder.drawItemRequirement( ScrW() / 2, ScrH() *0.48 + i * 40, itemData.item.type, itemData.count, "DermaLarge" )
+            raftBuilder.drawItemRequirement( ScrW() / 2, ScrH() * 0.48 + i * 40, itemData.item.type, itemData.count, "DermaLarge" )
         end
     end
 end
@@ -79,8 +79,8 @@ function SWEP:WallPreview()
     localHitPos.z = 0
     localHitPos:Normalize()
 
-    localHitPos.x = math.Round(localHitPos.x)
-    localHitPos.y = math.Round(localHitPos.y)
+    localHitPos.x = math.Round( localHitPos.x )
+    localHitPos.y = math.Round( localHitPos.y )
     if math.abs( localHitPos.x ) == math.abs( localHitPos.y ) then
         return self.ghost:SetColor( GHOST_INVIS )
     end
@@ -146,7 +146,7 @@ function SWEP:GetAimEntity()
 end
 
 function SWEP:GetPlacementDirection()
-    local ent = self:GetAimEntity() 
+    local ent = self:GetAimEntity()
     if not ( ent and ent.IsRaft ) then return end
 
     if self.selectedClass == "raft_platform" or self.selectedClass == "raft_stairs" then
@@ -201,13 +201,13 @@ function SWEP:SecondaryAttack()
     nextSecondary = CurTime() + INPUT_DELAY
 
     self.radial:Open()
-    hook.Add("KeyRelease", "RVR_Raft_Builder_Release", function( player, key )
+    hook.Add( "KeyRelease", "RVR_Raft_Builder_Release", function( player, key )
         if key == IN_ATTACK2 then
             self.radial:RunSelected()
             self.radial:Close()
             hook.Remove( "KeyRelease", "RVR_Raft_Builder_Release" )
         end
-    end)
+    end )
 end
 
 local nextReload = 0

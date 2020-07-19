@@ -16,7 +16,7 @@ end
 function ENT:OnRemove()
    if self._removing then return end
    self._removing = true
-    
+
     local raft = self:GetRaft()
     local neighbors = raft:GetNeighbors( self )
 

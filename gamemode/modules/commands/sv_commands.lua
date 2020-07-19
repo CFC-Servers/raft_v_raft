@@ -37,17 +37,17 @@ commands.addType( "float", function( arg )
 end )
 
 local booleanValues = {
-    ["enabled"]  = true,
-    ["enable"]   = true,
-    ["true"]     = true,
-    ["yes"]      = true,
-    ["1"]        = true,
+    ["enabled"] = true,
+    ["enable"] = true,
+    ["true"] = true,
+    ["yes"] = true,
+    ["1"] = true,
 
     ["disabled"] = false,
-    ["disable"]  = false,
-    ["false"]    = false,
-    ["no"]       = false,
-    ["0"]        = false
+    ["disable"] = false,
+    ["false"] = false,
+    ["no"] = false,
+    ["0"] = false
 }
 
 commands.addType( "bool", function( arg )
@@ -314,7 +314,7 @@ local function initializeBaseCommands()
         for commandName, commandData in pairs( commands.commands ) do
             if plyUserGroup < commandData.userGroup then continue end
 
-            local description = commandName .. ":\n" ..  commandData.description .. "\n "
+            local description = commandName .. ":\n" .. commandData.description .. "\n "
 
             ply:PrintMessage( HUD_PRINTCONSOLE, description )
         end

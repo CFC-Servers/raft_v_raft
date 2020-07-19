@@ -39,7 +39,7 @@ function RVR.Util.getModelTexture( model, pos, ang )
     ent:Remove()
 
     local mat = CreateMaterial( "rvr_model_" .. model, "UnlitGeneric", {
-        ['$basetexture'] = texture,
+        ["$basetexture"] = texture,
         ["$translucent"] = 1,
         ["$vertexcolor"] = 1
     } )
