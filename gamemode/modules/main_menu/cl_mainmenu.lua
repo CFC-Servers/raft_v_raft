@@ -67,7 +67,7 @@ end )
 
 function mainMenu.showIn( delay )
     mainMenu.toShow = true
-    timer.Create( delay, function()
+    timer.Simple( delay, function()
         mainMenu.createMenu()
         mainMenu.toShow = false
     end )
