@@ -44,7 +44,9 @@ function mainMenu.createEntry( data )
     label:SetTall( fontHeight )
     label:SetPos( x, y - fontHeight - headerSpacing )
     label:SetMouseInputEnabled( true )
-    if tooltip then label:SetTooltip( tooltip ) end
+    if tooltip then
+        label:SetTooltip( tooltip )
+    end
 
     data.label = label
 
@@ -59,7 +61,9 @@ function mainMenu.createEntry( data )
     local entry = vgui.Create( entryClass, container )
     entry:SetPos( x + 10, y )
     entry:SetSize( entryW, entryH )
-    if tooltip then entry:SetTooltip( tooltip ) end
+    if tooltip then
+        entry:SetTooltip( tooltip )
+    end
 
     return entry
 end
@@ -332,4 +336,3 @@ function mainMenu.createPartyCreateMenu()
         mainMenu.awaitingReply = true
     end )
 end
-

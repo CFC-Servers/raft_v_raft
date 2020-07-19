@@ -69,5 +69,5 @@ config.PLAYER_MODELS = {
     "models/player/group02/male_02.mdl",
     "models/player/group02/male_04.mdl",
     "models/player/group02/male_06.mdl",
-    "models/player/group02/male_08.mdl",
+    "models/player/group02/male_08.mdl"
 }

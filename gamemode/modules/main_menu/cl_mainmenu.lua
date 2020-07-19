@@ -152,8 +152,13 @@ function mainMenu.setMenuPage( page, ... )
     end
 end
 
-local function lerpCol( a, b, l )
-    return Color( Lerp( l, a.r, b.r ), Lerp( l, a.g, b.g ), Lerp( l, a.b, b.b ), Lerp( l, a.a, b.a ) )
+local function lerpCol( fromCol, toCol, progress )
+    return Color(
+        Lerp( progress, fromCol.r, toCol.r ),
+        Lerp( progress, fromCol.g, toCol.g ),
+        Lerp( progress, fromCol.b, toCol.b ),
+        Lerp( progress, fromCol.a, toCol.a )
+    )
 end
 
 function mainMenu.createNormalButton( text, x, y, alignment, action )
