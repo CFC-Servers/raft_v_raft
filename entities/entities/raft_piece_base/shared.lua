@@ -55,7 +55,10 @@ function ENT:GetRequiredItems()
     for itemName, amount in pairs( GAMEMODE.Config.Rafts.BUILDING_REQUIREMENTS[self.ClassName]) do
         table.insert(
             requirements,
-            { item = RVR.Items.getItemData( itemName ), count = amount }
+            {
+                item = RVR.Items.getItemData( itemName ),
+                count = amount,
+            }
         )
     end
 
