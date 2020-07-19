@@ -10,11 +10,11 @@ net.Receive( "RVR_MainMenu_SetModel", function( len, ply )
     end
 
     ply:SetModel( model )
-    ply.PlayerModel = model
+    ply.RVR_PlayerModel = model
 end )
 
 net.Receive( "RVR_MainMenu_SpawnSelf", function( len, ply )
-    if not ply:Alive() then
+    if not ply:Alive() and hook.Run( "RVR_PlayerCanSpawn", ply ) ~= false then
         ply:Spawn()
     end
 end )
