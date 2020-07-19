@@ -6,9 +6,6 @@ SWEP.Author = "CFC Dev Team"
 SWEP.ViewModel = Model( "" )
 SWEP.WorldModel = Model( "" )
 
-SWEP.Slot = 1
-SWEP.SlotPos = 1
-
 SWEP.DrawAmmo = false
 SWEP.DrawCrosshair = false
 
@@ -39,4 +36,3 @@ end
 function SWEP:ShouldDropOnDie()
     return false
 end
-
