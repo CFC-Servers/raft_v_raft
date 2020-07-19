@@ -29,9 +29,7 @@ local stats = {
     }
 }
 
-function GM:HUDPaint()
-    hook.Run( "HUDDrawTargetID" )
-
+local function drawStats()
     local barHeight = ScrH() * 0.04
 
     local hudHeight = barHeight * #stats
@@ -70,6 +68,14 @@ function GM:HUDPaint()
         surface.SetDrawColor( Color( 255, 255, 255 ) )
         surface.SetMaterial( stat.material )
         surface.DrawTexturedRect( x + 8, barY + 2, barHeight - 5, barHeight - 5 )
+    end
+end
+
+function GM:HUDPaint()
+    hook.Run( "HUDDrawTargetID" )
+
+    if hook.Run( "HUDShouldDraw", "RVR_Stats" ) then
+        drawStats()
     end
 
     hook.Run( "DrawDeathNotice", 0.85, 0.04 )

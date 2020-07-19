@@ -25,6 +25,16 @@ hook.Add( "RVR_Party_PartyChanged", "RVR_Party_Menu", function( id, data )
     timer.Simple( 0.2, party.reloadMenu )
 end )
 
+hook.Add( "Think", "RVR_Party_Show", function()
+    if not party.menu then return end
+
+    local shouldDraw = hook.Run( "HUDShouldDraw", "RVR_PartyMenu" ) and not gui.IsGameUIVisible()
+    if shouldDraw ~= party.menu.lastShouldDraw then
+        party.menu.lastShouldDraw = shouldDraw
+        party.menu:SetVisible( shouldDraw )
+    end
+end )
+
 function party.reloadMenu()
     if party.menu then
         party.menu:Remove()
