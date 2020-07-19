@@ -40,7 +40,7 @@ surface.CreateFont( "RVR_StartMenuTextEntry", {
 
 hook.Add( "HUDShouldDraw", "RVR_MainMenu_HideHud", function( hudType )
     if hudType == "CHudGMod" then return end
-    if mainMenu.frame or mainMenu.toShow then return false end
+    if mainMenu.frame or mainMenu.hideGui then return false end
 end )
 
 hook.Add( "HUDPaintBackground", "RVR_MainMenu", function()
@@ -66,10 +66,10 @@ hook.Add( "Initialize", "RVR_ShowMenu", function()
 end )
 
 function mainMenu.showIn( delay )
-    mainMenu.toShow = true
+    mainMenu.hideGui = true
     timer.Simple( delay, function()
         mainMenu.createMenu()
-        mainMenu.toShow = false
+        mainMenu.hideGui = false
     end )
 end
 
@@ -120,6 +120,11 @@ function mainMenu.closeMenu()
     if mainMenu.frame then
         mainMenu.frame:Remove()
         mainMenu.frame = nil
+
+        mainMenu.hideGui = true
+        timer.Simple( 0.1, function()
+            mainMenu.hideGui = false
+        end )
     end
 end
 
