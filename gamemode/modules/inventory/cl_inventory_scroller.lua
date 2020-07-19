@@ -56,7 +56,9 @@ function PANEL:SetupContent()
             end
 
             slot:SetLocationData( self.ent, index )
+
             local itemInfo = self.inventory.Inventory[index]
+
             if itemInfo then
                 slot:SetItemData( itemInfo.item, itemInfo.count )
             end

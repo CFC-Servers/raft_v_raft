@@ -5,9 +5,7 @@ function RVR.Commands.processArguments( argsStr, keepQuotes )
 
     local args = {}
     local str = ""
-
     local insideQuotes = false
-
     local i = 1
 
     while i <= string.len( argsStr ) do

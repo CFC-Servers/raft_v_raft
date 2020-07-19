@@ -23,8 +23,9 @@ net.Receive( "RVR_Inventory_OnPickup", function()
         itemData = itemData,
         count = count,
         startTime = CurTime(),
-        iconMat = Material( itemData.icon ),
+        iconMat = Material( itemData.icon )
     } )
+
     popupOffset = popupOffset - popupHeight - popupSpacing
 end )
 
@@ -38,8 +39,10 @@ function inv.drawPickupPopup( popup, x, y, w, h, alpha )
     local textW = h * 1.1
     surface.SetFont( "RVR_CraftingSubHeader" )
     surface.SetTextColor( brown.r, brown.g, brown.b, alpha )
+
     local text = "+" .. popup.count
     local tw, th = surface.GetTextSize( text )
+
     surface.SetTextPos( x + ( textW - tw ) * 0.5, y + ( h - th ) * 0.5 )
     surface.DrawText( text )
 
@@ -49,12 +52,14 @@ function inv.drawPickupPopup( popup, x, y, w, h, alpha )
     surface.DrawTexturedRect( iconX, iconY, iconSize, iconSize )
 
     local padding = 5
+
     surface.SetMaterial( popup.iconMat )
     surface.DrawTexturedRect( iconX + padding, iconY + padding, iconSize - padding * 2, iconSize - padding * 2 )
 
     local nameText = popup.itemData.displayName
     local _, nameTh = surface.GetTextSize( nameText )
     local nameX = x + textW + iconSize + 10
+
     surface.SetTextPos( nameX, y + ( h - nameTh ) * 0.5 )
     surface.DrawText( nameText )
 
@@ -66,6 +71,7 @@ hook.Add( "HUDPaint", "RVR_Inventory_OnPickup", function()
     local x = ScrW() - popupWidth
 
     local cTime = CurTime()
+
     if prevTime == 0 then
         prevTime = cTime
     end

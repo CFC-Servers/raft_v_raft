@@ -26,3 +26,7 @@ Creates a simple table for an item instance, currently just `{ type = itemType }
 - `water` - (int) Water value of this item, requires consumable
 - `health` - (int) Health value of this item, requires consumable
 - `onConsume` - (function) What do when consume
+- `hasDurability` - (bool) Does this item have durability, if defined, `maxDurability` and `durabilityUse` are also required
+- `maxDurability` - (int) Maximum durability, default for item spawn
+- `durabilityUse` - (int) How much durability to use when `wep:LoseDurability()` is used
+- `durabilityUseRandomRange` - (int) Optional random addition to durabilityUse on damage, by adding random between `-range/2` and `range`

@@ -1,8 +1,9 @@
 local configDir = GM.FolderName .. "/gamemode/config/"
-local files, _ = file.Find( configDir .. "*", "LUA" )
+local documents, _ = file.Find( configDir .. "*", "LUA" )
 
-for _, file in pairs( files ) do
-    local path = configDir .. file
+for _, document in pairs( documents ) do
+    local path = configDir .. document
+
     AddCSLuaFile( path )
     include( path )
 end
