@@ -2,6 +2,7 @@ GM.Config = GM.Config or {}
 GM.Config.Generic = GM.Config.Generic or {}
 
 local config = GM.Config.Generic
+config.DEFAULT_PLAYER_MODEL = "models/player/odessa.mdl"
 
 config.PLAYER_MODELS = {
     "models/player/odessa.mdl",
