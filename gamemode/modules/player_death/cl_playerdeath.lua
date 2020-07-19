@@ -74,6 +74,7 @@ end )
 
 hook.Add( "HUDPaintBackground", "RVR_PlayerDeathScreen", function()
     if LocalPlayer():Alive() then return end
+    if not hook.Run( "HUDShouldDraw", "RVR_DeathTint" ) then return end
     surface.SetDrawColor( 255, 0, 0, 70 )
     surface.DrawRect( 0, 0, ScrW(), ScrH() )
 end )

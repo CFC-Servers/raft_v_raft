@@ -1,5 +1,15 @@
-RVR.PlayerDeath = RVR.PlayerDeath or {}
-local death = RVR.PlayerDeath
+hook.Add( "InitPostEntity", "RVR_FindWaterLevel", function()
+    local surfaces = game.GetWorld():GetBrushSurfaces()
+
+    RVR.waterSurfaceZ = -1
+
+    for _, surfaceData in pairs( surfaces ) do
+        if surfaceData:IsWater() then
+            RVR.waterSurfaceZ = surfaceData:GetVertices()[1].z
+            break
+        end
+    end
+end )
 
 util.AddNetworkString( "RVR_PlayerDeath" )
 util.AddNetworkString( "RVR_SuccessfulPlayerSpawn" )

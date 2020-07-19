@@ -3,20 +3,6 @@ AddCSLuaFile( "shared.lua" )
 
 include( "shared.lua" )
 
-hook.Add( "InitPostEntity", "RVR_FindWaterLevel", function()
-    local trace = util.TraceLine( {
-        start = Vector( 0, 0, 10000 ),
-        endpos = Vector( 0, 0, -10000000000 ),
-        mask = MASK_WATER,
-    } )
-
-    if trace.Hit then
-        RVR.waterSurfaceZ = trace.HitPos.z
-    else
-        RVR.waterSurfaceZ = 0
-    end
-end )
-
 function ENT:Initialize()
     self.BaseClass.Initialize( self )
 
