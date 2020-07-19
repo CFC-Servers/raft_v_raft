@@ -35,9 +35,8 @@ function SWEP:SecondaryAttack()
     if not cmd:KeyDown( IN_ATTACK2 ) then return end
 
     self.Zoomed = not self.Zoomed
-    self:SetZoom( self.Zoomed )
-    print( self.Zoomed )
 
+    self:SetZoom( self.Zoomed )
     self:SetNextSecondaryFire( CurTime() + 0.3 )
 end
 
