@@ -48,12 +48,7 @@ function inv.openPlayerInventory( inventory )
     local eSlotYMult = 0.19
     local eSlotYSpacing = 0.25
 
-    local iconNames = {
-        "hat",
-        "shirt",
-        "pants"
-    }
-
+    local iconNames = { "hat", "shirt", "pants" }
     local slotSize = invScroller:GetSlotSize()
     local equipMult = 1.08
 
