@@ -1,9 +1,6 @@
 SWEP.PrintName = "<held_item>"
 SWEP.Author = "CFC Dev Team"
 
-SWEP.ViewModel = ""
-SWEP.WorldModel = ""
-
 SWEP.Primary.ClipSize = -1
 SWEP.Primary.DefaultClip = -1
 SWEP.Primary.Automatic = true
