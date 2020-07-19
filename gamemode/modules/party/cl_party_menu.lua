@@ -38,6 +38,7 @@ end )
 function party.reloadMenu()
     if party.menu then
         party.menu:Remove()
+        party.menu = nil
     end
 
     local partyData = LocalPlayer():GetParty()
