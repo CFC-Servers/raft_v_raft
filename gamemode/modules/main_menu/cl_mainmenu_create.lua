@@ -7,12 +7,14 @@ local textEntryBgShort = Material( "rvr/backgrounds/mainmenu_textbackground_shor
 mainMenu.backgrounds = mainMenu.backgrounds or {}
 mainMenu.backgrounds[mainMenu.MENU_CREATE] = Material( "rvr/backgrounds/mainmenu_create.png" )
 
+
+local fontHeight = ScrH() * 0.04
+
 function mainMenu.createEntry( data )
     data.action = function( val )
         data.tab[data.name] = val
     end
 
-    local fontHeight = ScrH() * 0.04
     local defaultEntrySpacingMult = 0.13
 
     local text = data.text
@@ -122,7 +124,7 @@ function mainMenu.createTextEntry( data )
 
         surface.SetDrawColor( 255, 255, 255 )
         surface.SetMaterial( data.short and textEntryBgShort or textEntryBg )
-        surface.DrawTexturedRect( -extraX, -extraY, _w + extraX * 2, _h + extraY * 5 )
+        surface.DrawTexturedRect( -extraX, -extraY, _w + extraX * 2, _h + extraY * 2 )
 
         DisableClipping( false )
 
@@ -237,7 +239,7 @@ end
 local joinModeLookup = {
     ["PUBLIC"] = 0,
     ["STEAM FRIENDS"] = 1,
-    ["PRIVATE"] = 2,
+    ["PRIVATE"] = 2
 }
 
 function mainMenu.createPartyCreateMenu()
@@ -289,12 +291,13 @@ function mainMenu.createPartyCreateMenu()
 
     mainMenu.awaitingReply = false
 
-    mainMenu.createNormalButton( "BACK", 50, mainMenu.h - 40 - ScrH() * 0.04, TEXT_ALIGN_LEFT, function()
+    mainMenu.createNormalButton( "BACK", 50, mainMenu.h - 40 - fontHeight, TEXT_ALIGN_LEFT, function()
         if mainMenu.awaitingReply then return end
         mainMenu.setMenuPage( mainMenu.MENU_START )
     end )
 
-    mainMenu.createNormalButton( "CREATE", mainMenu.w - 50, mainMenu.h - 40 - ScrH() * 0.04, TEXT_ALIGN_RIGHT, function()
+    local createBtnX, createBtnY = mainMenu.w - 50, mainMenu.h - 40 - fontHeight
+    mainMenu.createNormalButton( "CREATE", createBtnX, createBtnY, TEXT_ALIGN_RIGHT, function()
         if mainMenu.awaitingReply then return end
         local joinMode = joinModeLookup[partyData.joinModeStr]
         -- Color picker returns color without meta table, this packs it back up
