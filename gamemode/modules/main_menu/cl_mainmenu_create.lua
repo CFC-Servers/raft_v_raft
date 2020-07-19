@@ -12,16 +12,19 @@ function mainMenu.createEntry( data )
         data.tab[data.name] = val
     end
 
+    local fontHeight = ScrH() * 0.04
+    local defaultEntrySpacingMult = 0.13
+
     local text = data.text
     local entryW = data.entryWidth
     local tooltip = data.tooltip
     local entryClass = data.entryType
-    local entryH = data.entryHeight or ScrH() * 0.04
+    local entryH = data.entryHeight or fontHeight
 
     local x = data.x or 100
     local y = data.y
     if not y then
-        mainMenu.entryY = mainMenu.entryY + 0.13 * mainMenu.h
+        mainMenu.entryY = mainMenu.entryY + defaultEntrySpacingMult * mainMenu.h
         y = mainMenu.entryY
     end
 
@@ -38,8 +41,8 @@ function mainMenu.createEntry( data )
     label:SetText( text )
     label:SetTextColor( mainMenu.darkerYellow )
     label:SizeToContentsX()
-    label:SetTall( ScrH() * 0.04 )
-    label:SetPos( x, y - ScrH() * 0.04 - headerSpacing )
+    label:SetTall( fontHeight )
+    label:SetPos( x, y - fontHeight - headerSpacing )
     label:SetMouseInputEnabled( true )
     if tooltip then label:SetTooltip( tooltip ) end
 
@@ -62,18 +65,20 @@ function mainMenu.createEntry( data )
 end
 
 function mainMenu.createErrorLabel( name, x, y, centered )
+    local errLabelDisplayTime = 3
+
     local errorLabel = vgui.Create( "DLabel", mainMenu.container )
     errorLabel:SetTextColor( Color( 255, 0, 0, 0 ) )
     errorLabel:SetFont( "RVR_StartMenuSmall" )
     errorLabel:SetText( "" )
-    errorLabel:SetTall( ScrH() * 0.04 )
+    errorLabel:SetTall( fontHeight )
     errorLabel:SetPos( x, y )
     errorLabel.animProg = 0
 
     function errorLabel:SetError( err )
         self:SetText( err )
         self:SizeToContentsX()
-        self.animProg = 4
+        self.animProg = errLabelDisplayTime + 1 -- 1 for duration of fade animation
     end
 
     function errorLabel:Think()
@@ -88,8 +93,8 @@ function mainMenu.createErrorLabel( name, x, y, centered )
     if centered then
         function errorLabel:PerformLayout()
             local _w = self:GetWide()
-            local _, y = self:GetPos()
-            self:SetPos( x - _w * 0.5, y )
+            local _, _y = self:GetPos()
+            self:SetPos( x - _w * 0.5, _y )
         end
     end
 
@@ -106,12 +111,14 @@ function mainMenu.createTextEntry( data )
     textEntry:SetFont( "RVR_StartMenuTextEntry" )
     textEntry:SetTextColor( mainMenu.darkBrown )
 
+    local extraX, extraY = 10, 5
+
     function textEntry:Paint( _w, _h )
         DisableClipping( true )
 
         surface.SetDrawColor( 255, 255, 255 )
         surface.SetMaterial( data.short and textEntryBgShort or textEntryBg )
-        surface.DrawTexturedRect( -10, -5, _w + 20, _h + 10 )
+        surface.DrawTexturedRect( -extraX, -extraY, _w + extraX * 2, _h + extraY * 5 )
 
         DisableClipping( false )
 
