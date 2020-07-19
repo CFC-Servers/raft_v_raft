@@ -1,11 +1,10 @@
 local raftMeta = {}
 raftMeta.__index = raftMeta
-RVR.raftsList = {}
 
 function raftMeta:AddPiece( position, ent )
     ent:SetRaftGridPosition( position )
     self.pieces[ent:EntIndex()] = ent
-    self.grid[self.vectorIndex( position )] = ent:EntIndex()
+    self.grid[self.vectorIndex( position )] = ent
 
     net.Start("RVR_Raft_NewRaftPiece")
         net.WriteInt( self.id, 32 )
@@ -21,15 +20,17 @@ function raftMeta:RemovePiece( ent )
 end
 
 function raftMeta:GetPiece( position )
-    local index = self.grid[self.vectorIndex( position )]
-    if not index then return end
+    local ent = self.grid[self.vectorIndex( position )]
+    if not ent then return end
 
-    local ent = self.pieces[index]
+    local index = ent:EntIndex()
 
-    if not IsValid( ent ) then
+    if not IsValid( ent ) or not self.pieces[index] then
         self.pieces[index] = nil
+        self.grid[self.vectorIndex( position )] = nil
         return
     end
+
     return ent
 end
 
@@ -40,9 +41,12 @@ function raftMeta:GetNeighbors( piece )
         for y=-1, 1 do
             for z=-1, 1 do
                 local dir = Vector( x, y, z )
-                if dir:IsZero() then
+                if not dir:IsZero() then
                     local pos = self:GetPosition( piece ) + dir
-                    table.insert( neighbors, self:GetPiece( pos ) )
+                    local piece = self:GetPiece( pos )
+                    if IsValid( piece ) then 
+                        table.insert( neighbors, piece) 
+                    end 
                 end
             end
         end
@@ -151,7 +155,7 @@ if CLIENT then
             if not IsValid( ent ) then return end
 
             raft.pieces[entindex] = ent
-            raft.grid[raft.vectorIndex( position )] = entindex
+            raft.grid[raft.vectorIndex( position )] = ent
          end)
     end)
 

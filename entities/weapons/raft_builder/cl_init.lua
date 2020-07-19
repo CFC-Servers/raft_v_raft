@@ -146,8 +146,7 @@ function SWEP:GetAimEntity()
 end
 
 function SWEP:GetPlacementDirection()
-    local ent = self:GetAimEntity()
-    if not ent then return end
+    local ent = self:GetAimEntity() 
     if not ( ent and ent.IsRaft ) then return end
 
     if self.selectedClass == "raft_platform" or self.selectedClass == "raft_stairs" then

@@ -10,6 +10,7 @@ function ENT:ShouldExist()
 
     if not supportingPiece then return false end
     if supportingPiece._removing then return false end
+    
     local className = supportingPiece:GetClass()
 
     if className == "raft_foundation" then return true end
