@@ -1,16 +1,18 @@
+local L = RVR.Localization.Localize
+
 local function giveItem( caller, target, item, count )
     if count < 1 then
-        return "Cannot give less than 1 item, what are you expecting to happen?"
+        return L "cantGiveLessThanOne"
     end
 
     local success, amount = RVR.Inventory.attemptPickupItem( target, item, count )
     if success then return end
 
     if amount == 0 then
-        return "No space in inventory"
+        return L "noSpaceInInventory"
     end
 
-    return "Only able to fit " .. amount .. " of " .. count .. " items in inventory."
+    return L( "canOnlyFitAmount", amount, count )
 end
 
 local function giveSingle( caller, target, item )
@@ -25,7 +27,7 @@ hook.Add( "RVR_ModulesLoaded", "RVR_Inventory_AddCommands", function()
             local itemInstance = RVR.Inventory.getSelectedItem( caller )
             
             if not itemInstance then
-                return nil, "Not holding an item"
+                return nil, L "notHoldingItem"
             end
 
             str = itemInstance.type
@@ -34,7 +36,7 @@ hook.Add( "RVR_ModulesLoaded", "RVR_Inventory_AddCommands", function()
         local itemData = RVR.Items.getItemData( str )
 
         if not itemData then
-            return nil, "Item " .. str .. " does not exist"
+            return nil, L( "itemDoesNotExist", str )
         end
 
         return itemData
