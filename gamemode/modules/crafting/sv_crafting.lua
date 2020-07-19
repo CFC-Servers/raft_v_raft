@@ -21,6 +21,7 @@ net.Receive( "RVR_Crafting_Grab", function( len, ply )
     local state = cft.STATE_WAITING
 
     local output = ent.RVR_Crafting.output
+
     if output then
         if CurTime() >= output.timeStart + output.recipe.timeToCraft then
             local recipe = output.recipe
@@ -73,7 +74,7 @@ function cft.craft( ply, ent, recipe )
 
     ent.RVR_Crafting.output = {
         recipe = recipe,
-        timeStart = CurTime(),
+        timeStart = CurTime()
     }
 
     net.Start( "RVR_Crafting_CraftResponse" )
@@ -99,8 +100,8 @@ function cft.openMenu( ply, ent )
         else
             craftData.state = cft.STATE_CRAFTING
         end
-        craftData.timeStart = output.timeStart
 
+        craftData.timeStart = output.timeStart
         craftData.categoryID = recipe.categoryID
         craftData.recipeID = recipe.recipeID
     end
@@ -121,7 +122,7 @@ function cft.makeCrafter( ent, name, tier, crafterType )
     ent.RVR_Crafting = {
         tier = tier,
         name = name,
-        type = crafterType or "normal",
+        type = crafterType or "normal"
     }
 end
 

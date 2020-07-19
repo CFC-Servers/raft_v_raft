@@ -41,19 +41,19 @@ end
 surface.CreateFont( "RVR_CraftingHeader", {
     font = "Bungee Regular",
     size = ScrH() * 0.12,
-    weight = 700,
+    weight = 700
 } )
 
 surface.CreateFont( "RVR_CraftingSubHeader", {
     font = "Bungee Regular",
     size = ScrH() * 0.08,
-    weight = 700,
+    weight = 700
 } )
 
 surface.CreateFont( "RVR_CraftingLabel", {
     font = "Bungee Regular",
     size = ScrH() * 0.07,
-    weight = 700,
+    weight = 700
 } )
 
 function cft.openCraftingMenu( craftingData )
@@ -67,12 +67,13 @@ function cft.openCraftingMenu( craftingData )
         for _, category in pairs( categories ) do
             categoryMats[category.name] = Material( category.icon )
         end
+
         categoryMatsLoaded = true
     end
 
     cft.craftingData = {
         state = craftingData.state,
-        ent = craftingData.ent,
+        ent = craftingData.ent
     }
 
     if craftingData.state ~= cft.STATE_WAITING then
@@ -95,6 +96,7 @@ function cft.openCraftingMenu( craftingData )
     frame:ShowCloseButton( false )
     frame:SetSize( w, h )
     frame:CenterHorizontal()
+
     local x = frame:GetPos()
     frame:SetPos( x, 0.3 * ( ScrH() - h ) )
     frame:SetDraggable( false )
@@ -151,6 +153,7 @@ function cft.openCraftingMenu( craftingData )
     local upButton = vgui.Create( "DImageButton", frame )
     upButton:SetPos( left, padding - w * 0.025 + 1 )
     upButton:SetSize( scrollerWidth, w * 0.025 )
+
     function upButton:Paint( _w, _h )
         surface.SetMaterial( scrollerButtonMat )
         surface.SetDrawColor( Color( 255, 255, 255 ) )
@@ -230,9 +233,7 @@ function cft.openCraftingMenu( craftingData )
     cft.categoryDerma.categoryContent = categoryContent
 
     cft.setCategory( firstCat )
-
     cft.createGrabButton( frame )
-
     cft.updateCraftingHammers()
 end
 
@@ -386,9 +387,11 @@ function cft.setCategory( category )
 
         local itemLabel = vgui.Create( "DLabel", header )
         local text = itemData.displayName
+
         if recipe.count > 1 then
             text = text .. " (" .. recipe.count .. ")"
         end
+
         itemLabel:SetText( text )
         itemLabel:SetFont( "RVR_BoxInventoryHeader" )
         itemLabel:SizeToContents()
@@ -452,6 +455,7 @@ function cft.populateRecipePanel( panel, recipe )
 
     local keys = table.GetKeys( recipe.ingredients )
     table.sort( keys )
+
     for k, ingredient in pairs( keys ) do
         local count = recipe.ingredients[ingredient]
 
@@ -520,12 +524,11 @@ function cft.populateRecipePanel( panel, recipe )
 
     function ingredientContainer:PerformLayout()
         local h = panel:GetTall()
+
         self:SetTall( h * 0.58 )
         self:SetPos( 0, h * 0.22 )
-
         self:SizeToChildren( true, false )
         self:SetWide( self:GetWide() + 10 ) -- Account for right margin >:(
-
         self:CenterHorizontal()
     end
 
@@ -534,10 +537,8 @@ end
 
 function cft.createCraftButton( panel, recipe )
     local canCraft
-
     local tooltip
     local btnColor
-
     local isSelf = cft.craftingData.recipe == recipe
 
     if cft.craftingData.state == cft.STATE_WAITING then
@@ -577,6 +578,7 @@ function cft.createCraftButton( panel, recipe )
     if panel.timeLabel then panel.timeLabel:Remove() end
 
     local craftButton = vgui.Create( "DImage", panel )
+
     if isSelf and ( cft.craftingData.state == cft.STATE_CRAFTED or cft.craftingData.state == cft.STATE_GRAB_REQUEST ) then
         craftButton:SetImage( "rvr/icons/craftingmenu_grabbutton.png" )
     else
@@ -584,10 +586,12 @@ function cft.createCraftButton( panel, recipe )
     end
 
     craftButton:SetCursor( canCraft and "hand" or "no" )
+
     if not canCraft then
         craftButton:SetTooltip( tooltip )
         craftButton:SetImageColor( btnColor )
     end
+
     craftButton:SetMouseInputEnabled( true )
 
     panel.craftButton = craftButton
@@ -642,6 +646,7 @@ function cft.createCraftButton( panel, recipe )
 
     function timeLabel:PerformLayout()
         self:SetTall( craftButton:GetTall() )
+
         local w, h = panel:GetSize()
         self:SetPos( w - craftButton:GetWide() - 5 - self:GetWide(), h - self:GetTall() - 5 )
     end
@@ -666,7 +671,6 @@ function cft.createGrabButton( frame )
     end
 
     local w, h = frame:GetSize()
-
     local state = cft.craftingData.state
     local recipe = cft.craftingData.recipe
 
@@ -681,6 +685,7 @@ function cft.createGrabButton( frame )
     grabButton:SetImage( "rvr/icons/craftingmenu_biggrabbutton.png" )
     grabButton:SetMouseInputEnabled( true )
     grabButton:SetCursor( canGrab and "hand" or "no" )
+
     if not canGrab then
         if state == cft.STATE_CRAFTED then
             grabButton:SetImageColor( Color( 255, 150, 150 ) )
@@ -689,6 +694,7 @@ function cft.createGrabButton( frame )
             grabButton:SetImageColor( Color( 150, 150, 150 ) )
         end
     end
+
     grabButton:SetPos( w * 0.16, h * 0.885 )
     grabButton:SetWide( w * 0.81 )
 

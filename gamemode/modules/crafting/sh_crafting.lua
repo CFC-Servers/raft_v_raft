@@ -12,6 +12,7 @@ hook.Add( "PreGamemodeLoaded", "RVR_Crafting_AddRecipes", function()
 
     for catID, category in ipairs( GAMEMODE.Config.Crafting.RECIPES ) do
         local minRecipeTier = 1000
+
         for recipeID, recipe in pairs( category.recipes ) do
             recipe.tier = recipe.tier or 1
             if recipe.tier < minRecipeTier then
@@ -27,32 +28,33 @@ hook.Add( "PreGamemodeLoaded", "RVR_Crafting_AddRecipes", function()
                     item = {
                         type = name
                     },
-                    count = count,
+                    count = count
                 } )
             end
 
             recipe.count = recipe.count or 1
         end
+
         category.categoryID = catID
-
         category.crafterType = category.crafterType or "normal"
-
         category.minTier = minRecipeTier == 1000 and 1 or minRecipeTier
     end
 end )
 
 function cft.addCategory( name, icon, crafterType, index )
     local categories = GAMEMODE.Config.Crafting.RECIPES
+
     table.insert( categories, index or #categories, {
         name = name,
         icon = icon,
         crafterType = crafterType,
-        recipes = {},
+        recipes = {}
     } )
 end
 
 function cft.addRecipe( categoryName, item, count, ingredients, timeToCraft, tier )
     local category
+
     for k, v in pairs( GAMEMODE.Config.Crafting.RECIPES ) do
         if v.name == categoryName then
             category = v
@@ -68,6 +70,6 @@ function cft.addRecipe( categoryName, item, count, ingredients, timeToCraft, tie
         count = count or 1,
         ingredients = ingredients,
         tier = tier,
-        timeToCraft = timeToCraft,
+        timeToCraft = timeToCraft
     } )
 end

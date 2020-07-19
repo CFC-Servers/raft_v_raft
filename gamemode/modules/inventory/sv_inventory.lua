@@ -18,7 +18,7 @@ function inv.setupPlayer( ply )
         CursorSlot = nil,
         HeadGear = nil,
         BodyGear = nil,
-        FootGear = nil,
+        FootGear = nil
     }
 end
 
@@ -113,6 +113,7 @@ function inv.setSlot( ent, position, itemData, plysToNotify )
         else
             typeChanged = tobool( itemData ) ~= tobool( inventory.Inventory[position] )
         end
+
         inventory.Inventory[position] = itemData
     elseif isPlayer and position > inventory.MaxSlots and position < inventory.MaxSlots + 3 then
         if position == inventory.MaxSlots + 1 then
@@ -198,9 +199,11 @@ function inv.slotCanContain( ent, position, item )
         if position == ent.RVR_Inventory.MaxSlots + 1 then
             return tobool( itemData.isHeadGear )
         end
+
         if position == ent.RVR_Inventory.MaxSlots + 2 then
             return tobool( itemData.isBodyGear )
         end
+
         if position == ent.RVR_Inventory.MaxSlots + 3 then
             return tobool( itemData.isFootGear )
         end
@@ -284,6 +287,25 @@ function inv.getSelectedItem( ply )
     return itemData.item, itemData.count
 end
 
+local function addDurabilityFuncs( wep, instance, itemData )
+    function wep:LoseDurability()
+        local halfRange = ( itemData.durabilityUseRandomRange or 0 ) * 0.5
+        local damage = itemData.durabilityUse + math.random( -halfRange, halfRange )
+
+        instance.durability = math.Clamp( instance.durability - damage, 0, itemData.maxDurability )
+
+        local ply = self.Owner
+        local hotbarSelected = ply.RVR_Inventory.HotbarSelected
+
+        if instance.durability <= 0 then
+            inv.consumeInSlot( ply, hotbarSelected, 1 )
+        else
+            local slotData = inv.getSlot( ply, hotbarSelected )
+            inv.notifyItemSlotChange( { ply }, ply, hotbarSelected, slotData )
+        end
+    end
+end
+
 function inv.setSelectedItem( ply, idx )
     local config = GAMEMODE.Config.Inventory
     if not ply.RVR_Inventory then return end
@@ -298,11 +320,16 @@ function inv.setSelectedItem( ply, idx )
     local itemSlotData = ply.RVR_Inventory.Inventory[idx]
 
     local wep
+
     if itemSlotData then
         local itemData = RVR.Items.getItemData( itemSlotData.item.type )
 
         if itemData.swep then
             wep = ply:Give( itemData.swep )
+
+            if itemData.hasDurability then
+                addDurabilityFuncs( wep, itemSlotData.item, itemData )
+            end
         else
             wep = ply:Give( "rvr_held_item" )
             wep:SetItemData( itemData )
@@ -322,9 +349,11 @@ function inv.moveItem( fromEnt, toEnt, fromPosition, toPosition, count )
     count = count or -1
 
     local plys = {}
+
     if type( fromEnt ) == "Player" then
         table.insert( plys, fromEnt )
     end
+
     if type( toEnt ) == "Player" then
         table.insert( plys, toEnt )
     end
@@ -350,6 +379,7 @@ function inv.moveItem( fromEnt, toEnt, fromPosition, toPosition, count )
     end
 
     local toItem = inv.getSlot( toEnt, toPosition )
+
     if toItem then
         if not inv.canItemsStack( fromItem.item, toItem.item ) then
             -- Item swapping - Only allow if count is all items
@@ -422,8 +452,9 @@ function inv.dropItem( ply, position, count )
 
     local droppedItem = ents.Create( "rvr_dropped_item" )
     if not IsValid( droppedItem ) then return end
+
     droppedItem:SetPos( ply:GetShootPos() + Angle( 0, ply:EyeAngles().yaw, 0 ):Forward() * 20 )
-    droppedItem:Setup( RVR.Items.getItemData( itemData.item.type ), count )
+    droppedItem:Setup( itemData.item, count )
     droppedItem:Spawn()
 
     return droppedItem
