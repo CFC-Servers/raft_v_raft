@@ -1,12 +1,19 @@
 SWEP.PrintName = "<held_item>"
+SWEP.Author = "CFC Dev Team"
+
+SWEP.ViewModel = ""
+SWEP.WorldModel = ""
+
 SWEP.Primary.ClipSize = -1
 SWEP.Primary.DefaultClip = -1
 SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "None"
+
 SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.DefaultClip = -1
 SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = "None"
+
 SWEP.BobScale = 0.1
 SWEP.SwayScale = 0
 SWEP.DrawAmmo = false
@@ -105,4 +112,7 @@ function SWEP:PrimaryAttack()
             self.consumeAnimStart = nil
         end )
     end
+end
+
+function SWEP:SecondaryAttack()
 end
