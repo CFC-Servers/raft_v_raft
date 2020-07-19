@@ -295,7 +295,8 @@ net.Receive( "RVR_Party_createParty", function( len, ply )
 
     if joinMode > 2 then return end
 
-    local success, err, errType = party.createParty( name, ply, tag, color, joinMode )
+    local partyID, err, errType = party.createParty( name, ply, tag, color, joinMode )
+    local success = partyID ~= nil
     errType = errType or "generic"
 
     net.Start( "RVR_Party_createParty" )

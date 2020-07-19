@@ -40,7 +40,7 @@ surface.CreateFont( "RVR_StartMenuTextEntry", {
 
 hook.Add( "HUDShouldDraw", "RVR_MainMenu_HideHud", function( hudType )
     if hudType == "CHudGMod" then return end
-    if mainMenu.frame then return false end
+    if mainMenu.frame or mainMenu.toShow then return false end
 end )
 
 hook.Add( "HUDPaintBackground", "RVR_MainMenu", function()
@@ -54,6 +54,24 @@ hook.Add( "HUDPaintBackground", "RVR_MainMenu", function()
         w = _w, h = _h,
     } )
 end )
+
+hook.Add( "RVR_PlayerDeath", "RVR_ShowMenu", function( ply )
+    if ply ~= LocalPlayer() then return end
+    if ply:GetPartyID() then return end
+    mainMenu.showIn( 1 )
+end )
+
+hook.Add( "Initialize", "RVR_ShowMenu", function()
+    mainMenu.createMenu()
+end )
+
+function mainMenu.showIn( delay )
+    mainMenu.toShow = true
+    timer.Create( delay, function()
+        mainMenu.createMenu()
+        mainMenu.toShow = false
+    end )
+end
 
 function mainMenu.createMenu()
     if mainMenu.frame then
