@@ -8,6 +8,12 @@ net.Receive( "RVR_SuccessfulPlayerSpawn", function()
     hook.Run( "RVR_SuccessfulPlayerSpawn", net.ReadEntity() )
 end )
 
+hook.Add( "HUDShouldDraw", "RVR_HideDeathTint", function( hudType )
+    if hudType == "CHudDamageIndicator" then
+        return false
+    end
+end )
+
 hook.Add( "RVR_Inventory_HotbarCanScroll", "RVR_PlayerDeath", function()
     if not LocalPlayer():Alive() then return false end
 end )
