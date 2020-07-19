@@ -32,6 +32,24 @@ function ENT:Initialize()
     end
 end
 
+function ENT:Think()
+    local phys = self:GetPhysicsObject()
+
+    local entAng = phys:GetAngles()
+    local forward = Vector( 1, 0, 0 ):Angle()
+
+    local p = math.rad( math.AngleDifference( entAng.p, forward.p ) )
+    local y = 0
+    local r = math.rad( math.AngleDifference( entAng.r, forward.r ) )
+
+    local damp = 0.75
+    local strength = 100
+    local divAng = Vector( p, y, 0 )
+    divAng:Rotate( Angle( 0, -entAng.r, 0 ) )
+
+    phys:AddAngleVelocity( ( -Vector( r, divAng.x, divAng.y ) * strength ) - ( phys:GetAngleVelocity() * damp ) )
+end
+
 function ENT:OnRemove()
     if self.timerIdentifier then
         timer.Remove( self.timerIdentifier )
