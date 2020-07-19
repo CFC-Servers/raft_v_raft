@@ -245,6 +245,25 @@ function inv.getSelectedItem( ply )
     return itemData.item, itemData.count
 end
 
+local function addDurabilityFuncs( wep, instance, itemData )
+    function wep:LoseDurability()
+        local halfRange = ( itemData.durabilityUseRandomRange or 0 ) * 0.5
+        local damage = itemData.durabilityUse + math.random( -halfRange, halfRange )
+
+        instance.durability = math.Clamp( instance.durability - damage, 0, itemData.maxDurability )
+
+        local ply = self.Owner
+        local hotbarSelected = ply.RVR_Inventory.HotbarSelected
+
+        if instance.durability <= 0 then
+            inv.consumeInSlot( ply, hotbarSelected, 1 )
+        else
+            local slotData = inv.getSlot( ply, hotbarSelected )
+            inv.notifyItemSlotChange( { ply }, ply, hotbarSelected, slotData )
+        end
+    end
+end
+
 function inv.setSelectedItem( ply, idx )
     local config = GAMEMODE.Config.Inventory
     if not ply.RVR_Inventory then return end
@@ -265,6 +284,10 @@ function inv.setSelectedItem( ply, idx )
 
         if itemData.swep then
             wep = ply:Give( itemData.swep )
+
+            if itemData.hasDurability then
+                addDurabilityFuncs( wep, itemSlotData.item, itemData )
+            end
         else
             wep = ply:Give( "rvr_held_item" )
             wep:SetItemData( itemData )
@@ -385,7 +408,7 @@ function inv.dropItem( ply, position, count )
     if not IsValid( droppedItem ) then return end
 
     droppedItem:SetPos( ply:GetShootPos() + Angle( 0, ply:EyeAngles().yaw, 0 ):Forward() * 20 )
-    droppedItem:Setup( RVR.Items.getItemData( itemData.item.type ), count )
+    droppedItem:Setup( itemData.item, count )
     droppedItem:Spawn()
 
     return droppedItem

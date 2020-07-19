@@ -3,7 +3,9 @@ local function giveItem( caller, target, item, count )
         return "Cannot give less than 1 item, what are you expecting to happen?"
     end
 
-    local success, amount = RVR.Inventory.attemptPickupItem( target, item, count )
+    local instance = RVR.Items.getItemInstance( item.type )
+
+    local success, amount = RVR.Inventory.attemptPickupItem( target, instance, count )
     if success then return end
 
     if amount == 0 then
