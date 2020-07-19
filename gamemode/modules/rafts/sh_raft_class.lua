@@ -105,7 +105,7 @@ function RVR.newRaft( id )
 
     setmetatable( raft, raftMeta )
 
-    RVR.raftLookup[r.id] = raft
+    RVR.raftLookup[raft.id] = raft
     if not SERVER then return raft end
 
     net.Start( "RVR_Raft_NewRaft" )

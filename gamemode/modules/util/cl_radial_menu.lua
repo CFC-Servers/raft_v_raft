@@ -10,7 +10,7 @@ local function getCursorAng()
     return math.deg( math.atan2( y, x ) ) + 180
 end
 
-local function newPoint( centerX, centeryY, angle, radius )
+local function newPoint( centerX, centerY, angle, radius )
     local radians = math.rad( angle )
     return {
         x = centerX + math.sin( radians ) * radius,
