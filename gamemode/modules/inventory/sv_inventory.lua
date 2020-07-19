@@ -29,7 +29,7 @@ function inv.clearInventory( ent )
 
     ent.RVR_Inventory.Inventory = {}
 
-    if type( ent ) == "Player" then
+    if ent:IsPlayer() then
         ent.RVR_Inventory.CursorSlot = nil
         ent.RVR_Inventory.HeadGear = nil
         ent.RVR_Inventory.BodyGear = nil
@@ -46,7 +46,7 @@ function inv.isEmpty( ent )
 
     if not table.IsEmpty( entInv.Inventory ) then return false end
 
-    if type( ent ) == "Player" then
+    if ent:IsPlayer() then
         if entInv.CursorSlot or entInv.HeadGear or entInv.BodyGear or entInv.FootGear then
             return false
         end
