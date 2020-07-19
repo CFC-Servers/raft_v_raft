@@ -42,13 +42,12 @@ end
 
 function SWEP:SetZoom( state )
     local owner = self:GetOwner()
+    if not ( IsValid( owner ) and owner:IsPlayer() ) then return end
 
-    if IsValid( owner ) and owner:IsPlayer() then
-        if state then
-            owner:SetFOV( 20, 0.3 )
-        else
-            owner:SetFOV( 0, 0.2 )
-        end
+    if state then
+        owner:SetFOV( 20, 0.3 )
+    else
+        owner:SetFOV( 0, 0.2 )
     end
 end
 
