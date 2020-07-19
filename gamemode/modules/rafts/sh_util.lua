@@ -12,5 +12,5 @@ function RVR.getSizeFromDirection( ent, dir )
 
     local _, size = getFirstNonZero( { vec.x, vec.y, vec.z } )
 
-    return math.abs( size or  0 )
+    return math.abs( size or 0 )
 end

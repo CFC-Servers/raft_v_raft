@@ -41,6 +41,7 @@ function raftMeta:GetNeighbors( piece )
         for y = -1, 1 do
             for z = -1, 1 do
                 local dir = Vector( x, y, z )
+
                 if not dir:IsZero() then
                     local pos = self:GetPosition( piece ) + dir
                     local piece = self:GetPiece( pos )
@@ -95,23 +96,23 @@ RVR.raftLookup = RVR.raftLookup or {}
 function RVR.newRaft( id )
     lastid = lastid + 1
 
-    local r = {
+    local raft = {
         pieces = {},
         owners = {},
         grid = {},
         id = id or lastid,
     }
 
-    setmetatable( r, raftMeta )
+    setmetatable( raft, raftMeta )
 
-    RVR.raftLookup[r.id] = r
-    if not SERVER then return r end
+    RVR.raftLookup[r.id] = raft
+    if not SERVER then return raft end
 
     net.Start( "RVR_Raft_NewRaft" )
-        net.WriteInt( r.id, 32 )
+        net.WriteInt( raft.id, 32 )
     net.Broadcast()
 
-    return r
+    return raft
 end
 
 
@@ -148,7 +149,7 @@ if CLIENT then
         local raftid = net.ReadInt( 32 )
         local entindex = net.ReadInt( 32 )
         local position = net.ReadVector()
-        timer.Simple( 0.1, function()
+        timer.Simple( 0.1, function() -- entity is not created when net message arrives
             local ent = Entity( entindex )
             local raft = RVR.raftLookup[raftid]
 

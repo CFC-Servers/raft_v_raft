@@ -130,7 +130,6 @@ function SWEP:PiecePreview()
     -- update ghost position
     self.ghost:SetModel( self.selectedClassTable.Model )
     self.ghost:SetColor( GHOST_COLOR )
-
     self.ghost:SetPos( ent:LocalToWorld( localDir * size ) )
     self.ghost:SetAngles( ent:GetAngles() - ent:GetRaftRotationOffset() + Angle( 0, self.yaw, 0 ) )
 end

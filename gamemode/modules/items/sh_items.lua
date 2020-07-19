@@ -40,7 +40,6 @@ items.items = {
         stackable = true,
     },
     {
-
         type = "raft_builder",
         displayName = "Raft Builder",
         description = "Build rafts uwu",

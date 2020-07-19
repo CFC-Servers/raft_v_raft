@@ -1,4 +1,7 @@
-function RVR.createRaft( position )
+RVR.Builder = {} or RVR.Builder
+local builder = RVR.Builder
+
+function builder.createRaft( position )
     local raft = RVR.newRaft()
 
     local ent = ents.Create( "raft_foundation" )
@@ -11,7 +14,7 @@ function RVR.createRaft( position )
 end
 
 -- returns an error
-function RVR.expandRaft( piece, class, dir, rotation )
+function builder.expandRaft( piece, class, dir, rotation )
     if not piece.IsRaft then return end
     rotation = rotation or Angle( 0, 0, 0 )
 
@@ -42,7 +45,7 @@ function RVR.expandRaft( piece, class, dir, rotation )
     return newEnt, nil
 end
 
-function RVR.placeWall( piece, class, yaw )
+function builder.placeWall( piece, class, yaw )
     local pos = piece:GetWallOrigin()
     piece.walls = piece.walls or {}
 

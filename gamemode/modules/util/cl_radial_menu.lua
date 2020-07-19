@@ -1,6 +1,6 @@
 surface.CreateFont( "RVR_RadialMenu_Title", {
     font = "Bungee Regular",
-    size = 30,
+    size = ScrW() * 0.015,
     weight = 500,
 } )
 
@@ -10,11 +10,11 @@ local function getCursorAng()
     return math.deg( math.atan2( y, x ) ) + 180
 end
 
-local function newPoint( centerx, centery, angle, radius )
+local function newPoint( centerX, centeryY, angle, radius )
     local radians = math.rad( angle )
     return {
-        x = centerx + math.sin( radians ) * radius,
-        y = centery + math.cos( radians ) * radius,
+        x = centerX + math.sin( radians ) * radius,
+        y = centerY + math.cos( radians ) * radius,
     }
 end
 

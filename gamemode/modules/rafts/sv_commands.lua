@@ -10,7 +10,7 @@ local function summonCommandCallback( ply )
     }
 
     local pos = trace.HitPos
-    local raft = RVR.createRaft( pos )
+    local raft = RVR.Builder.createRaft( pos )
 
     raft:SetPartyID( partyID )
 end
@@ -38,7 +38,7 @@ local function placeWallCallback( ply, piece, class, yaw )
         return
     end
 
-    local _, err = RVR.placeWall( piece, class, yaw )
+    local _, err = RVR.Builder.placeWall( piece, class, yaw )
     if err ~= nil then
         return "Couldn't place  wall: " .. err
     end
@@ -70,7 +70,7 @@ local function expandCallback( ply, piece, class, x, y, z, yaw )
 
     local dir = Vector( x, y, z )
 
-    local _, err = RVR.expandRaft( piece, class, dir, Angle( 0, yaw, 0 ) )
+    local _, err = RVR.Builder.expandRaft( piece, class, dir, Angle( 0, yaw, 0 ) )
     if err ~= nil then
         return "Couldn't place raft piece: " .. err
     end
@@ -90,7 +90,7 @@ end
 
 hook.Add( "RVR_ModulesLoaded", "RvR_MakeRaftCommands", function()
 
-    RVR.Commands.register( "summon_raft", {}, {}, RVR_USER_SUPERADMIN, summonCommandCallback, "summon a raft" )
+    RVR.Commands.register( "summon_raft", {}, {}, RVR_USER_SUPERADMIN, summonCommandCallback, "Summon a raft" )
 
     RVR.Commands.register(
         "expand_raft",
@@ -101,7 +101,7 @@ hook.Add( "RVR_ModulesLoaded", "RvR_MakeRaftCommands", function()
         "expand a raft"
     )
 
-    RVR.Commands.register( "delete_piece", { "piece" }, { "entity" }, RVR_USER_SUPERADMIN, deleteCallback, "delete a raft piece" )
-    RVR.Commands.register( "list_rafts", {}, {}, RVR_USER_ALL, listRafts, "list rafts in raftLookup table" )
-    RVR.Commands.register( "place_wall", { "piece", "class", "yaw" }, { "entity", "string", "int" }, RVR_USER_ALL, placeWallCallback, "place a  wall" )
+    RVR.Commands.register( "delete_piece", { "piece" }, { "entity" }, RVR_USER_SUPERADMIN, deleteCallback, "Delete a raft piece" )
+    RVR.Commands.register( "list_rafts", {}, {}, RVR_USER_ALL, listRafts, "List rafts in raftLookup table" )
+    RVR.Commands.register( "place_wall", { "piece", "class", "yaw" }, { "entity", "string", "int" }, RVR_USER_ALL, placeWallCallback, "Place a  wall" )
 end )
