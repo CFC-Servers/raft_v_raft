@@ -9,6 +9,9 @@ SWEP.WorldModel = Model( "" )
 SWEP.DrawAmmo = false
 SWEP.DrawCrosshair = false
 
+SWEP.Primary.Ammo = ""
+SWEP.Secondary.Ammo = ""
+
 function SWEP:Initialize()
     self:SetWeaponHoldType( "normal" )
 end
@@ -20,7 +23,7 @@ function SWEP:Deloy()
 
     self:DrawShadow( false )
 
-    return true
+    return false
 end
 
 function SWEP:PrimaryAttack()

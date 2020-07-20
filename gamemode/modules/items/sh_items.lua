@@ -47,16 +47,6 @@ items.items = {
         stackable = true
     },
     {
-        type = "raft_builder",
-        displayName = "Raft Builder",
-        description = "Build rafts uwu",
-        model = "models/weapons/w_crowbar.mdl",
-        swep = "raft_builder",
-        maxCount = 1,
-        stackable = false,
-        icon = "materials/rvr/items/raft_builder.png"
-    },
-    {
         type = "tuna",
         displayName = "Tuna",
         description = "A living tuna, eating it would not only make you a monster, but also hurt you!",
@@ -91,6 +81,39 @@ items.items = {
         water = 60,
         viewModelOffset = Vector( -2, 5, -9 ),
         viewModelAng = Angle( 0, -15, 0 )
+    },
+    {
+        type = "raft_builder",
+        displayName = "Raft Builder",
+        description = "Build rafts uwu",
+        model = "models/weapons/w_crowbar.mdl",
+        swep = "raft_builder",
+        stackable = false,
+        icon = "materials/rvr/items/raft_builder.png"
+    },
+    {
+        type = "spear",
+        displayName = "Spear",
+        description = "For hittin' stuff. uwu",
+        swep = "rvr_spear",
+        stackable = false,
+        icon = "materials/rvr/items/wooden_spear.png",
+        hasDurability = true,
+        maxDurability = 150,
+        durabilityUse = 10,
+        durabilityUseRandomRange = 10
+    },
+    {
+        type = "tape",
+        displayName = "Tape",
+        description = "For repairin' stuff. uwu",
+        swep = "rvr_tape",
+        stackable = false,
+        icon = "materials/rvr/items/ducttape.png",
+        hasDurability = true,
+        maxDurability = 150,
+        durabilityUse = 10,
+        durabilityUseRandomRange = 10
     }
 }
 
