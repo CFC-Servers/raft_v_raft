@@ -61,8 +61,9 @@ hook.Add( "RVR_PlayerDeath", "RVR_ShowMenu", function( ply )
     mainMenu.showIn( 1 )
 end )
 
-hook.Add( "Initialize", "RVR_ShowMenu", function()
+hook.Add( "InitPostEntity", "RVR_ShowMenu", function()
     mainMenu.createMenu()
+    mainMenu.frame:MoveToBack()
 end )
 
 function mainMenu.showIn( delay )
