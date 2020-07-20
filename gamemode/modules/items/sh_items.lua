@@ -47,6 +47,16 @@ items.items = {
         stackable = true
     },
     {
+        type = "raft_builder",
+        displayName = "Raft Builder",
+        description = "Build rafts uwu",
+        model = "models/weapons/w_crowbar.mdl",
+        swep = "raft_builder",
+        maxCount = 1,
+        stackable = false,
+        icon = "materials/rvr/items/raft_builder.png"
+    },
+    {
         type = "tuna",
         displayName = "Tuna",
         description = "A living tuna, eating it would not only make you a monster, but also hurt you!",
