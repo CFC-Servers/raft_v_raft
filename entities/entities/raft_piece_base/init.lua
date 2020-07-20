@@ -9,7 +9,7 @@ function ENT:Initialize()
 
     local phys = self:GetPhysicsObject()
     if IsValid( phys ) then
-        phys:EnableMotion( false )
+        phys:EnableMotion( true )
     end
 end
 
@@ -32,5 +32,31 @@ function ENT:ShouldExist()
     return true
 end
 
-function ENT:PhysicsSimulate( phys, deltaTime )
+
+function ENT:PhysicsUpdate( phys )
+    local mass = phys:GetMass()
+
+    local zPos = self:GetPos().z
+    local difference = RVR.waterSurfaceZ+10 - zPos
+    
+    if difference > 1000 then return end
+
+    local force = Vector( 0, 0, difference ) - phys:GetVelocity()
+    phys:ApplyForceCenter( force*mass)
+
+
+    local entAng = phys:GetAngles()
+    local forward = Vector( 1, 0, 0 ):Angle()
+
+    local pitch = math.rad( math.AngleDifference( entAng.pitch, forward.pitch ) )
+    local yaw = 0
+    local roll = math.rad( math.AngleDifference( entAng.roll, forward.roll ) )
+
+    local damp = 0.75
+    local strength = 500
+    local divAng = Vector( pitch, yaw, 0 )
+    divAng:Rotate( Angle( 0, -entAng.roll, 0 ) )
+
+    phys:AddAngleVelocity( ( -Vector( roll, divAng.x, divAng.y ) * strength ) - ( phys:GetAngleVelocity() * damp ) )
 end
+
