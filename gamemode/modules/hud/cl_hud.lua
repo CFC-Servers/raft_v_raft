@@ -9,7 +9,7 @@ local stats = {
         get = function()
             return LocalPlayer():Health()
         end,
-        max = 100,
+        max = 100
     },
     {
         material = Material( "rvr/icons/water.png" ),
@@ -17,7 +17,7 @@ local stats = {
         get = function()
             return LocalPlayer():GetWater()
         end,
-        max = config.MAX_WATER,
+        max = config.MAX_WATER
     },
     {
         material = Material( "rvr/icons/food.png" ),
@@ -25,13 +25,11 @@ local stats = {
         get = function()
             return LocalPlayer():GetFood()
         end,
-        max = config.MAX_FOOD,
-    },
+        max = config.MAX_FOOD
+    }
 }
 
-function GM:HUDPaint()
-    hook.Run( "HUDDrawTargetID" )
-
+local function drawStats()
     local barHeight = ScrH() * 0.04
 
     local hudHeight = barHeight * #stats
@@ -71,11 +69,25 @@ function GM:HUDPaint()
         surface.SetMaterial( stat.material )
         surface.DrawTexturedRect( x + 8, barY + 2, barHeight - 5, barHeight - 5 )
     end
+end
+
+function GM:HUDPaint()
+    hook.Run( "HUDDrawTargetID" )
+
+    if hook.Run( "HUDShouldDraw", "RVR_Stats" ) then
+        drawStats()
+    end
 
     hook.Run( "DrawDeathNotice", 0.85, 0.04 )
 end
 
-local isHidden = { ["CHudHealth"] = true, ["CHudBattery"] = true, ["CHudAmmo"] = true, ["CHudSecondaryAmmo"] = true }
+local isHidden = {
+    ["CHudHealth"] = true,
+    ["CHudBattery"] = true,
+    ["CHudAmmo"] = true,
+    ["CHudSecondaryAmmo"] = true
+}
+
 function GM:HUDShouldDraw( name )
     if isHidden[name] then return false end
 

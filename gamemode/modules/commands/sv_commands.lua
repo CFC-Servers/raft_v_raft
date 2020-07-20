@@ -37,17 +37,17 @@ commands.addType( "float", function( arg )
 end )
 
 local booleanValues = {
-    ["enabled"]  = true,
-    ["enable"]   = true,
-    ["true"]     = true,
-    ["yes"]      = true,
-    ["1"]        = true,
+    ["enabled"] = true,
+    ["enable"] = true,
+    ["true"] = true,
+    ["yes"] = true,
+    ["1"] = true,
 
     ["disabled"] = false,
-    ["disable"]  = false,
-    ["false"]    = false,
-    ["no"]       = false,
-    ["0"]        = false
+    ["disable"] = false,
+    ["false"] = false,
+    ["no"] = false,
+    ["0"] = false
 }
 
 commands.addType( "bool", function( arg )
@@ -60,6 +60,30 @@ end )
 
 commands.addType( "string", function( arg )
     return arg
+end )
+
+commands.addType( "entity", function( arg, ply )
+    if arg == "^" then
+        return ply
+    end
+
+    local entID, err = commands.types.int( arg, ply )
+    if err == nil then
+        return Entity( entID ), nil
+    end
+
+    if arg == "@" then
+        local ent = ply:GetEyeTrace().Entity
+
+        local err = nil
+        if not IsValid( ent ) then
+            err = "You aren't aiming at a valid entity"
+        end
+
+        return ent, err
+    end
+
+    return nil, "Not an entity"
 end )
 
 commands.addType( "player", function( arg, ply )
@@ -248,8 +272,6 @@ local function onPlayerSay( ply, text )
     if validCommand then
         return ""
     end
-
-    return
 end
 
 hook.Add( "PlayerSay", "RVR_Commands_onPlayerSay", onPlayerSay )
@@ -290,7 +312,7 @@ local function initializeBaseCommands()
         for commandName, commandData in pairs( commands.commands ) do
             if plyUserGroup < commandData.userGroup then continue end
 
-            local description = commandName .. ":\n" ..  commandData.description .. "\n "
+            local description = commandName .. ":\n" .. commandData.description .. "\n "
 
             ply:PrintMessage( HUD_PRINTCONSOLE, description )
         end

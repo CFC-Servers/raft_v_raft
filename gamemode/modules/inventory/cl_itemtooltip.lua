@@ -12,7 +12,7 @@ local spillover = 6
 surface.CreateFont( "RVR_TooltipDesc", {
     font = "Tahoma",
     size = ScrH() * 0.02,
-    weight = 500,
+    weight = 500
 } )
 
 function PANEL:Init()
@@ -47,6 +47,7 @@ function PANEL:Init()
     self.underline:SetColor( yellow )
 
     local this = self
+
     function self.underline:PerformLayout()
         local _w, _h = this.foreground:GetSize()
         local iconW = this.itemBackground:GetWide()
@@ -126,6 +127,7 @@ function PANEL:SetItem( item )
 
     self:ClearIcons()
     updateIsMaterial( item )
+    
     if item.isMaterial then
         self:AddIcon( "craftable" )
     end

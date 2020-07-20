@@ -29,13 +29,14 @@ function SWEP:Initialize()
     self:NetworkVarNotify( "ItemType", function( this, _, _, itemType )
         local itemData = RVR.Items.getItemData( itemType )
         if not itemData then return end
+
         this.itemData = itemData
 
         local mdl = this.itemData.model
         if not mdl then
             local wep = weapons.Get( this.itemData.swep )
-
             if not wep then return end
+
             mdl = wep.Model
         end
 
@@ -43,6 +44,7 @@ function SWEP:Initialize()
 
         if not IsValid( self.WorldModelEnt ) then
             self.WorldModelEnt = ClientsideModel( self.WorldModel )
+
             if self.WorldModelEnt then
                 self.WorldModelEnt:SetNoDraw( true )
             end
@@ -64,11 +66,11 @@ function SWEP:PrimaryAttack()
     if not itemType then return end
 
     local itemData = RVR.Items.getItemData( itemType )
+    local owner = self:GetOwner()
 
     if not itemData or not itemData.consumable then return end
-    if not itemData:canConsume( self.Owner ) then return end
+    if not itemData:canConsume( owner ) then return end
 
-    local owner = self.Owner
 
     local hookID = "RVR_HeldItemConsume" .. owner:EntIndex()
 
@@ -105,6 +107,7 @@ function SWEP:PrimaryAttack()
         end )
     else
         self.consumeAnimStart = SysTime()
+
         timer.Simple( self.Cooldown, function()
             self.consumeAnimStart = nil
         end )

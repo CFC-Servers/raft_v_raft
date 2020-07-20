@@ -6,7 +6,9 @@ include( "shared.lua" )
 -- Generates function to remove ent if it exists
 local function getSafeRemover( ent )
     return function()
-        if IsValid( ent ) then ent:Remove() end
+        if IsValid( ent ) then
+            ent:Remove()
+        end
     end
 end
 
@@ -34,6 +36,7 @@ end
 
 function ENT:RestartDespawnTimer()
     local despawnTime = GAMEMODE.Config.Inventory.ITEM_DESPAWN_TIME
+
     if despawnTime > 0 then
         timer.Adjust( "rvr_dropped_item_despawn_" .. self:EntIndex(), despawnTime, 1, getSafeRemover( self ) )
     end
@@ -41,10 +44,19 @@ end
 
 -- Set dropped item information
 function ENT:Setup( item, count )
+    local itemData = RVR.Items.getItemData( item.type )
+
     self:SetAmount( count )
-    self:SetItemType( item.type )
-    self:SetItemDisplayName( item.displayName )
-    self:SetModel( item.model )
+    self:SetItemType( itemData.type )
+    self:SetItemDisplayName( itemData.displayName )
+    if itemData.model then
+        self:SetModel( itemData.model )
+    elseif itemData.swep then
+        local wep = weapons.Get( itemData.swep )
+        if wep.Model then
+            self:SetModel( wep.Model )
+        end
+    end
 
     self.item = item
 end
@@ -63,7 +75,6 @@ function ENT:StartTouch( collider )
     collider:Remove()
 
     self:SetAmount( self:GetAmount() + collider:GetAmount() )
-
     self:RestartDespawnTimer()
 end
 
@@ -76,6 +87,7 @@ function ENT:Use( activator, caller )
 
     -- Try pick up
     local success, amount = RVR.Inventory.attemptPickupItem( caller, self.item, self:GetAmount() )
+
     if success then
         self:Remove()
         return
@@ -85,6 +97,5 @@ function ENT:Use( activator, caller )
     if amount == 0 then return end
 
     self:SetAmount( self:GetAmount() - amount )
-
     self:RestartDespawnTimer()
 end

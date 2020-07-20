@@ -9,13 +9,20 @@ end
 
 -- Wrapper for now, allows adding metadata to item instances later
 function items.getItemInstance( itemType )
-    if not items.getItemData( itemType ) then
+    local itemData = items.getItemData( itemType )
+    if not itemData then
         error( "Item type " .. itemType .. " does not exist" )
     end
 
-    return {
+    local instance = {
         type = itemType
     }
+
+    if itemData.hasDurability then
+        instance.durability = itemData.maxDurability
+    end
+
+    return instance
 end
 
 -- Item structure in README
@@ -28,7 +35,7 @@ items.items = {
         maxCount = 10,
         model = "models/rvr/items/plank.mdl",
         icon = "materials/rvr/items/wood.png",
-        stackable = true,
+        stackable = true
     },
     {
         type = "nail",
@@ -37,7 +44,17 @@ items.items = {
         maxCount = 25,
         model = "models/rvr/items/nail.mdl",
         icon = "materials/rvr/items/nail.png",
-        stackable = true,
+        stackable = true
+    },
+    {
+        type = "raft_builder",
+        displayName = "Raft Builder",
+        description = "Build rafts uwu",
+        model = "models/weapons/w_crowbar.mdl",
+        swep = "raft_builder",
+        maxCount = 1,
+        stackable = false,
+        icon = "materials/rvr/items/raft_builder.png"
     },
     {
         type = "tuna",
@@ -49,7 +66,7 @@ items.items = {
         stackable = true,
         consumable = true,
         food = 10,
-        health = -5,
+        health = -5
     },
     {
         type = "cooked_tuna",
@@ -60,7 +77,7 @@ items.items = {
         icon = "materials/rvr/items/cooked_tuna.png",
         stackable = true,
         consumable = true,
-        food = 30,
+        food = 30
     },
     {
         type = "water",
@@ -73,8 +90,8 @@ items.items = {
         consumable = true,
         water = 60,
         viewModelOffset = Vector( -2, 5, -9 ),
-        viewModelAng = Angle( 0, -15, 0 ),
-    },
+        viewModelAng = Angle( 0, -15, 0 )
+    }
 }
 
 local config = GM.Config.Hunger
@@ -118,5 +135,8 @@ for k, item in pairs( items.items ) do
 end
 
 for _, item in pairs( items.items ) do
-    util.PrecacheModel( item.model )
+    if item.model then
+        util.PrecacheModel( item.model )
+    end
+    item.maxCount = item.maxCount or 1
 end

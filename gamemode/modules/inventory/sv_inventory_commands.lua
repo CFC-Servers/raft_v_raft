@@ -3,7 +3,9 @@ local function giveItem( caller, target, item, count )
         return "Cannot give less than 1 item, what are you expecting to happen?"
     end
 
-    local success, amount = RVR.Inventory.attemptPickupItem( target, item, count )
+    local instance = RVR.Items.getItemInstance( item.type )
+
+    local success, amount = RVR.Inventory.attemptPickupItem( target, instance, count )
     if success then return end
 
     if amount == 0 then
@@ -23,6 +25,7 @@ hook.Add( "RVR_ModulesLoaded", "RVR_Inventory_AddCommands", function()
         str = str:lower()
         if str == "^" then
             local itemInstance = RVR.Inventory.getSelectedItem( caller )
+            
             if not itemInstance then
                 return nil, "Not holding an item"
             end

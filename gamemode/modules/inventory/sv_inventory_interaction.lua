@@ -64,6 +64,7 @@ function inv.notifyItemSlotChange( plys, ent, slotNum, slotData )
         net.WriteEntity( ent )
         net.WriteInt( slotNum, 8 )
         net.WriteBool( tobool( slotData ) )
+
         if slotData then
             local data = table.Copy( slotData )
             table.Merge( data.item, RVR.Items.getItemData( data.item.type ) )
@@ -85,9 +86,7 @@ function inv.playerOpenInventory( ply, invEnt )
     if hook.Run( "RVR_PreventInventory", ply, invEnt ) then return end
 
     ply.RVR_Inventory_Open = invEnt
-
     inventoryData.ActivePlayer = ply
-
     local isPlayer = invEnt == ply
 
     net.Start( "RVR_Inventory_Open" )
@@ -112,10 +111,13 @@ net.Receive( "RVR_Inventory_Close", function( len, ply )
 
     ply.RVR_Inventory_Open = nil
 
+    hook.Run( "RVR_Inventory_Close", ply, invEnt )
+
     if not ply.RVR_Inventory.CursorSlot then return end
     local cursorItemData = ply.RVR_Inventory.CursorSlot
 
     local success, amount = inv.attemptPickupItem( ply, cursorItemData.item, cursorItemData.count )
+
     if not success then
         cursorItemData.count = cursorItemData.count - amount
         inv.dropItem( ply, -1, -1 )
