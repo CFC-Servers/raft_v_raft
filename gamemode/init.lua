@@ -6,7 +6,7 @@ resource.AddFile( "resource/fonts/bungee_regular.ttf" )
 
 -- Needed to show holding animations, to be remove when main menu implemented
 function GM:PlayerSetModel( ply )
-    ply.RVR_PlayerModel = ply.RVR_PlayerModel or RVR.Config.Generic.DEFAULT_PLAYER_MODEL
+    ply.RVR_PlayerModel = ply.RVR_PlayerModel or GAMEMODE.Config.Generic.DEFAULT_PLAYER_MODEL
     ply:SetModel( ply.RVR_PlayerModel )
 end
 
