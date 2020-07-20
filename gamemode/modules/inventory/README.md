@@ -5,7 +5,7 @@ Inventories are stored on the entity they belong to, under `RVR_Inventory` and a
     {
         Inventory = {},
         MaxSlots = 10,
-        InventoryType = "Box",
+        InventoryType = "Box"
     }
 ```
 Player inventories store extra data such as `HotbarSelected`, `CursorSlot` and gear slots.  

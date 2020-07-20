@@ -100,7 +100,7 @@ function RVR.newRaft( id )
         pieces = {},
         owners = {},
         grid = {},
-        id = id or lastid,
+        id = id or lastid
     }
 
     setmetatable( raft, raftMeta )

@@ -57,7 +57,7 @@ function party.createParty( partyName, owner, tag, color, joinMode )
         tag = tag,
         color = color,
         joinMode = joinMode,
-        invites = {},
+        invites = {}
     }
 
     party.parties[id] = partyData

@@ -119,7 +119,7 @@ if GM.Config.Party.OVERRIDE_CHAT_ADD then
                         partyData.color,
                         "[" .. partyData.tag .. "] ",
                         prevColor,
-                        v,
+                        v
                     } )
                 else
                     table.insert( out, v )

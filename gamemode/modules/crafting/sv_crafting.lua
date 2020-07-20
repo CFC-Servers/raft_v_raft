@@ -73,7 +73,7 @@ function cft.craft( ply, ent, recipe )
 
     ent.RVR_Crafting.output = {
         recipe = recipe,
-        timeStart = CurTime(),
+        timeStart = CurTime()
     }
 
     net.Start( "RVR_Crafting_CraftResponse" )
@@ -121,7 +121,7 @@ function cft.makeCrafter( ent, name, tier, crafterType )
     ent.RVR_Crafting = {
         tier = tier,
         name = name,
-        type = crafterType or "normal",
+        type = crafterType or "normal"
     }
 end
 

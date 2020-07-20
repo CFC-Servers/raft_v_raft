@@ -18,18 +18,18 @@ SWEP.Secondary.Ammo = ""
 
 SWEP.Placeables = {
     {
-        class = "raft_foundation",
+        class = "raft_foundation"
     },
     {
-        class = "raft_platform",
+        class = "raft_platform"
     },
     {
-        class = "raft_stairs",
+        class = "raft_stairs"
     },
     {
-        class = "raft_wall",
+        class = "raft_wall"
     },
     {
-        class = "raft_fence",
-    },
+        class = "raft_fence"
+    }
 }

@@ -14,7 +14,7 @@ local function newPoint( centerX, centerY, angle, radius )
     local radians = math.rad( angle )
     return {
         x = centerX + math.sin( radians ) * radius,
-        y = centerY + math.cos( radians ) * radius,
+        y = centerY + math.cos( radians ) * radius
     }
 end
 
@@ -24,7 +24,7 @@ function radialMeta:AddItem( name, material, callback )
     local item = {
         name = name,
         iconMaterial = material,
-        callback = callback,
+        callback = callback
     }
 
     table.insert( self.items, item )

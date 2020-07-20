@@ -27,7 +27,7 @@ hook.Add( "PreGamemodeLoaded", "RVR_Crafting_AddRecipes", function()
                     item = {
                         type = name
                     },
-                    count = count,
+                    count = count
                 } )
             end
 
@@ -47,7 +47,7 @@ function cft.addCategory( name, icon, crafterType, index )
         name = name,
         icon = icon,
         crafterType = crafterType,
-        recipes = {},
+        recipes = {}
     } )
 end
 
@@ -68,6 +68,6 @@ function cft.addRecipe( categoryName, item, count, ingredients, timeToCraft, tie
         count = count or 1,
         ingredients = ingredients,
         tier = tier,
-        timeToCraft = timeToCraft,
+        timeToCraft = timeToCraft
     } )
 end

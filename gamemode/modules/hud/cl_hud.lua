@@ -9,7 +9,7 @@ local stats = {
         get = function()
             return LocalPlayer():Health()
         end,
-        max = 100,
+        max = 100
     },
     {
         material = Material( "rvr/icons/water.png" ),
@@ -17,7 +17,7 @@ local stats = {
         get = function()
             return LocalPlayer():GetWater()
         end,
-        max = config.MAX_WATER,
+        max = config.MAX_WATER
     },
     {
         material = Material( "rvr/icons/food.png" ),
@@ -25,7 +25,7 @@ local stats = {
         get = function()
             return LocalPlayer():GetFood()
         end,
-        max = config.MAX_FOOD,
+        max = config.MAX_FOOD
     },
 }
 

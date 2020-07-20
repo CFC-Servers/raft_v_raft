@@ -23,7 +23,7 @@ net.Receive( "RVR_Inventory_OnPickup", function()
         itemData = itemData,
         count = count,
         startTime = CurTime(),
-        iconMat = Material( itemData.icon ),
+        iconMat = Material( itemData.icon )
     } )
     popupOffset = popupOffset - popupHeight - popupSpacing
 end )

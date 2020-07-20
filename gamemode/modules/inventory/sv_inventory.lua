@@ -18,7 +18,7 @@ function inv.setupPlayer( ply )
         CursorSlot = nil,
         HeadGear = nil,
         BodyGear = nil,
-        FootGear = nil,
+        FootGear = nil
     }
 end
 

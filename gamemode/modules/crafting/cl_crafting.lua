@@ -72,7 +72,7 @@ function cft.openCraftingMenu( craftingData )
 
     cft.craftingData = {
         state = craftingData.state,
-        ent = craftingData.ent,
+        ent = craftingData.ent
     }
 
     if craftingData.state ~= cft.STATE_WAITING then

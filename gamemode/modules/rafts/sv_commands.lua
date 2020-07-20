@@ -6,7 +6,7 @@ local function summonCommandCallback( ply )
         start = ply:EyePos(),
         endpos = ply:EyePos() + ply:EyeAngles():Forward() * 1000,
         mask = MASK_ALL,
-        filter = ply,
+        filter = ply
     }
 
     local pos = trace.HitPos

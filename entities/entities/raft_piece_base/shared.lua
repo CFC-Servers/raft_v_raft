@@ -57,7 +57,7 @@ function ENT:GetRequiredItems()
             requirements,
             {
                 item = RVR.Items.getItemData( itemName ),
-                count = amount,
+                count = amount
             }
         )
     end
