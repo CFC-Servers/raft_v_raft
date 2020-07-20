@@ -17,25 +17,25 @@ mainMenu.backgrounds = mainMenu.backgrounds or {}
 surface.CreateFont( "RVR_StartMenuButton", {
     font = "Bungee Regular",
     size = ScrH() * 0.09,
-    weight = 700,
+    weight = 700
 } )
 
 surface.CreateFont( "RVR_StartMenuLabel", {
     font = "Bungee Regular",
     size = ScrH() * 0.07,
-    weight = 700,
+    weight = 700
 } )
 
 surface.CreateFont( "RVR_StartMenuSmall", {
     font = "Bungee Regular",
     size = ScrH() * 0.05,
-    weight = 700,
+    weight = 700
 } )
 
 surface.CreateFont( "RVR_StartMenuTextEntry", {
     font = "Roboto",
     size = ScrH() * 0.04,
-    weight = 700,
+    weight = 700
 } )
 
 hook.Add( "HUDShouldDraw", "RVR_MainMenu_HideHud", function( hudType )
@@ -51,7 +51,7 @@ hook.Add( "HUDPaintBackground", "RVR_MainMenu", function()
         origin = camPos,
         angles = camAng,
         x = 0, y = 0,
-        w = _w, h = _h,
+        w = _w, h = _h
     } )
 end )
 
