@@ -119,19 +119,19 @@ function mainMenu.fillPartiesList( partyBox, parties )
         joinModeLabel:SetText( joinModeStrs[partyData.joinMode] )
 
         function panel:PerformLayout()
-            local _w, _h = self:GetSize()
+            local w, h = self:GetSize()
 
-            nameLabel:SetPos( _w * 0.006, 0 )
-            nameLabel:SetSize( _w * 0.39, _h )
+            nameLabel:SetPos( w * 0.006, 0 )
+            nameLabel:SetSize( w * 0.39, h )
 
-            ownerLabel:SetPos( _w * 0.408, 0 )
-            ownerLabel:SetSize( _w * 0.3, _h )
+            ownerLabel:SetPos( w * 0.408, 0 )
+            ownerLabel:SetSize( w * 0.3, h )
 
-            countLabel:SetPos( _w * 0.75, 0 )
-            countLabel:SetSize( _w * 0.04, _h )
+            countLabel:SetPos( w * 0.75, 0 )
+            countLabel:SetSize( w * 0.04, h )
 
-            joinModeLabel:SetPos( _w * 0.885, 0 )
-            joinModeLabel:SetSize( _w * 0.115, _h )
+            joinModeLabel:SetPos( w * 0.885, 0 )
+            joinModeLabel:SetSize( w * 0.115, h )
         end
     end
 end
@@ -165,8 +165,8 @@ function mainMenu.createPartyJoinMenu( pageNum )
         headerLabel:SetPos( x, y )
 
         function headerLabel:PerformLayout()
-            local _w = self:GetWide()
-            self:SetPos( x - _w * 0.5, y )
+            local w = self:GetWide()
+            self:SetPos( x - w * 0.5, y )
         end
     end
 
@@ -176,9 +176,9 @@ function mainMenu.createPartyJoinMenu( pageNum )
     partyBox:DockPadding( 10, 10, 10, 0 )
     partyBox:SetMouseInputEnabled( true )
 
-    function partyBox:Paint( _w, _h )
+    function partyBox:Paint( w, h )
         surface.SetMaterial( joinPartyBg )
-        surface.DrawTexturedRect( 0, 0, _w, _h )
+        surface.DrawTexturedRect( 0, 0, w, h )
     end
 
     local leftBtn = vgui.Create( "DButton", container )
@@ -187,9 +187,9 @@ function mainMenu.createPartyJoinMenu( pageNum )
     leftBtn:SetPos( boxX, boxY + boxH - 10 )
     leftBtn:SetVisible( mainMenu.pageNum > 1 )
 
-    function leftBtn:Paint( _w, _h )
+    function leftBtn:Paint( w, h )
         surface.SetMaterial( joinPartyArrow )
-        surface.DrawTexturedRect( 0, 0, _w, _h )
+        surface.DrawTexturedRect( 0, 0, w, h )
     end
 
     function leftBtn:DoClick()
@@ -204,10 +204,10 @@ function mainMenu.createPartyJoinMenu( pageNum )
         pageCounter:SizeToContents()
 
         function pageCounter:PerformLayout()
-            local _w, _h = self:GetSize()
+            local w, h = self:GetSize()
             local _x, _y = mainMenu.w * 0.5, boxY + boxH + 45
 
-            self:SetPos( _x - _w * 0.5, _y - _h * 0.5 )
+            self:SetPos( _x - w * 0.5, _y - h * 0.5 )
         end
     end
 
@@ -217,9 +217,9 @@ function mainMenu.createPartyJoinMenu( pageNum )
     rightBtn:SetPos( boxX + boxW - 100, boxY + boxH - 10 )
     rightBtn:SetVisible( mainMenu.pageNum < maxPages )
 
-    function rightBtn:Paint( _w, _h )
+    function rightBtn:Paint( w, h )
         surface.SetMaterial( joinPartyArrow )
-        surface.DrawTexturedRectUV( 0, 0, _w, _h, 1, 0, 0, 1 )
+        surface.DrawTexturedRectUV( 0, 0, w, h, 1, 0, 0, 1 )
     end
 
     function rightBtn:DoClick()

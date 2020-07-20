@@ -28,21 +28,21 @@ function mainMenu.createStartMenuButton( text, action )
     button:SetTall( ScrH() * 0.04 ) -- This font is really tall for some reason, this removes some extra whitespace
     button.DoClick = action
 
-    function button:Paint( _w, _h )
+    function button:Paint( w, h )
         local mouseX, mouseY = input.GetCursorPos()
         local selfX, selfY = self:LocalToScreen( 0, 0 )
 
-        if mouseX < selfX or mouseX > selfX + _w then return end
-        if mouseY < selfY or mouseY > selfY + _h then return end
+        if mouseX < selfX or mouseX > selfX + w then return end
+        if mouseY < selfY or mouseY > selfY + h then return end
 
         surface.SetDrawColor( mainMenu.darkerYellow )
-        surface.DrawRect( 0, _h - 1, _w, 1 )
+        surface.DrawRect( 0, h - 1, w, 1 )
 
         -- Draws a lil dot to the left
         DisableClipping( true )
 
         local dotSize = 7
-        surface.DrawRect( -20, ( _h - dotSize ) * 0.5, dotSize, dotSize )
+        surface.DrawRect( -20, ( h - dotSize ) * 0.5, dotSize, dotSize )
 
         DisableClipping( false )
     end
@@ -71,8 +71,8 @@ function mainMenu.createStartMenu()
     imageContainer:SetPos( mainMenu.w * 0.03, mainMenu.h * 0.035 )
     imageContainer:SetSize( mainMenu.w * 0.6, mainMenu.h * 0.935 )
 
-    function imageContainer:Paint( _w, _h )
-        draw.RoundedBox( 5, 0, 0, _w, _h, mainMenu.darkBrown )
+    function imageContainer:Paint( w, h )
+        draw.RoundedBox( 5, 0, 0, w, h, mainMenu.darkBrown )
     end
 
     local image = vgui.Create( "DPanel", imageContainer )
@@ -100,7 +100,7 @@ function mainMenu.createStartMenu()
         end
     end
 
-    function image:Paint( _w, _h )
+    function image:Paint( w, h )
         surface.SetDrawColor( 255, 255, 255 )
 
         if self.nextImagePath then
@@ -115,15 +115,15 @@ function mainMenu.createStartMenu()
         if self.nextImagePath then
             local adjustedProg = ( 1 - math.cos( self.nextImageProg * math.pi ) ) * 0.5;
 
-            local offset = ( 1 - adjustedProg ) * _w
+            local offset = ( 1 - adjustedProg ) * w
             surface.SetMaterial( self.nextImagePath )
-            surface.DrawTexturedRect( offset, 0, _w, _h )
+            surface.DrawTexturedRect( offset, 0, w, h )
 
             surface.SetMaterial( self.imagePath )
-            surface.DrawTexturedRect( offset - _w, 0, _w, _h )
+            surface.DrawTexturedRect( offset - w, 0, w, h )
         else
             surface.SetMaterial( self.imagePath )
-            surface.DrawTexturedRect( 0, 0, _w, _h )
+            surface.DrawTexturedRect( 0, 0, w, h )
         end
     end
 end

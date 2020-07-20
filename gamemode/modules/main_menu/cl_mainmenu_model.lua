@@ -59,10 +59,10 @@ function mainMenu.createModelMenu()
     local scrollerWidth = mainMenu.w * 0.39
     scrollerContainer:SetSize( scrollerWidth, mainMenu.h * 0.667 )
 
-    function scrollerContainer:Paint( _w, _h )
+    function scrollerContainer:Paint( w, h )
         surface.SetMaterial( scrollerBackgroundMat )
         surface.SetDrawColor( Color( 255, 255, 255 ) )
-        surface.DrawTexturedRect( 0, 0, 0.9 * _w, _h )
+        surface.DrawTexturedRect( 0, 0, 0.9 * w, h )
     end
 
     local scrollerMargin = 10
