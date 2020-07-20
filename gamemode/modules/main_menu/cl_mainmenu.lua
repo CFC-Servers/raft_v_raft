@@ -45,13 +45,13 @@ end )
 
 hook.Add( "HUDPaintBackground", "RVR_MainMenu", function()
     if not mainMenu.frame then return end
-    local _w, _h = ScrW(), ScrH()
+    local w, h = ScrW(), ScrH()
 
     render.RenderView( {
         origin = camPos,
         angles = camAng,
         x = 0, y = 0,
-        w = _w, h = _h
+        w = w, h = h
     } )
 end )
 
@@ -96,10 +96,10 @@ function mainMenu.createMenu()
     frame:SetDraggable( false )
     frame:MakePopup()
 
-    function frame:Paint( _w, _h )
+    function frame:Paint( w, h )
         surface.SetMaterial( self.backgroundMat )
         surface.SetDrawColor( Color( 255, 255, 255 ) )
-        surface.DrawTexturedRect( 0, 0, _w, _h )
+        surface.DrawTexturedRect( 0, 0, w, h )
     end
 
     mainMenu.frame = frame

@@ -55,9 +55,9 @@ function mainMenu.createEntry( data )
     local errorLabel = mainMenu.createErrorLabel( data.name, 0, 0 )
 
     function errorLabel:PerformLayout()
-        local _w = label:GetWide()
+        local w = label:GetWide()
         local _x, _y = label:GetPos()
-        self:SetPos( _x + _w + 20, _y )
+        self:SetPos( _x + w + 20, _y )
     end
 
     local entry = vgui.Create( entryClass, container )
@@ -98,9 +98,9 @@ function mainMenu.createErrorLabel( name, x, y, centered )
 
     if centered then
         function errorLabel:PerformLayout()
-            local _w = self:GetWide()
+            local w = self:GetWide()
             local _, _y = self:GetPos()
-            self:SetPos( x - _w * 0.5, _y )
+            self:SetPos( x - w * 0.5, _y )
         end
     end
 
@@ -119,12 +119,12 @@ function mainMenu.createTextEntry( data )
 
     local extraX, extraY = 10, 5
 
-    function textEntry:Paint( _w, _h )
+    function textEntry:Paint( w, h )
         DisableClipping( true )
 
         surface.SetDrawColor( 255, 255, 255 )
         surface.SetMaterial( data.short and textEntryBgShort or textEntryBg )
-        surface.DrawTexturedRect( -extraX, -extraY, _w + extraX * 2, _h + extraY * 2 )
+        surface.DrawTexturedRect( -extraX, -extraY, w + extraX * 2, h + extraY * 2 )
 
         DisableClipping( false )
 
@@ -155,10 +155,10 @@ function mainMenu.createColorEntry( data )
     picker:SetPalette( false )
     picker:SetWangs( false )
 
-    function picker:Paint( _w, _h )
+    function picker:Paint( w, h )
         DisableClipping( true )
 
-        draw.RoundedBox( 6, -10, -10, _w + 20, _h + 20, Color( 158, 122, 74 ) )
+        draw.RoundedBox( 6, -10, -10, w + 20, h + 20, Color( 158, 122, 74 ) )
 
         DisableClipping( false )
     end
@@ -172,12 +172,12 @@ function mainMenu.createColorEntry( data )
 
     function preview:PerformLayout()
         local x, y = data.label:GetPos()
-        local _w, _h = data.label:GetSize()
-        self:SetPos( x + _w + 10, y + _h * 0.5 - 13 )
+        local w, h = data.label:GetSize()
+        self:SetPos( x + w + 10, y + h * 0.5 - 13 )
     end
 
-    function preview:Paint( _w, _h )
-        draw.RoundedBox( 10, 3, 3, _w - 6, _h - 6, picker:GetColor() )
+    function preview:Paint( w, h )
+        draw.RoundedBox( 10, 3, 3, w - 6, h - 6, picker:GetColor() )
     end
 
     data.action( data.defaultColor )
@@ -202,9 +202,9 @@ function mainMenu.createRadioMenuEntry( data )
         btn.option = option
 
         function btn:PerformLayout()
-            local _h = panel:GetTall() + spacing
-            _h = _h / #data.options - spacing
-            self:SetTall( _h )
+            local h = panel:GetTall() + spacing
+            h = h / #data.options - spacing
+            self:SetTall( h )
         end
 
         function btn:DoClick()
@@ -226,9 +226,9 @@ function mainMenu.createRadioMenuEntry( data )
             end
         end
 
-        function btn:Paint( _w, _h )
+        function btn:Paint( w, h )
             local bgCol = self.selected and mainMenu.darkBrown or mainMenu.darkerYellow
-            draw.RoundedBox( 10, 0, 0, _w, _h, bgCol )
+            draw.RoundedBox( 10, 0, 0, w, h, bgCol )
         end
 
         btn:SetSelected( k == 1 )
