@@ -114,6 +114,26 @@ items.items = {
         maxDurability = 150,
         durabilityUse = 10,
         durabilityUseRandomRange = 10
+    },
+    {
+        type = "binoculars",
+        displayName = "Binoculars",
+        description = "For lookin' at stuff. uwu",
+        swep = "rvr_binoculars",
+        stackable = false,
+        icon = "materials/rvr/items/binoculars.png"
+    },
+    {
+        type = "sword",
+        displayName = "Sword",
+        description = "For hittin' stuff. uwu",
+        swep = "rvr_sword",
+        stackable = false,
+        icon = "materials/rvr/items/sword.png",
+        hasDurability = true,
+        maxDurability = 150,
+        durabilityUse = 5,
+        durabilityUseRandomRange = 6
     }
 }
 

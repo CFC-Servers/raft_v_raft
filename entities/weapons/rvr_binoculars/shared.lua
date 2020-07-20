@@ -61,5 +61,6 @@ function SWEP:OnRemove()
 end
 
 function SWEP:AdjustMouseSensitivity()
+    -- TODO: Adjust this so the sensitivity can never be inverted
     return self.Zoomed and 0.2 or nil
 end
