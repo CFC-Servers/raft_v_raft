@@ -2,6 +2,7 @@ GM.Config = GM.Config or {}
 GM.Config.Crafting = GM.Config.Crafting or {}
 
 local config = GM.Config.Crafting
+
 --[[
 
 Recipe structure
@@ -25,7 +26,6 @@ recipe = {
     tier = (optional) Minimum crafter tier required, defaults to 1
     timeToCraft = Time in seconds this craft takes (non-zero)
 }
-
 ]]
 
 config.RECIPES = {
@@ -100,5 +100,5 @@ config.RECIPES = {
         name = "Other",
         icon = "rvr/icons/craftingmenu_category_other.png",
         recipes = {}
-    },
+    }
 }

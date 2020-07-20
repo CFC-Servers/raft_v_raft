@@ -18,9 +18,11 @@ end
 local function hungerDamageThink()
     for  _, ply in  pairs( player.GetHumans() ) do
         local damage = 0
+
         if ply:GetFood() <= 0 then
             damage = damage + config.DAMAGE_AMOUNT
         end
+
         if ply:GetWater() <= 0 then
             damage = damage + config.DAMAGE_AMOUNT
         end
@@ -43,6 +45,7 @@ end
 function PlayerMeta:AddFood( n )
     local food = self:GetNWInt( "rvr_food" )
     food = math.Clamp( food + n, 0, config.MAX_FOOD )
+
     self:SetNWInt( "rvr_food", food )
 end
 
@@ -53,5 +56,6 @@ end
 function PlayerMeta:AddWater( n )
     local water = self:GetNWInt( "rvr_water" )
     water = math.Clamp( water + n, 0, config.MAX_WATER )
+
     self:SetNWInt( "rvr_water", water )
 end

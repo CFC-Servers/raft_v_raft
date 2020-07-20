@@ -1,5 +1,6 @@
 RVR.Party = RVR.Party or {}
 local party = RVR.Party
+party.invites = {}
 
 function party.tryCreateParty( name, tag, color, joinMode, callback )
     if not party.joinModeStrs[joinMode] then return end
@@ -19,13 +20,14 @@ net.Receive( "RVR_Party_createParty", function()
     if not party.createPartyCallback then return end
 
     local success = net.ReadBool()
-    local err
+    local err, errType
 
     if not success then
         err = net.ReadString()
+        errType = net.ReadString()
     end
 
-    party.createPartyCallback( success, err )
+    party.createPartyCallback( success, err, errType )
     party.createPartyCallback = nil
 end )
 
@@ -159,4 +161,12 @@ hook.Add( "CreateMove", "RVR_Party_PreventSpawn", function( cmd )
 
     cmd:ClearButtons()
     cmd:ClearMovement()
+end )
+
+net.Receive( "RVR_Party_inviteSent", function()
+    local partyID = net.ReadUInt( 32 )
+
+    party.invites[partyID] = CurTime()
+
+    hook.Run( "RVR_Party_gotInvite", partyID )
 end )

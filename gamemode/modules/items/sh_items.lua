@@ -9,13 +9,20 @@ end
 
 -- Wrapper for now, allows adding metadata to item instances later
 function items.getItemInstance( itemType )
-    if not items.getItemData( itemType ) then
+    local itemData = items.getItemData( itemType )
+    if not itemData then
         error( "Item type " .. itemType .. " does not exist" )
     end
 
-    return {
+    local instance = {
         type = itemType
     }
+
+    if itemData.hasDurability then
+        instance.durability = itemData.maxDurability
+    end
+
+    return instance
 end
 
 -- Item structure in README
@@ -84,7 +91,7 @@ items.items = {
         water = 60,
         viewModelOffset = Vector( -2, 5, -9 ),
         viewModelAng = Angle( 0, -15, 0 )
-    },
+    }
 }
 
 local config = GM.Config.Hunger
@@ -128,5 +135,8 @@ for k, item in pairs( items.items ) do
 end
 
 for _, item in pairs( items.items ) do
-    util.PrecacheModel( item.model )
+    if item.model then
+        util.PrecacheModel( item.model )
+    end
+    item.maxCount = item.maxCount or 1
 end

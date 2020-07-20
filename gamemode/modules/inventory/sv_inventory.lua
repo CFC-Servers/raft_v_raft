@@ -24,6 +24,37 @@ end
 
 hook.Add( "PlayerInitialSpawn", "RVR_SetupInventory", inv.setupPlayer )
 
+function inv.clearInventory( ent )
+    if not ent.RVR_Inventory then return end
+
+    ent.RVR_Inventory.Inventory = {}
+
+    if ent:IsPlayer() then
+        ent.RVR_Inventory.CursorSlot = nil
+        ent.RVR_Inventory.HeadGear = nil
+        ent.RVR_Inventory.BodyGear = nil
+        ent.RVR_Inventory.FootGear = nil
+        ent.RVR_Inventory.HotbarSelected = 1
+
+        inv.fullPlayerUpdate( ent )
+    end
+end
+
+function inv.isEmpty( ent )
+    local entInv = ent.RVR_Inventory
+    if not entInv then return true end
+
+    if not table.IsEmpty( entInv.Inventory ) then return false end
+
+    if ent:IsPlayer() then
+        if entInv.CursorSlot or entInv.HeadGear or entInv.BodyGear or entInv.FootGear then
+            return false
+        end
+    end
+
+    return true
+end
+
 function inv.tryTakeItems( ent, items )
     local inventory = ent.RVR_Inventory
 
@@ -82,6 +113,7 @@ function inv.setSlot( ent, position, itemData, plysToNotify )
         else
             typeChanged = tobool( itemData ) ~= tobool( inventory.Inventory[position] )
         end
+
         inventory.Inventory[position] = itemData
     elseif isPlayer and position > inventory.MaxSlots and position < inventory.MaxSlots + 3 then
         if position == inventory.MaxSlots + 1 then
@@ -167,9 +199,11 @@ function inv.slotCanContain( ent, position, item )
         if position == ent.RVR_Inventory.MaxSlots + 1 then
             return tobool( itemData.isHeadGear )
         end
+
         if position == ent.RVR_Inventory.MaxSlots + 2 then
             return tobool( itemData.isBodyGear )
         end
+
         if position == ent.RVR_Inventory.MaxSlots + 3 then
             return tobool( itemData.isFootGear )
         end
@@ -179,44 +213,56 @@ function inv.slotCanContain( ent, position, item )
 end
 
 -- returns couldFitAll, amount
-function inv.attemptPickupItem( ply, item, count )
-    if not ply.RVR_Inventory then return false, 0 end
+function inv.attemptPickupItem( ent, item, count )
+    if not ent.RVR_Inventory then return false, 0 end
     count = count or 1
     local originalCount = count
 
+    if ent.RVR_Inventory.PreventAdding then return false, 0 end
+
+    local isPlayer = ent:IsPlayer()
+    local plys
+    if isPlayer then
+        plys = { ent }
+    end
+
     local itemData = RVR.Items.getItemData( item.type )
 
-    for k = 1, ply.RVR_Inventory.MaxSlots do
-        local itemSlotData = inv.getSlot( ply, k )
+    for k = 1, ent.RVR_Inventory.MaxSlots do
+        local itemSlotData = inv.getSlot( ent, k )
         -- Can fit more
         if itemSlotData and inv.canItemsStack( itemSlotData.item, item ) and itemSlotData.count < itemData.maxCount then
             local canFit = itemData.maxCount - itemSlotData.count
             if canFit >= count then
                 itemSlotData.count = itemSlotData.count + count
-                inv.setSlot( ply, k, itemSlotData, { ply } )
+                inv.setSlot( ent, k, itemSlotData, plys )
 
-                inv.notifyItemPickup( ply, item, originalCount )
+                if isPlayer then
+                    inv.notifyItemPickup( ent, item, originalCount )
+                end
                 return true, originalCount
             else
                 itemSlotData.count = itemSlotData.count + canFit
-                inv.setSlot( ply, k, itemSlotData, { ply } )
+                inv.setSlot( ent, k, itemSlotData, plys )
 
                 count = count - canFit
             end
         end
     end
 
-    for k = 1, ply.RVR_Inventory.MaxSlots do
-        local itemSlotData = inv.getSlot( ply, k )
+    for k = 1, ent.RVR_Inventory.MaxSlots do
+        local itemSlotData = inv.getSlot( ent, k )
         -- Empty
         if not itemSlotData then
             if count <= itemData.maxCount then
-                inv.setSlot( ply, k, { item = item, count = count }, { ply } )
+                inv.setSlot( ent, k, { item = item, count = count }, plys )
 
-                inv.notifyItemPickup( ply, item, originalCount )
+                if isPlayer then
+                    inv.notifyItemPickup( ent, item, originalCount )
+                end
                 return true, originalCount
             else
-                inv.setSlot( ply, k, { item = item, count = itemData.maxCount }, { ply } )
+                inv.setSlot( ent, k, { item = item, count = itemData.maxCount }, plys )
                 count = count - itemData.maxCount
             end
         end
@@ -224,8 +270,8 @@ function inv.attemptPickupItem( ply, item, count )
 
     local amountPickedup = originalCount - count
 
-    if amountPickedup > 0 then
-        inv.notifyItemPickup( ply, item, amountPickedup )
+    if amountPickedup > 0 and isPlayer then
+        inv.notifyItemPickup( ent, item, amountPickedup )
     end
 
     return false, amountPickedup
@@ -239,6 +285,25 @@ function inv.getSelectedItem( ply )
     if not itemData then return end
 
     return itemData.item, itemData.count
+end
+
+local function addDurabilityFuncs( wep, instance, itemData )
+    function wep:LoseDurability()
+        local halfRange = ( itemData.durabilityUseRandomRange or 0 ) * 0.5
+        local damage = itemData.durabilityUse + math.random( -halfRange, halfRange )
+
+        instance.durability = math.Clamp( instance.durability - damage, 0, itemData.maxDurability )
+
+        local ply = self.Owner
+        local hotbarSelected = ply.RVR_Inventory.HotbarSelected
+
+        if instance.durability <= 0 then
+            inv.consumeInSlot( ply, hotbarSelected, 1 )
+        else
+            local slotData = inv.getSlot( ply, hotbarSelected )
+            inv.notifyItemSlotChange( { ply }, ply, hotbarSelected, slotData )
+        end
+    end
 end
 
 function inv.setSelectedItem( ply, idx )
@@ -255,11 +320,16 @@ function inv.setSelectedItem( ply, idx )
     local itemSlotData = ply.RVR_Inventory.Inventory[idx]
 
     local wep
+
     if itemSlotData then
         local itemData = RVR.Items.getItemData( itemSlotData.item.type )
 
         if itemData.swep then
             wep = ply:Give( itemData.swep )
+
+            if itemData.hasDurability then
+                addDurabilityFuncs( wep, itemSlotData.item, itemData )
+            end
         else
             wep = ply:Give( "rvr_held_item" )
             wep:SetItemData( itemData )
@@ -279,9 +349,11 @@ function inv.moveItem( fromEnt, toEnt, fromPosition, toPosition, count )
     count = count or -1
 
     local plys = {}
+
     if type( fromEnt ) == "Player" then
         table.insert( plys, fromEnt )
     end
+
     if type( toEnt ) == "Player" then
         table.insert( plys, toEnt )
     end
@@ -298,11 +370,16 @@ function inv.moveItem( fromEnt, toEnt, fromPosition, toPosition, count )
         return false, "Item cannot be placed here"
     end
 
+    if toEnt.RVR_Inventory.PreventAdding then
+        return false, "This inventory cannot have items added to it"
+    end
+
     if count > fromItem.count then
         count = fromItem.count
     end
 
     local toItem = inv.getSlot( toEnt, toPosition )
+
     if toItem then
         if not inv.canItemsStack( fromItem.item, toItem.item ) then
             -- Item swapping - Only allow if count is all items
@@ -375,8 +452,9 @@ function inv.dropItem( ply, position, count )
 
     local droppedItem = ents.Create( "rvr_dropped_item" )
     if not IsValid( droppedItem ) then return end
+
     droppedItem:SetPos( ply:GetShootPos() + Angle( 0, ply:EyeAngles().yaw, 0 ):Forward() * 20 )
-    droppedItem:Setup( RVR.Items.getItemData( itemData.item.type ), count )
+    droppedItem:Setup( itemData.item, count )
     droppedItem:Spawn()
 
     return droppedItem

@@ -272,8 +272,6 @@ local function onPlayerSay( ply, text )
     if validCommand then
         return ""
     end
-
-    return
 end
 
 hook.Add( "PlayerSay", "RVR_Commands_onPlayerSay", onPlayerSay )
