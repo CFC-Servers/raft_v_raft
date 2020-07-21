@@ -41,6 +41,7 @@ function builder.expandRaft( piece, class, dir, rotation )
     newEnt:SetPos( piece:LocalToWorld( localDir * size ) )
     newEnt:SetRaftRotationOffset( rotation )
     newEnt:SetRaft( piece:GetRaft() )
+    constraint.Weld( newEnt, piece, 0, 0, 0, true, false )
     raft:AddPiece( raft:GetPosition( piece ) + dir, newEnt )
     return newEnt, nil
 end
