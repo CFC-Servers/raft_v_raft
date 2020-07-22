@@ -86,6 +86,8 @@ function party.removeParty( id )
 
     party.parties[id] = nil
 
+    hook.Run( "RVR_Party_PartyRemoved", partyData )
+
     updateClientPartyData( id )
 
     return true
@@ -366,10 +368,7 @@ hook.Add( "RVR_SuccessfulPlayerSpawn", "RVR_Party_Raft_Spawn", function( ply )
     local partyData = ply:GetParty()
     if not partyData then return end -- This should never happen, but just to be sure.
 
-    --[[ Uncomment this whenever raft builder is implemented
-    local raftData = partyData.raft
-    local spawnPos = RVR.Raft.getSpawnPos( raftData )
+    local spawnPos = partyData.raft:GetSpawnPosition( ply )
 
     ply:SetPos( spawnPos )
-    ]]
 end )

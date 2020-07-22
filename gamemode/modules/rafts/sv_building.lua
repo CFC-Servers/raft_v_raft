@@ -1,6 +1,22 @@
 RVR.Builder = {} or RVR.Builder
 local builder = RVR.Builder
 
+hook.Add( "RVR_Party_PartyCreated", "RVR_Raft_createRaft", function( partyData )
+    local raft = RVR.Builder.createRaft( Vector( 0, 0, RVR.waterSurfaceZ ) )
+
+    raft:SetPartyID( partyData.id )
+
+    partyData.raft = raft
+end )
+
+hook.Add( "RVR_Party_PartyRemoved", "RVR_Raft_removeRaft", function( partyData )
+    if not partyData.raft then return end
+
+    if partyData.raft then
+        partyData.raft:Remove()
+    end
+end )
+
 function builder.createRaft( position )
     local raft = RVR.newRaft()
 

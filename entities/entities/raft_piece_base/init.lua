@@ -21,7 +21,7 @@ function ENT:OnRemove()
     local neighbors = raft:GetNeighbors( self )
 
     for _, ent in pairs( neighbors ) do
-        if not ent:ShouldExist() then
+        if IsValid( ent ) and not ent._removing and not ent:ShouldExist() then
             ent:Remove()
         end
     end
