@@ -139,7 +139,7 @@ function mainMenu.createTextEntry( data )
             surface.PlaySound( "resource/warning.wav" )
         end
 
-        data.action( curText )
+        data.action( self:GetText() )
     end
 
     data.action( "" )
