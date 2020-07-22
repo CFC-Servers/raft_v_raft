@@ -2,9 +2,24 @@ include( "shared.lua" )
 
 local abs = math.abs
 
-local GHOST_COLOR = Color( 0, 255, 0, 150 )
+local GHOST_VALID = Color( 0, 255, 0, 150 )
+local GHOST_INVALID = Color( 255, 0, 0, 150 )
 local GHOST_INVIS = Color( 0, 0, 0, 0 )
 local INPUT_DELAY = 0.2
+
+surface.CreateFont( "RVR_RaftBuilderIngredients", {
+    font = "Bungee Regular",
+    size = ScrH() * 0.045,
+    weight = 500
+} )
+
+local raftPartIcons = {
+    raft_foundation = Material( "rvr/icons/raft_foundation.png" ),
+    raft_platform = Material( "rvr/icons/raft_platform.png" ),
+    raft_stairs = Material( "rvr/icons/raft_stairs.png" ),
+    raft_wall = Material( "rvr/icons/raft_wall.png" ),
+    raft_fence = Material( "rvr/icons/raft_fence.png" )
+}
 
 function SWEP:Initialize()
     self.ghost = ClientsideModel( "models/rvr/raft/raft_base.mdl", RENDERGROUP_BOTH )
@@ -20,7 +35,8 @@ function SWEP:Initialize()
         local clsName = placeable.class
         local cls = baseclass.Get( clsName )
 
-        local mat = RVR.Util.getModelTexture( cls.Model, cls.PreviewPos, cls.PreviewAngle )
+        local mat = raftPartIcons[clsName]
+
         self.radial:AddItem( cls.PrintName, mat, function()
             self:SetSelectedClass( clsName )
         end )
@@ -28,16 +44,22 @@ function SWEP:Initialize()
 
     local raftBuilder = self
     function self.radial:customPaint()
-        draw.NoTexture()
+        self:SetCenterOutlineColor()
         if not self.selectedItem then return end
+        draw.NoTexture()
         local className = raftBuilder.Placeables[self.selectedItem].class
         local class = baseclass.Get( className )
         local required = class:GetRequiredItems()
 
         for i, itemData in ipairs( required ) do
-            raftBuilder.drawItemRequirement( ScrW() / 2, ScrH() * 0.48 + i * 40, itemData.item.type, itemData.count, "DermaLarge" )
+            raftBuilder.drawItemRequirement( ScrW() * 0.497, ScrH() * 0.5 + ( i - 1 ) * 30,
+                itemData.item.type, itemData.count, "RVR_RaftBuilderIngredients", ScrH() * 0.025 )
         end
     end
+end
+
+function SWEP:DoDrawCrosshair( x, y )
+    return self.radial.isOpen
 end
 
 function SWEP:SetSelectedClass( cls )
@@ -51,6 +73,9 @@ function SWEP:OnRemove()
 end
 
 function SWEP:Think()
+    self:updateCanMake()
+    self.radial:SetCenterOutlineColor( self.canMake and Color( 0, 255, 0 ) or Color( 255, 0, 0 ) )
+
     local ent = self:GetAimEntity()
     if not ent or not ent.IsRaft then return self.ghost:SetColor( GHOST_INVIS ) end
 
@@ -88,7 +113,7 @@ function SWEP:WallPreview()
     self.wallYaw = localHitPos:Angle().yaw
 
     self.ghost:SetModel( self.selectedClassTable.Model )
-    self.ghost:SetColor( GHOST_COLOR )
+    self.ghost:SetColor( self.canMake and GHOST_VALID or GHOST_INVALID )
 
     self.ghost:SetPos( ent:LocalToWorld( pos ) )
     self.ghost:SetAngles( ent:LocalToWorldAngles( Angle( 0, self.wallYaw, 0 ) ) )
@@ -129,7 +154,7 @@ function SWEP:PiecePreview()
 
     -- update ghost position
     self.ghost:SetModel( self.selectedClassTable.Model )
-    self.ghost:SetColor( GHOST_COLOR )
+    self.ghost:SetColor( self.canMake and GHOST_VALID or GHOST_INVALID )
     self.ghost:SetPos( ent:LocalToWorld( localDir * size ) )
     self.ghost:SetAngles( ent:GetAngles() - ent:GetRaftRotationOffset() + Angle( 0, self.yaw, 0 ) )
 end
@@ -171,6 +196,8 @@ end
 
 local nextPrimary = 0
 function SWEP:PrimaryAttack()
+    if not self.canMake then return end
+
     if CurTime() <= nextPrimary then return end
     nextPrimary = CurTime() + INPUT_DELAY
 
@@ -226,7 +253,40 @@ hook.Add( "RVR_InventoryCacheUpdate", "RVR_ItemCountCacheClear", function()
     itemCountCache = {}
 end )
 
-function SWEP.drawItemRequirement( x, y, itemType, requirement, font )
+function SWEP:updateCanMake()
+    if not self.radial.selectedItem then
+        self.canMake = false
+        return
+    end
+
+    local className = self.Placeables[self.radial.selectedItem].class
+    local class = baseclass.Get( className )
+    local required = class:GetRequiredItems()
+
+    local canMake = true
+
+    for _, itemData in pairs( required ) do
+        local itemType, requirement = itemData.item.type, itemData.count
+
+        local count
+        if itemCountCache[itemType] then
+            count = itemCountCache[itemType]
+        else
+            count = RVR.Inventory.selfGetItemCount( itemType )
+
+            itemCountCache[itemType] = count
+        end
+
+        if count < requirement then
+            canMake = false
+            break
+        end
+    end
+
+    self.canMake = canMake
+end
+
+function SWEP.drawItemRequirement( x, y, itemType, requirement, font, h )
     local count
     if itemCountCache[itemType] then
         count = itemCountCache[itemType]
@@ -250,10 +310,11 @@ function SWEP.drawItemRequirement( x, y, itemType, requirement, font )
 
     surface.SetFont( font )
     local textW, textH = surface.GetTextSize( text )
+    h = h or textH
 
-    local iconSize = textH * iconSizeMult
+    local iconSize = h * iconSizeMult
 
-    local w, h = textW + iconSize + 5, textH
+    local w = textW + iconSize + 5
 
     surface.SetDrawColor( 255, 255, 255 )
     surface.SetMaterial( icon )
@@ -267,4 +328,6 @@ function SWEP.drawItemRequirement( x, y, itemType, requirement, font )
 
     surface.SetTextPos( x - w * 0.5 + iconSize + 5, y - textH * 0.5 )
     surface.DrawText( text )
+
+    return count >= requirement
 end
