@@ -40,6 +40,15 @@ function raftMeta:GetPiece( position )
     return ent
 end
 
+function raftMeta:GetAveragePosition()
+    local totalPos = Vector()
+    for _, raftPiece in pairs( self.pieces ) do
+        totalPos = totalPos + raftPiece:GetPos()
+    end
+
+    return totalPos / table.Count( self.pieces )
+end
+
 function raftMeta:GetNeighbors( piece )
     local neighbors = {}
 

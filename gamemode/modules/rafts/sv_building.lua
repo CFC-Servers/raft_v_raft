@@ -1,10 +1,66 @@
 RVR.Builder = {} or RVR.Builder
 local builder = RVR.Builder
 
+function builder.getNewRaftPosition()
+    local config = GAMEMODE.Config.Rafts
+
+    local raftPoses = builder.getRaftPositions()
+
+    local bestSpawn = Vector( 0, 0, RVR.waterSurfaceZ + config.RAFT_VERTICAL_OFFSET )
+    local bestSpawnSqrDist = 0
+
+    local w = config.MAP_MAX.x - config.MAP_MIN.x
+    local h = config.MAP_MAX.y - config.MAP_MIN.y
+
+    local spawnEffectCutoffSqr = config.SPAWN_EFFECT_CUTOFF_DISTANCE ^ 2
+
+    for k = 1, config.SPAWN_CANDIDATE_BATCH_SIZE do
+        local gridX = math.random( 0, config.SPAWN_GRID_SIZE )
+        local gridY = math.random( 0, config.SPAWN_GRID_SIZE )
+
+        local x = config.MAP_MIN.x + w * ( gridX / config.SPAWN_GRID_SIZE )
+        local y = config.MAP_MIN.y + h * ( gridY / config.SPAWN_GRID_SIZE )
+
+        local pos = Vector( x, y, RVR.waterSurfaceZ + config.RAFT_VERTICAL_OFFSET )
+
+        local totalSqrDist = 0
+        for _, raftPos in pairs( raftPoses ) do
+            totalSqrDist = totalSqrDist + raftPos:DistToSqr( pos )
+        end
+
+        if totalSqrDist > spawnEffectCutoffSqr then
+            totalSqrDist = spawnEffectCutoffSqr
+        end
+
+        if totalSqrDist > bestSpawnSqrDist then
+            bestSpawnSqrDist = totalSqrDist
+            bestSpawn = pos
+        end
+    end
+
+    return bestSpawn
+end
+
+function builder.getRaftPositions()
+    local config = GAMEMODE.Config.Rafts
+
+    local out = {}
+    for _, raft in pairs( RVR.raftLookup ) do
+        local pos = raft:GetAveragePosition()
+        pos.z = RVR.waterSurfaceZ + config.RAFT_VERTICAL_OFFSET
+        table.insert( out, pos )
+    end
+
+    return out
+end
+
 hook.Add( "RVR_Party_PartyCreated", "RVR_Raft_createRaft", function( partyData )
-    local raft = RVR.Builder.createRaft( Vector( 0, 0, RVR.waterSurfaceZ ) )
+    local raft = RVR.Builder.createRaft( builder.getNewRaftPosition() )
 
     raft:SetPartyID( partyData.id )
+    builder.expandRaft( raft:GetPiece( Vector( 0, 0, 0 ) ), "raft_foundation", Vector( 1, 0, 0 ))
+    builder.expandRaft( raft:GetPiece( Vector( 0, 0, 0 ) ), "raft_foundation", Vector( 0, 1, 0 ), Angle( 0, 180, 0 ) )
+    builder.expandRaft( raft:GetPiece( Vector( 1, 0, 0 ) ), "raft_foundation", Vector( 0, 1, 0 ))
 
     partyData.raft = raft
 end )
