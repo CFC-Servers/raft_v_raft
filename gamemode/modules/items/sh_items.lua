@@ -98,7 +98,7 @@ items.items = {
         description = "Gmod physics gun, how did you get this?!",
         stackable = false,
         swep = "weapon_physgun",
-        icon = "icon16/shield.png"
+        icon = "materials/icon16/shield.png"
     }
 }
 
