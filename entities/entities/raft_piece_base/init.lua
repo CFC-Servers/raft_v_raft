@@ -11,7 +11,8 @@ function ENT:Initialize()
     if IsValid( phys ) then
         phys:EnableMotion( true )
     end
-    phys:SetMass(10000)
+    
+    phys:SetMass(self.DefaultMass)
 end
 
 function ENT:OnRemove()
@@ -42,22 +43,9 @@ function ENT:PhysicsUpdate( phys )
     
     if difference > 1000 then return end
 
-    local force = Vector( 0, -10, difference ) - phys:GetVelocity() * 0.7
+    local force = Vector( 0, 0, difference ) - phys:GetVelocity() * 0.7
     phys:ApplyForceCenter( force * mass)
 
-
-    local entAng = phys:GetAngles()
-    local forward = Vector( 1, 0, 0 ):Angle()
-
-    local pitch = math.rad( math.AngleDifference( entAng.pitch, forward.pitch ) )
-    local yaw = 0
-    local roll = math.rad( math.AngleDifference( entAng.roll, forward.roll ) )
-
-    local damp = 0.75
-    local strength = 500
-    local divAng = Vector( pitch, yaw, 0 )
-    divAng:Rotate( Angle( 0, -entAng.roll, 0 ) )
-
-    phys:AddAngleVelocity( ( -Vector( roll, divAng.x, divAng.y ) * strength ) - ( phys:GetAngleVelocity() * damp ) )
+    RVR.Util.keepAnglesThink( phys )
 end
 
