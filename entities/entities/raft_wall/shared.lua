@@ -1,5 +1,4 @@
-ENT.Base = "base_anim"
-ENT.Type = "anim"
+ENT.Base = "raft_breakable_base"
 ENT.Author = "THE Gaft Gals ;)"
 ENT.PrintName = "Wall"
 ENT.Model = "models/rvr/raft/wall.mdl"
