@@ -13,14 +13,6 @@ surface.CreateFont( "RVR_RaftBuilderIngredients", {
     weight = 500
 } )
 
-local raftPartIcons = {
-    raft_foundation = Material( "rvr/icons/raft_foundation.png" ),
-    raft_platform = Material( "rvr/icons/raft_platform.png" ),
-    raft_stairs = Material( "rvr/icons/raft_stairs.png" ),
-    raft_wall = Material( "rvr/icons/raft_wall.png" ),
-    raft_fence = Material( "rvr/icons/raft_fence.png" )
-}
-
 local debugMat = "models/debug/debugwhite"
 
 function SWEP:Initialize()
@@ -33,11 +25,11 @@ function SWEP:Initialize()
 
     self.radial = RVR.newRadialMenu()
 
-    for _, placeable in pairs( self.Placeables ) do
+    for _, placeable in pairs( GAMEMODE.Config.Rafts.PLACEABLES ) do
         local clsName = placeable.class
         local cls = baseclass.Get( clsName )
 
-        local mat = raftPartIcons[clsName]
+        local mat = Material( placeable.icon )
 
         self.radial:AddItem( cls.PrintName, mat, function()
             self:SetSelectedClass( clsName )
@@ -49,7 +41,7 @@ function SWEP:Initialize()
         self:SetCenterOutlineColor()
         if not self.selectedItem then return end
         draw.NoTexture()
-        local className = raftBuilder.Placeables[self.selectedItem].class
+        local className = GAMEMODE.Config.Rafts.PLACEABLES[self.selectedItem].class
         local class = baseclass.Get( className )
         local required = class:GetRequiredItems()
 
@@ -271,7 +263,7 @@ function SWEP:UpdateCanMake()
         return
     end
 
-    local className = self.Placeables[self.radial.selectedItem].class
+    local className = GAMEMODE.Config.Rafts.PLACEABLES[self.radial.selectedItem].class
     local class = baseclass.Get( className )
     local required = class:GetRequiredItems()
 
