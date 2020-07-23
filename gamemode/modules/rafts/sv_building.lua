@@ -18,6 +18,7 @@ function builder.getNewRaftPosition()
         local gridX = math.random( 0, config.SPAWN_GRID_SIZE )
         local gridY = math.random( 0, config.SPAWN_GRID_SIZE )
 
+        -- World position from grid pos
         local x = config.MAP_MIN.x + w * ( gridX / config.SPAWN_GRID_SIZE )
         local y = config.MAP_MIN.y + h * ( gridY / config.SPAWN_GRID_SIZE )
 
@@ -28,6 +29,7 @@ function builder.getNewRaftPosition()
             totalSqrDist = totalSqrDist + raftPos:DistToSqr( pos )
         end
 
+        -- Clamp totalSqrDist to spawnEffectCutoffSqr
         if totalSqrDist > spawnEffectCutoffSqr then
             totalSqrDist = spawnEffectCutoffSqr
         end
