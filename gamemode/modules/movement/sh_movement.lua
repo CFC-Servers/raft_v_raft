@@ -30,7 +30,7 @@ local function calculateStepPos( ply, pos )
         -- player is floating
         if not trace.Hit then return nil end
         
-        return tr.HitPos
+        return trace.HitPos
     end
 
     local trace = util.TraceHull{
@@ -61,21 +61,23 @@ function GM:SetupMove( ply, mv , cmd )
 
     ply.RVRMovement = ang:Forward() * cmd:GetForwardMove() + ang:Right() * cmd:GetSideMove()
     
-    local speed = ply.RVRAccel:Length() * FrameTime()
+    local speed = ply.RVRMovement:Length() * FrameTime()
     
     ply.RVRMovement:Normalize()
     
     if ply:Crouching() then
-        speed:Mul( ply:GetCrouchedWalkSpeed() )
+        speed = speed * ply:GetCrouchedWalkSpeed()
+    elseif ply:IsSprinting() then
+        speed = speed * 2
     end
-
-    ply.RVRAccel:Mul( speed ) 
+    ply.RVRMovement:Mul( speed ) 
 end
 
 function GM:FinishMove( ply, mv )
     if ply:GetMoveType() == MOVETYPE_NOCLIP then return end
     
     local ground = ply:GetGroundEntity()
+    
     if not IsValid( ground ) then return end
     if not ground.IsRaft then return end
 
@@ -84,10 +86,10 @@ function GM:FinishMove( ply, mv )
     local pos = ply:GetPos() 
     
     -- Why am i dividing this by 2?
-    pos = TryMove( ply, pos, mv:GetVelocity() / 2 + ply.RVRAccel )
+    pos = tryMove( ply, pos, mv:GetVelocity() / 2 + ply.RVRMovement )
     
-    ply:SetLocalVelocity( ground:GetVelocity() )
-	ply:SetAbsVelocity( ground:GetVelocity() )
+    ply:SetLocalVelocity( ground:GetVelocity() + ply.RVRMovement)
+	ply:SetAbsVelocity( ground:GetVelocity() + ply.RVRMovement)
 	ply:SetLocalAngles( ground:GetAngles() )
     
     if not pos then return true end

@@ -43,7 +43,7 @@ function ENT:PhysicsUpdate( phys )
     
     if difference > 1000 then return end
 
-    local force = Vector( 0, 0, difference ) - phys:GetVelocity() * 0.7
+    local force = Vector( -5, 5, difference ) - phys:GetVelocity() * 0.7
     phys:ApplyForceCenter( force * mass)
 
     RVR.Util.keepAnglesThink( phys )

@@ -10,7 +10,7 @@ function RVR.Util.keepAnglesThink( phys, strength, damp )
     strength = strength or defaultStrength
     damp = damp or defaultDamping
 
-    local entAng = physObject:GetAngles() 
+    local entAng = phys:GetAngles() 
 
     local pitch = math.rad( math.AngleDifference( entAng.pitch, forwardAngle.pitch ) )
     local yaw = 0
