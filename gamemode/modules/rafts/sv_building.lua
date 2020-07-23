@@ -21,7 +21,7 @@ function builder.getNewRaftPosition()
 
     local spawnEffectCutoffSqr = config.SPAWN_EFFECT_CUTOFF_DISTANCE ^ 2
 
-    for k = 1, config.SPAWN_CANDIDATE_BATCH_SIZE do
+    for i = 1, config.SPAWN_CANDIDATE_BATCH_SIZE do
         local gridX = math.random( 0, config.SPAWN_GRID_SIZE )
         local gridY = math.random( 0, config.SPAWN_GRID_SIZE )
 
