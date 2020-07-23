@@ -367,9 +367,6 @@ function SWEP:UpdatePermitted()
 
     local traceResult = util.TraceHull( traceData )
 
-    TRACE_RESULT = traceResult
-    TRACE_DATA = traceData
-
     if traceResult.Hit then
         self.permitted = false
     end
