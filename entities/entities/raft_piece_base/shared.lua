@@ -6,7 +6,7 @@ ENT.Model = ""
 ENT.IsRaft = true
 ENT.PreviewPos = Vector( 100, 0, -5 )
 ENT.PreviewAngle = Angle( -30, 45, -30 )
-ENT.DefaultMass = 10000
+ENT.DefaultMass = 200
 
 function ENT:SetRaft( raft )
     self:SetRaftID( raft.id )

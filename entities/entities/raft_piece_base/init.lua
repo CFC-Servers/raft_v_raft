@@ -11,7 +11,7 @@ function ENT:Initialize()
     if IsValid( phys ) then
         phys:EnableMotion( true )
     end
-    
+
     phys:SetMass(self.DefaultMass)
 end
 
@@ -33,19 +33,3 @@ end
 function ENT:ShouldExist()
     return true
 end
-
-
-function ENT:PhysicsUpdate( phys )
-    local mass = phys:GetMass()
-
-    local zPos = self:GetPos().z
-    local difference = RVR.waterSurfaceZ+10 - zPos
-    
-    if difference > 1000 then return end
-
-    local force = Vector( -5, 5, difference ) - phys:GetVelocity() * 0.7
-    phys:ApplyForceCenter( force * mass)
-
-    RVR.Util.keepAnglesThink( phys )
-end
-
