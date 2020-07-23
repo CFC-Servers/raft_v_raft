@@ -91,6 +91,14 @@ items.items = {
         water = 60,
         viewModelOffset = Vector( -2, 5, -9 ),
         viewModelAng = Angle( 0, -15, 0 )
+    },
+    {
+        type = "gun",
+        displayName = "Gun",
+        description = "G U N",
+        swep = "weapon_pistol",
+        icon = "materials/icon16/cross.png",
+        stackable = false
     }
 }
 

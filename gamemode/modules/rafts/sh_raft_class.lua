@@ -83,6 +83,8 @@ function raftMeta:GetSpawnPosition( ply )
     local _, highestPiece = next( self.pieces )
 
     for _, raftPiece in pairs( self.pieces ) do
+        if not IsValid( raftPiece ) then continue end
+
         if config.SPAWNPOINT_PARTS[raftPiece:GetClass()] then
             local size = raftPiece:OBBMaxs() - raftPiece:OBBMins()
             local center = raftPiece:OBBCenter()
@@ -176,7 +178,9 @@ function RVR.removeRaft( id )
     net.Broadcast()
 
     for _, ent in pairs( raft.pieces ) do
-        ent:Remove()
+        if ent:IsValid() then
+            ent:Remove()
+        end
     end
 end
 
