@@ -21,6 +21,8 @@ local raftPartIcons = {
     raft_fence = Material( "rvr/icons/raft_fence.png" )
 }
 
+local debugMat = "models/debug/debugwhite"
+
 function SWEP:Initialize()
     self.ghost = ClientsideModel( "models/rvr/raft/raft_base.mdl", RENDERGROUP_BOTH )
     self:SetSelectedClass( "raft_platform" )
@@ -66,6 +68,7 @@ function SWEP:SetSelectedClass( cls )
     self.selectedClass = cls
     self.selectedClassTable = baseclass.Get( self.selectedClass )
     self.ghost:SetModel( self.selectedClassTable.Model )
+    self.ghost:SetMaterial( debugMat )
 end
 
 function SWEP:OnRemove()
@@ -73,7 +76,9 @@ function SWEP:OnRemove()
 end
 
 function SWEP:Think()
-    self:updateCanMake()
+    self:UpdateCanMake()
+    self:UpdatePermitted()
+
     self.radial:SetCenterOutlineColor( self.canMake and Color( 0, 255, 0 ) or Color( 255, 0, 0 ) )
 
     local ent = self:GetAimEntity()
@@ -113,7 +118,8 @@ function SWEP:WallPreview()
     self.wallYaw = localHitPos:Angle().yaw
 
     self.ghost:SetModel( self.selectedClassTable.Model )
-    self.ghost:SetColor( self.canMake and GHOST_VALID or GHOST_INVALID )
+    self.ghost:SetMaterial( debugMat )
+    self:UpdateGhostColor()
 
     self.ghost:SetPos( ent:LocalToWorld( pos ) )
     self.ghost:SetAngles( ent:LocalToWorldAngles( Angle( 0, self.wallYaw, 0 ) ) )
@@ -154,9 +160,15 @@ function SWEP:PiecePreview()
 
     -- update ghost position
     self.ghost:SetModel( self.selectedClassTable.Model )
-    self.ghost:SetColor( self.canMake and GHOST_VALID or GHOST_INVALID )
+    self.ghost:SetMaterial( debugMat )
+    self:UpdateGhostColor()
     self.ghost:SetPos( ent:LocalToWorld( localDir * size ) )
     self.ghost:SetAngles( ent:GetAngles() - ent:GetRaftRotationOffset() + Angle( 0, self.yaw, 0 ) )
+end
+
+function SWEP:UpdateGhostColor()
+    local ghostValid = self.canMake and self.permitted
+    self.ghost:SetColor( ghostValid and GHOST_VALID or GHOST_INVALID )
 end
 
 function SWEP:GetAimEntity()
@@ -253,7 +265,7 @@ hook.Add( "RVR_InventoryCacheUpdate", "RVR_ItemCountCacheClear", function()
     itemCountCache = {}
 end )
 
-function SWEP:updateCanMake()
+function SWEP:UpdateCanMake()
     if not self.radial.selectedItem then
         self.canMake = false
         return
@@ -330,4 +342,15 @@ function SWEP.drawItemRequirement( x, y, itemType, requirement, font, h )
     surface.DrawText( text )
 
     return count >= requirement
+end
+
+function SWEP:UpdatePermitted()
+    self.permitted = false
+
+    local trace = self:GetOwner():GetEyeTrace()
+    local ent = trace.Entity
+    local isRaftEnt = IsValid( ent ) and ent.IsRaft
+    if isRaftEnt and ent:GetRaft():CanBuild( LocalPlayer() ) then
+        self.permitted = true
+    end
 end

@@ -91,6 +91,14 @@ items.items = {
         water = 60,
         viewModelOffset = Vector( -2, 5, -9 ),
         viewModelAng = Angle( 0, -15, 0 )
+    },
+    {
+        type = "physgun",
+        displayName = "Physics gun",
+        description = "Gmod physics gun, how did you get this?!",
+        stackable = false,
+        swep = "weapon_physgun",
+        icon = "icon16/shield.png"
     }
 }
 
