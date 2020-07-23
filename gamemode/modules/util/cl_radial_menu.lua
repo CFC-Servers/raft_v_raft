@@ -78,10 +78,11 @@ function radialMeta:Paint()
         local color = self.color
         local matColor = Color( 255, 255, 255 )
 
-        local inSegment = aimAng > i * buttonSize and aimAng < buttonSize + i * buttonSize and aimDist > self.infoCircleRadius
-
         local startAng = math.ceil( i * buttonSize )
         local endAng = math.ceil( ( i + 1 ) * buttonSize )
+
+        local inAngularRange = aimAng > startAng and aimAng < endAng
+        local inSegment = inAngularRange and aimDist > self.infoCircleRadius
 
         if inSegment then
             color = self.selectedColor
@@ -115,7 +116,7 @@ end
 
 function radialMeta:DrawOuterCircleSegment( start, size )
     local centerX, centerY = ScrW() / 2, ScrH() / 2
-    local radius = self.outerRadius * 1.116
+    local radius = self.outerRadius * self.outerRingRadiusMultiplier
 
     local doubleRadiusSquared = 2 * radius * radius
     local normalWidth = math.ceil( math.sqrt( doubleRadiusSquared * ( 1 - math.cos( math.rad( 1 ) ) ) ) )
@@ -224,11 +225,12 @@ function RVR.newRadialMenu()
         secondarySelectedColor = Color( 156, 0, 0, 255 ),
         infoCircleColor = Color( 50, 50, 50, 255 ),
         titleColor = Color( 255, 255, 255, 255 ),
-        outerRadius = 300,
-        innerRadius = 150,
+        outerRadius = ScrH() * 0.28,
+        innerRadius = ScrH() * 0.14,
         infoCircleRadius = 110,
         iconRadius = 230,
         segmentSize = 5,
+        outerRingRadiusMultiplier = 1.116,
         pointCache = {},
         customPaint = function() end
     }

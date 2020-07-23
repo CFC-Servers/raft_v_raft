@@ -49,7 +49,7 @@ items.items = {
     {
         type = "raft_builder",
         displayName = "Raft Builder",
-        description = "Build rafts uwu",
+        description = "Build rafts with various items found in the ocean!",
         model = "models/weapons/w_crowbar.mdl",
         swep = "raft_builder",
         maxCount = 1,

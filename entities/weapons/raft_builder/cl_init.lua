@@ -45,9 +45,14 @@ function SWEP:Initialize()
         local class = baseclass.Get( className )
         local required = class:GetRequiredItems()
 
+        -- Shifted left slightly from center
+        local x = ScrW() * 0.497
+        local spacing = 30
+        local iconHeight = ScrH() * 0.025
         for i, itemData in ipairs( required ) do
-            raftBuilder.drawItemRequirement( ScrW() * 0.497, ScrH() * 0.5 + ( i - 1 ) * 30,
-                itemData.item.type, itemData.count, "RVR_RaftBuilderIngredients", ScrH() * 0.025 )
+            local y = ScrH() * 0.5 + ( i - 1 ) * spacing
+            raftBuilder.drawItemRequirement( x, y, itemData.item.type,
+                itemData.count, "RVR_RaftBuilderIngredients", iconHeight )
         end
     end
 end
