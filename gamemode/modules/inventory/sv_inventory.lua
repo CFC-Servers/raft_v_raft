@@ -441,6 +441,8 @@ function inv.dropItem( ply, position, count )
     local itemData = inv.getSlot( ply, position )
     if not itemData then return end
 
+    if hook.Run( "RVR_PreventDropItem", ply, itemData ) then return end
+
     if count < 0 or count == itemData.count then
         inv.setSlot( ply, position, nil, { ply } )
 

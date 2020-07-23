@@ -86,6 +86,7 @@ function SWEP:PrimaryAttack()
 
             hook.Remove( "RVR_PreventInventory", hookID )
             hook.Remove( "RVR_PreventCraftingMenu", hookID )
+            hook.Remove( "RVR_PreventDropItem", hookID )
         end )
 
         timer.Simple( self.Cooldown * 0.5, function()
@@ -98,6 +99,11 @@ function SWEP:PrimaryAttack()
         end )
 
         hook.Add( "RVR_PreventCraftingMenu", hookID, function( ply, idx )
+            if ply ~= owner then return end
+            return true
+        end )
+
+        hook.Add( "RVR_PreventDropItem", hookID, function( ply, itemData )
             if ply ~= owner then return end
             return true
         end )
