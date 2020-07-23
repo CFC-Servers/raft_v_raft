@@ -7,6 +7,10 @@ local GHOST_INVALID = Color( 255, 0, 0, 150 )
 local GHOST_INVIS = Color( 0, 0, 0, 0 )
 local INPUT_DELAY = 0.2
 
+local DEFAULT_SELECTED = "raft_foundation"
+
+local defaultSelectedIndex
+
 surface.CreateFont( "RVR_RaftBuilderIngredients", {
     font = "Bungee Regular",
     size = ScrH() * 0.045,
@@ -25,11 +29,15 @@ function SWEP:Initialize()
 
     self.radial = RVR.newRadialMenu()
 
-    for _, placeable in pairs( GAMEMODE.Config.Rafts.PLACEABLES ) do
+    for i, placeable in pairs( GAMEMODE.Config.Rafts.PLACEABLES ) do
         local clsName = placeable.class
         local cls = baseclass.Get( clsName )
 
         local mat = Material( placeable.icon )
+
+        if placeable.class == DEFAULT_SELECTED then
+            defaultSelectedIndex = i
+        end
 
         self.radial:AddItem( cls.PrintName, mat, function()
             self:SetSelectedClass( clsName )
@@ -39,9 +47,8 @@ function SWEP:Initialize()
     local raftBuilder = self
     function self.radial:customPaint()
         self:SetCenterOutlineColor()
-        if not self.selectedItem then return end
         draw.NoTexture()
-        local className = GAMEMODE.Config.Rafts.PLACEABLES[self.selectedItem].class
+        local className = GAMEMODE.Config.Rafts.PLACEABLES[self.selectedItem or defaultSelectedIndex].class
         local class = baseclass.Get( className )
         local required = class:GetRequiredItems()
 
@@ -55,6 +62,8 @@ function SWEP:Initialize()
                 itemData.count, "RVR_RaftBuilderIngredients", iconHeight )
         end
     end
+
+    self:SetSelectedClass( DEFAULT_SELECTED )
 end
 
 function SWEP:DoDrawCrosshair( x, y )
@@ -118,7 +127,7 @@ function SWEP:WallPreview()
     self.ghost:SetMaterial( debugMat )
     self:UpdateGhostColor()
 
-    self.ghost:SetPos( ent:LocalToWorld( pos ) )
+    self.ghost:SetPos( ent:LocalToWorld( pos ) + Vector( 0, 0, 0.1 ) )
     self.ghost:SetAngles( ent:LocalToWorldAngles( Angle( 0, self.wallYaw, 0 ) ) )
 end
 
@@ -159,7 +168,7 @@ function SWEP:PiecePreview()
     self.ghost:SetModel( self.selectedClassTable.Model )
     self.ghost:SetMaterial( debugMat )
     self:UpdateGhostColor()
-    self.ghost:SetPos( ent:LocalToWorld( localDir * size ) )
+    self.ghost:SetPos( ent:LocalToWorld( localDir * size ) + Vector( 0, 0, 0.1 ) )
     self.ghost:SetAngles( ent:GetAngles() - ent:GetRaftRotationOffset() + Angle( 0, self.yaw, 0 ) )
 end
 
@@ -263,12 +272,7 @@ hook.Add( "RVR_InventoryCacheUpdate", "RVR_ItemCountCacheClear", function()
 end )
 
 function SWEP:UpdateCanMake()
-    if not self.radial.selectedItem then
-        self.canMake = false
-        return
-    end
-
-    local className = GAMEMODE.Config.Rafts.PLACEABLES[self.radial.selectedItem].class
+    local className = GAMEMODE.Config.Rafts.PLACEABLES[self.radial.selectedItem or defaultSelectedIndex].class
     local class = baseclass.Get( className )
     local required = class:GetRequiredItems()
 
@@ -353,14 +357,14 @@ function SWEP:UpdatePermitted()
     end
 
     local mins, maxs = self.ghost:GetModelBounds()
-    local center = self.ghost:GetPos() + self.ghost:OBBCenter()
+    local pos = self.ghost:GetPos()
 
     local traceData = {
-        start = center,
-        endpos = center,
+        start = pos,
+        endpos = pos,
         filter = self.ghost,
-        mins = mins * 0.99,
-        maxs = maxs * 0.99,
+        mins = mins + Vector( 5, 5, 5 ),
+        maxs = maxs + Vector( -5, -5, 5 ),
         mask = MASK_ALL,
         ignoreworld = true
     }
