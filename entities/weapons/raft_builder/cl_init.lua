@@ -205,7 +205,7 @@ end
 
 local nextPrimary = 0
 function SWEP:PrimaryAttack()
-    if not self.canMake then return end
+    if not ( self.canMake and self.permitted ) then return end
 
     if CurTime() <= nextPrimary then return end
     nextPrimary = CurTime() + INPUT_DELAY
@@ -342,12 +342,35 @@ function SWEP.drawItemRequirement( x, y, itemType, requirement, font, h )
 end
 
 function SWEP:UpdatePermitted()
-    self.permitted = false
+    self.permitted = true
 
     local trace = self:GetOwner():GetEyeTrace()
     local ent = trace.Entity
     local isRaftEnt = IsValid( ent ) and ent.IsRaft
-    if isRaftEnt and ent:GetRaft():CanBuild( LocalPlayer() ) then
-        self.permitted = true
+    if not ( isRaftEnt and ent:GetRaft():CanBuild( LocalPlayer() ) ) then
+        self.permitted = false
+        return
+    end
+
+    local mins, maxs = self.ghost:GetModelBounds()
+    local center = self.ghost:GetPos() + self.ghost:OBBCenter()
+
+    local traceData = {
+        start = center,
+        endpos = center,
+        filter = self.ghost,
+        mins = mins * 0.99,
+        maxs = maxs * 0.99,
+        mask = MASK_ALL,
+        ignoreworld = true
+    }
+
+    local traceResult = util.TraceHull( traceData )
+
+    TRACE_RESULT = traceResult
+    TRACE_DATA = traceData
+
+    if traceResult.Hit then
+        self.permitted = false
     end
 end
