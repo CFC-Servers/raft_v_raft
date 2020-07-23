@@ -75,17 +75,20 @@ function raftMeta:GetPosition( piece )
     return piece:GetRaftGridPosition()
 end
 
+-- Attempts to find a spawnable part that can fit a player on, else spawns significantly above the highest part
 function raftMeta:GetSpawnPosition( ply )
+    local config = GAMEMODE.Config.Rafts
+
     local mins, maxs = ply:GetCollisionBounds()
     local _, highestPiece = next( self.pieces )
 
     for _, raftPiece in pairs( self.pieces ) do
-        if raftPiece:GetClass() == "raft_foundation" then
+        if config.SPAWNPOINT_PARTS[raftPiece:GetClass()] then
             local size = raftPiece:OBBMaxs() - raftPiece:OBBMins()
             local center = raftPiece:OBBCenter()
             local top = raftPiece:GetPos() + center + Vector( 0, 0, size.z * 0.5 + 1 )
 
-            local tr = util.TraceHull {
+            local traceResult = util.TraceHull {
                 start = top,
                 endpos = top,
                 filter = ply,
@@ -94,13 +97,13 @@ function raftMeta:GetSpawnPosition( ply )
                 mask = MASK_PLAYERSOLID
             }
 
-            if not tr.Hit then
+            if not traceResult.Hit then
                 return top
             end
+        end
 
-            if raftPiece:GetPos().z > highestPiece:GetPos().z then
-                highestPiece = raftPiece
-            end
+        if raftPiece:GetPos().z > highestPiece:GetPos().z then
+            highestPiece = raftPiece
         end
     end
 
@@ -113,8 +116,8 @@ function raftMeta:GetParty()
     return party.getParty( self.partyID )
 end
 
-function raftMeta:SetParty( party )
-    self.partyID = party.ID
+function raftMeta:SetParty( partyData )
+    self.partyID = partyData.ID
 end
 
 function raftMeta:SetPartyID( partyID )

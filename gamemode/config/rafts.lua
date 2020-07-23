@@ -31,13 +31,6 @@ Config.BUILDING_REQUIREMENTS = {
 
 Config.RAFT_VERTICAL_OFFSET = 10
 
--- Used for spawning rafts
--- Currently set up for rvr_water, this should be set to the minimum corner in x and y
-Config.MAP_MIN = Vector( -15000, -15000 )
-
--- This should be set to the maximum corner in x and y
-Config.MAP_MAX = Vector( 15000, 15000 )
-
 -- Raft creation time scales with the square of this number, double it, and the creation time quadruples
 Config.SPAWN_GRID_SIZE = 100
 
@@ -46,3 +39,19 @@ Config.SPAWN_CANDIDATE_BATCH_SIZE = 30
 
 -- The distance at which other rafts no longer affect the score of a candidate
 Config.SPAWN_EFFECT_CUTOFF_DISTANCE = 1500
+
+Config.SPAWNPOINT_PARTS = {
+    raft_foundation = true,
+    raft_platform = true
+}
+
+Config.Map = {}
+
+-- Used for spawning rafts
+Config.Map["rvr_water"] = {
+    -- This should be set to the minimum corner in x and y
+    MAP_MIN = Vector( -15000, -15000 ),
+
+    -- This should be set to the maximum corner in x and y
+    MAP_MAX = Vector( 15000, 15000 )
+}

@@ -3,14 +3,21 @@ local builder = RVR.Builder
 
 function builder.getNewRaftPosition()
     local config = GAMEMODE.Config.Rafts
+    local mapConfig = GAMEMODE.Config.Rafts.Map[game.GetMap()]
+
+    -- Fallback to rvr_water if non existant
+    if not mapConfig then
+        mapConfig = GAMEMODE.Config.Rafts.Map["rvr_water"]
+        print( "[RVR] Warning! Missing map size definitions for " .. game.GetMap() .. " in rafts config." )
+    end
 
     local raftPoses = builder.getRaftPositions()
 
     local bestSpawn = Vector( 0, 0, RVR.waterSurfaceZ + config.RAFT_VERTICAL_OFFSET )
     local bestSpawnSqrDist = 0
 
-    local w = config.MAP_MAX.x - config.MAP_MIN.x
-    local h = config.MAP_MAX.y - config.MAP_MIN.y
+    local w = mapConfig.MAP_MAX.x - mapConfig.MAP_MIN.x
+    local h = mapConfig.MAP_MAX.y - mapConfig.MAP_MIN.y
 
     local spawnEffectCutoffSqr = config.SPAWN_EFFECT_CUTOFF_DISTANCE ^ 2
 
@@ -19,8 +26,8 @@ function builder.getNewRaftPosition()
         local gridY = math.random( 0, config.SPAWN_GRID_SIZE )
 
         -- World position from grid pos
-        local x = config.MAP_MIN.x + w * ( gridX / config.SPAWN_GRID_SIZE )
-        local y = config.MAP_MIN.y + h * ( gridY / config.SPAWN_GRID_SIZE )
+        local x = mapConfig.MAP_MIN.x + w * ( gridX / config.SPAWN_GRID_SIZE )
+        local y = mapConfig.MAP_MIN.y + h * ( gridY / config.SPAWN_GRID_SIZE )
 
         local pos = Vector( x, y, RVR.waterSurfaceZ + config.RAFT_VERTICAL_OFFSET )
 
@@ -60,6 +67,7 @@ hook.Add( "RVR_Party_PartyCreated", "RVR_Raft_createRaft", function( partyData )
     local raft = RVR.Builder.createRaft( builder.getNewRaftPosition() )
 
     raft:SetPartyID( partyData.id )
+
     builder.expandRaft( raft:GetPiece( Vector( 0, 0, 0 ) ), "raft_foundation", Vector( 1, 0, 0 ))
     builder.expandRaft( raft:GetPiece( Vector( 0, 0, 0 ) ), "raft_foundation", Vector( 0, 1, 0 ), Angle( 0, 180, 0 ) )
     builder.expandRaft( raft:GetPiece( Vector( 1, 0, 0 ) ), "raft_foundation", Vector( 0, 1, 0 ))
