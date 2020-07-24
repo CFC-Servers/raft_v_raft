@@ -49,7 +49,7 @@ items.items = {
     {
         type = "raft_builder",
         displayName = "Raft Builder",
-        description = "Build rafts uwu",
+        description = "Build rafts with various items found in the ocean!",
         model = "models/weapons/w_crowbar.mdl",
         swep = "raft_builder",
         maxCount = 1,
@@ -114,6 +114,14 @@ items.items = {
         placeableClass = "rvr_crafter",
         viewModelOffset = Vector( 30, 60, -39 ),
         viewModelAng = Angle( 0, -40, 0 )
+    },
+    {
+        type = "physgun",
+        displayName = "Physics gun",
+        description = "Gmod physics gun, how did you get this?!",
+        stackable = false,
+        swep = "weapon_physgun",
+        icon = "materials/icon16/shield.png"
     }
 }
 
