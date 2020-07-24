@@ -97,10 +97,11 @@ items.items = {
         displayName = "Storage Box",
         description = "Store all your items!",
         maxCount = 1,
-        model = "models/rvr/props/workbench.mdl",
+        model = "models/props_junk/wood_crate001a.mdl",
         icon = "materials/rvr/items/water_bottle.png",
         placeable = true,
-        placeableClass = "rvr_storage"
+        placeableClass = "rvr_storage",
+        viewModelOffset = Vector( 30, 50, -9 )
     }
 }
 

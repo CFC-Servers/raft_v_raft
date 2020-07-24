@@ -141,11 +141,41 @@ function builder.placeWall( piece, class, yaw )
     return newEnt
 end
 
-function builder.placeItem( parentPiece, item, relativePos, angle ) 
+function builder.placeItem( parentPiece, item, pos, angle ) 
     local newEnt = ents.Create( item.placeableClass )
-    newEnt:SetPos( parentPiece:LocalToWorld( relativePos ) )
+    newEnt:SetPos( pos )
     newEnt:SetAngles( angle )
     newEnt:SetParent( parentPiece )
     newEnt:Spawn()
+    
     return newEnt
 end
+
+function builder.tryPlaceItem( ply, parentPiece, item, pos, angle ) 
+    if not parentPiece.IsRaft then return end
+    if not item.placeable then return end
+    local raft = parentPiece:GetRaft()
+    if not raft then return end
+    if not IsValid( ply ) then return end
+
+    if not raft:CanBuild( ply ) then
+        ply:PrintMessage( HUD_PRINTCONSOLE, "You do not have permissions to build on this raft" )
+        return
+    end
+
+    local required = {
+        { item = item, count = 1 }
+    }
+
+    local success, itemsMissing = RVR.Inventory.checkItems( ply.RVR_Inventory, required )
+    if not success then
+        -- TODO print itemsMissing in a human readable format
+        ply:PrintMessage( HUD_PRINTCONSOLE, "missing required items" )
+        return
+    end
+
+    RVR.Builder.placeItem( parentPiece, item, pos, angle )
+
+    RVR.Inventory.tryTakeItems( ply, required )
+end
+
