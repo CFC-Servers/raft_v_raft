@@ -5,4 +5,4 @@ ENT.Author = ""
 ENT.Model = "models/props_junk/wood_crate001a.mdl"
 ENT.InventoryName = "Medium Storage"
 ENT.InventorySize = 50
-ENT.PlacementOffset = Vector(0, 0, 20)
+ENT.PlacementOffset = Vector( 0, 0, 20 )
