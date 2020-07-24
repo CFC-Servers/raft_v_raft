@@ -30,6 +30,12 @@ function ENT:OnRemove()
             ent:Remove()
         end
     end
+
+    if self.walls then
+        for _, wall in pairs( self.walls ) do
+            wall:Remove()
+        end
+    end
 end
 
 -- should the raft piece still exist e.g. a platform must have a foundation bellow it

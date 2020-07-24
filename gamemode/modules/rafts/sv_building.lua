@@ -137,6 +137,7 @@ function builder.placeWall( piece, class, yaw )
     newEnt:Spawn()
     newEnt:SetPos( piece:LocalToWorld( pos ) )
     newEnt:SetAngles( piece:LocalToWorldAngles( Angle( 0, yaw, 0 ) ) )
+    newEnt:SetRaft( piece:GetRaft() )
     piece.walls[yaw] = newEnt
     return newEnt
 end
