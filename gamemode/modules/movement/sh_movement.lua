@@ -12,6 +12,15 @@ local function isEmptyPos( ply, pos )
     return not trace.Hit
 end
 
+local function getGroundIfRaft( ply ) 
+    local ground = ply:GetGroundEntity()
+    
+    if not IsValid( ground ) then return end
+    if not ground.IsRaft then return end
+
+    return ground
+end
+
 local function calculateStepPos( ply, pos )
     local mins, maxs = ply:GetCollisionBounds()
 
@@ -76,18 +85,14 @@ end
 function GM:FinishMove( ply, mv )
     if ply:GetMoveType() == MOVETYPE_NOCLIP then return end
     
-    local ground = ply:GetGroundEntity()
-    
-    if not IsValid( ground ) then return end
-    if not ground.IsRaft then return end
+    local ground = getGroundIfRaft( ply )
+    if not ground then return end
 
     mv:SetVelocity( ground:GetVelocity() )
-
-    local pos = ply:GetPos() 
     
     -- Why am i dividing this by 2?
-    pos = tryMove( ply, pos, mv:GetVelocity() / 2 + ply.RVRMovement )
-    
+    local pos = tryMove( ply, ply:GetPos(), mv:GetVelocity() / 2 + ply.RVRMovement )
+
     ply:SetLocalVelocity( ground:GetVelocity() + ply.RVRMovement)
 	ply:SetAbsVelocity( ground:GetVelocity() + ply.RVRMovement)
 	ply:SetLocalAngles( ground:GetAngles() )
