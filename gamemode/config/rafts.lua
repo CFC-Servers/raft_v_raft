@@ -29,6 +29,29 @@ Config.BUILDING_REQUIREMENTS = {
     }
 }
 
+Config.PLACEABLES = {
+    {
+        class = "raft_foundation",
+        icon = "rvr/icons/raft_foundation.png"
+    },
+    {
+        class = "raft_platform",
+        icon = "rvr/icons/raft_platform.png"
+    },
+    {
+        class = "raft_stairs",
+        icon = "rvr/icons/raft_stairs.png"
+    },
+    {
+        class = "raft_wall",
+        icon = "rvr/icons/raft_wall.png"
+    },
+    {
+        class = "raft_fence",
+        icon = "rvr/icons/raft_fence.png"
+    }
+}
+
 Config.RAFT_VERTICAL_OFFSET = 10
 
 -- Raft creation time scales with the square of this number, double it, and the creation time quadruples
