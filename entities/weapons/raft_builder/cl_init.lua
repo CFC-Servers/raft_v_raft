@@ -17,13 +17,12 @@ surface.CreateFont( "RVR_RaftBuilderIngredients", {
     weight = 500
 } )
 
-local debugMat = "models/debug/debugwhite"
-
 function SWEP:Initialize()
     self.ghost = ClientsideModel( "models/rvr/raft/raft_base.mdl", RENDERGROUP_BOTH )
     self:SetSelectedClass( "raft_platform" )
     self.ghost:SetRenderMode( RENDERMODE_TRANSCOLOR )
     self.ghost:SetColor( Color( 0, 0, 0, 0 ) )
+    self.ghost:SetMaterial( "models/debug/debugwhite" )
 
     self.yaw = 0
 
@@ -47,8 +46,9 @@ function SWEP:Initialize()
     local raftBuilder = self
     function self.radial:customPaint()
         self:SetCenterOutlineColor()
+        if not self.selectedItem then return end
         draw.NoTexture()
-        local className = GAMEMODE.Config.Rafts.PLACEABLES[self.selectedItem or defaultSelectedIndex].class
+        local className = GAMEMODE.Config.Rafts.PLACEABLES[self.selectedItem].class
         local class = baseclass.Get( className )
         local required = class:GetRequiredItems()
 
@@ -74,7 +74,6 @@ function SWEP:SetSelectedClass( cls )
     self.selectedClass = cls
     self.selectedClassTable = baseclass.Get( self.selectedClass )
     self.ghost:SetModel( self.selectedClassTable.Model )
-    self.ghost:SetMaterial( debugMat )
 end
 
 function SWEP:OnRemove()
@@ -124,7 +123,6 @@ function SWEP:WallPreview()
     self.wallYaw = localHitPos:Angle().yaw
 
     self.ghost:SetModel( self.selectedClassTable.Model )
-    self.ghost:SetMaterial( debugMat )
     self:UpdateGhostColor()
 
     self.ghost:SetPos( ent:LocalToWorld( pos ) + Vector( 0, 0, 0.1 ) )
@@ -166,7 +164,6 @@ function SWEP:PiecePreview()
 
     -- update ghost position
     self.ghost:SetModel( self.selectedClassTable.Model )
-    self.ghost:SetMaterial( debugMat )
     self:UpdateGhostColor()
     self.ghost:SetPos( ent:LocalToWorld( localDir * size ) + Vector( 0, 0, 0.1 ) )
     self.ghost:SetAngles( ent:GetAngles() - ent:GetRaftRotationOffset() + Angle( 0, self.yaw, 0 ) )
@@ -356,6 +353,7 @@ function SWEP:UpdatePermitted()
         return
     end
 
+    -- TODO: Check this server side as well
     local mins, maxs = self.ghost:GetModelBounds()
     local pos = self.ghost:GetPos()
 
