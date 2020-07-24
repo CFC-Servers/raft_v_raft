@@ -62,5 +62,6 @@ function builder.placeWall( piece, class, yaw )
     newEnt:SetPos( piece:LocalToWorld( pos ) )
     newEnt:SetAngles( piece:LocalToWorldAngles( Angle( 0, yaw, 0 ) ) )
     piece.walls[yaw] = newEnt
+    newEnt:SetParent(piece)
     return newEnt
 end
