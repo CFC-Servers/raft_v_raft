@@ -132,3 +132,28 @@ function SWEP:DrawWorldModel()
 
     self.WorldModelEnt:DrawModel()
 end
+
+
+local GHOST_COLOR = Color( 0, 255, 0, 150 )
+local GHOST_INVIS = Color( 0, 0, 0, 0 )
+
+local ghost = ClientsideModel( "models/rvr/raft/raft_base.mdl", RENDERGROUP_BOTH ) 
+ghost:SetRenderMode( RENDERMODE_TRANSCOLOR )
+ghost:SetColor( GHOST_INVIS )
+
+function SWEP:PlaceItem()
+    
+end
+
+function SWEP:Think()
+    local trace = self:GetOwner():GetEyeTrace()
+    if not self.itemData.placeable then return end
+    if not trace.Hit then return end
+    local baseclass = baseclass.Get( self.itemData.placeableClass )
+    if not baseclass then  return end
+    
+    local offset = baseclass.GhostOffset or Vector(0,0,0)
+    ghost:SetColor( GHOST_COLOR )
+    ghost:SetModel( baseclass.Model )
+    ghost:SetPos(trace.HitPos + offset)
+end

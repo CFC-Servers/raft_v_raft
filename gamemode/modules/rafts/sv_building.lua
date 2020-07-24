@@ -140,3 +140,12 @@ function builder.placeWall( piece, class, yaw )
     piece.walls[yaw] = newEnt
     return newEnt
 end
+
+function builder.placeItem( parentPiece, item, relativePos, angle ) 
+    local newEnt = ents.Create( item.placeableClass )
+    newEnt:SetPos( parentPiece:LocalToWorld( relativePos ) )
+    newEnt:SetAngles( angle )
+    newEnt:SetParent( parentPiece )
+    newEnt:Spawn()
+    return newEnt
+end

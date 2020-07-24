@@ -91,6 +91,16 @@ items.items = {
         water = 60,
         viewModelOffset = Vector( -2, 5, -9 ),
         viewModelAng = Angle( 0, -15, 0 )
+    },
+    {
+        type = "storage_box",
+        displayName = "Storage Box",
+        description = "Store all your items!",
+        maxCount = 1,
+        model = "models/rvr/props/workbench.mdl",
+        icon = "materials/rvr/items/water_bottle.png",
+        placeable = true,
+        placeableClass = "rvr_storage"
     }
 }
 
