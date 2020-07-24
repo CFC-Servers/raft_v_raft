@@ -98,10 +98,22 @@ items.items = {
         description = "Store all your items!",
         maxCount = 1,
         model = "models/props_junk/wood_crate001a.mdl",
-        icon = "materials/rvr/items/water_bottle.png",
+        icon = "materials/rvr/items/water_bottle.png", -- TODO proper icon?
         placeable = true,
         placeableClass = "rvr_storage",
         viewModelOffset = Vector( 30, 50, -9 )
+    },
+    {
+        type = "workbench",
+        displayName = "Work Bench",
+        description = "Crafting.. woah!",
+        maxCount = 1,
+        model = "models/rvr/props/workbench.mdl",
+        icon = "materials/rvr/items/water_bottle.png", -- TODO proper icon?
+        placeable = true,
+        placeableClass = "rvr_crafter",
+        viewModelOffset = Vector( 30, 60, -39 ),
+        viewModelAng = Angle( 0, -40, 0 )
     }
 }
 

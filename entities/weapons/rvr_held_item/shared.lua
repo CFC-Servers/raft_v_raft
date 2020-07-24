@@ -139,5 +139,9 @@ function SWEP:GetPlacementInfo()
     local pos = trace.HitPos + offset 
     if not class.Model then return end
     -- TODO collision checks
-    return trace.Entity, self.itemData, pos, Angle( 0, 0, 0 )
+    local ang = self:GetOwner():EyeAngles()
+    ang.pitch = 0
+    ang.roll = 0
+
+    return trace.Entity, self.itemData, pos, ang
 end
