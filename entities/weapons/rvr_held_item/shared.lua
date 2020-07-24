@@ -65,7 +65,7 @@ function SWEP:PrimaryAttack()
     local owner = self:GetOwner()
     if not itemData then return end
 
-    if SERVER then
+    if SERVER and itemData.placeable then
         self.itemData = itemData
         local parentPiece, item, pos, ang = self:GetPlacementInfo()
          
