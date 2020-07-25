@@ -30,6 +30,19 @@ recipe = {
 
 config.RECIPES = {
     {
+        name = "Water",
+        icon = "", -- TODO water bottle icon
+        crafterType = "water_purifier",
+        recipes = {
+            {
+                item = "water",
+                count = 6,
+                timeToCraft = 60,
+                ingredients = { }
+            }
+        }
+    },
+    {
         name = "Weapons",
         icon = "rvr/icons/craftingmenu_category_weapons.png",
         recipes = {

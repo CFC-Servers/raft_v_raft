@@ -138,7 +138,22 @@ function SWEP:GetPlacementInfo()
     local offset = class.PlacementOffset or Vector( 0, 0, 0 )
     local pos = trace.HitPos + offset 
     if not class.Model then return end
-    -- TODO collision checks
+    
+    local mins, maxs = RVR.Util.GetModelBounds( class.Model )
+
+    local traceData = {
+        start = pos,
+        endpos = pos,
+        filter = ghost,
+        mins = mins + Vector( 5, 5, 5 ),
+        maxs = maxs - Vector( 5 ,5, 5 ),
+        mask = MASK_ALL,
+        ignoreworld = true
+    }
+    
+    local traceResult = util.TraceHull( traceData )
+    if traceResult.Hit then return end
+
     local ang = self:GetOwner():EyeAngles()
     ang.pitch = 0
     ang.roll = 0
