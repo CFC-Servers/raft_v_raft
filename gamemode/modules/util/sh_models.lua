@@ -1,7 +1,7 @@
 RVR.Util = RVR.Util or {}
 
 local function entCreate( model )
-    local ent = ents.Create("prop_physics")
+    local ent = ents.Create( "prop_physics" )
     ent:SetModel( model )
     
     return ent
