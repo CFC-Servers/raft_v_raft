@@ -148,7 +148,7 @@ function builder.placeItem( parentPiece, item, pos, angle )
     newEnt:SetAngles( angle )
     newEnt:SetParent( parentPiece )
     newEnt:Spawn()
-    
+    if item.onPlacement then item.onPlacement( newEnt ) end
     return newEnt
 end
 
