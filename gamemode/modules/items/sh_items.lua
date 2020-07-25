@@ -127,6 +127,18 @@ items.items = {
         viewModelOffset = Vector( 30, 50, -9 )
     },
     {
+        type = "grill",
+        displayName = "Grill",
+        description = "Cook your food. Or eat it raw...",
+        maxCount = 1,
+        model = "models/props_c17/furnitureStove001a.mdl", -- TODO a better model?
+        icon = "materials/rvr/items/water_bottle.png", -- TODO proper icon
+        placeable = true,
+        placeableClass = "rvr_grill",
+        viewModelOffset = Vector( 10, 40, -20 ),
+        viewModelAng = Angle( 0, -40, 0 ) 
+    },
+    {
         type = "physgun",
         displayName = "Physics gun",
         description = "Gmod physics gun, how did you get this?!",
