@@ -31,8 +31,8 @@ recipe = {
 config.RECIPES = {
     {
         name = "Water",
-        icon = "", -- TODO water bottle icon
-        crafterType = "water_purifier",
+        icon = "materials/rvr/items/water_bottle.png",
+        crafterType = "water",
         recipes = {
             {
                 item = "water",

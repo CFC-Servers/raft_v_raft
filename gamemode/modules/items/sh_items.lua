@@ -116,6 +116,17 @@ items.items = {
         viewModelAng = Angle( 0, -40, 0 )
     },
     {
+        type = "water_purifier",
+        displayName = "Water Purifier",
+        description = "Makes water from air? is this magick?",
+        maxCount = 1,
+        model = "models/props_borealis/bluebarrel001.mdl", -- TODO a better model?
+        icon = "materials/rvr/items/water_bottle.png", -- TODO proper icon
+        placeable = true,
+        placeableClass = "rvr_water_purifier",
+        viewModelOffset = Vector( 30, 50, -9 )
+    },
+    {
         type = "physgun",
         displayName = "Physics gun",
         description = "Gmod physics gun, how did you get this?!",

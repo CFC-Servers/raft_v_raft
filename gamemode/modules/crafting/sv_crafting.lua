@@ -68,9 +68,11 @@ function cft.craft( ply, ent, recipe )
 
     local category = GAMEMODE.Config.Crafting.RECIPES[recipe.categoryID]
     if ent.RVR_Crafting.type ~= category.crafterType then return false end
-
-    local success = RVR.Inventory.tryTakeItems( ply, recipe.itemsStruct )
-    if not success then return false end
+    
+    if #recipe.itemsStruct > 0 then
+        local success = RVR.Inventory.tryTakeItems( ply, recipe.itemsStruct )
+        if not success then return false end
+    end
 
     ent.RVR_Crafting.output = {
         recipe = recipe,
