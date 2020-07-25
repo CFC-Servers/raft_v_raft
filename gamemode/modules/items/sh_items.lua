@@ -98,9 +98,31 @@ items.items = {
         description = "Store all your items!",
         maxCount = 1,
         model = "models/props_junk/wood_crate001a.mdl",
-        icon = "materials/rvr/items/water_bottle.png", -- TODO proper icon?
+        icon = "materials/rvr/items/storage_box.png",
         placeable = true,
         placeableClass = "rvr_storage",
+        viewModelOffset = Vector( 30, 50, -9 )
+    },
+    {
+        type = "storage_box_small",
+        displayName = "Small Storage Box",
+        description = "Store all your items!",
+        maxCount = 1,
+        model = "models/props_junk/cardboard_box002b.mdl",
+        icon = "materials/rvr/items/storage_box_small.png",
+        placeable = true,
+        placeableClass = "rvr_storage_small",
+        viewModelOffset = Vector( 30, 50, -9 )
+    },
+    {
+        type = "storage_box_large",
+        displayName = "Large Storage Box",
+        description = "Store all your items!",
+        maxCount = 1,
+        model = "models/props_junk/wood_crate002a.mdl",
+        icon = "materials/rvr/items/storage_box_large.png",
+        placeable = true,
+        placeableClass = "rvr_storage_large",
         viewModelOffset = Vector( 30, 50, -9 )
     },
     {
@@ -109,7 +131,7 @@ items.items = {
         description = "Crafting.. woah!",
         maxCount = 1,
         model = "models/rvr/props/workbench.mdl",
-        icon = "materials/rvr/items/water_bottle.png", -- TODO proper icon?
+        icon = "materials/rvr/items/workbench.png",
         placeable = true,
         placeableClass = "rvr_crafter",
         viewModelOffset = Vector( 30, 60, -39 ),
