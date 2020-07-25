@@ -9,7 +9,6 @@ end
 
 if CLIENT then entCreate = ents.CreateClientProp end
 
-
 local modelBoundsCache = {}
 
 function RVR.Util.GetModelBounds( model )
