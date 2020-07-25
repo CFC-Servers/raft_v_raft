@@ -367,8 +367,10 @@ end )
 hook.Add( "RVR_SuccessfulPlayerSpawn", "RVR_Party_Raft_Spawn", function( ply )
     local partyData = ply:GetParty()
     if not partyData then return end -- This should never happen, but just to be sure.
-
-    local spawnPos = partyData.raft:GetSpawnPosition( ply )
+    
+    local raft = RVR.getRaft( partyData.raftID )
+    
+    local spawnPos = raft:GetSpawnPosition( ply )
 
     ply:SetPos( spawnPos )
 end )
