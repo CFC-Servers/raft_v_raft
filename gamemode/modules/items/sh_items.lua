@@ -47,7 +47,7 @@ items.items = {
         model = "models/rvr/items/nail.mdl",
         icon = "materials/rvr/items/nail.png",
         stackable = true,
-        worldModelOffset = Vector( -2, 1, 3 ),
+        worldModelOffset = Vector( -2, 1, 3 )
     },
     {
         type = "raft_builder",
@@ -98,7 +98,7 @@ items.items = {
         water = 60,
         viewModelOffset = Vector( -2, 5, -9 ),
         viewModelAng = Angle( 0, -15, 0 ),
-        worldModelOffset = Vector( -2, 1, 7 ),
+        worldModelOffset = Vector( -2, 1, 7 )
     },
     {
         type = "physgun",
