@@ -9,14 +9,17 @@ function ENT:OnRemove()
 
     local raft = self:GetRaft()
     if not raft then return end
-    local neighbors = raft:GetNeighbors( self )
 
-    for _, ent in pairs( neighbors ) do
-        local relativePos = self:GetRaftGridPosition() - ent:GetRaftGridPosition()
-        if relativePos:Length() > 1 then continue end
+    raft:RemovePiece( self )
+end
 
-        print( ent, relativePos )
+function ENT:SetRemoveTime( t )
+    self.removeTime = CurTime() + t
+end
+
+function ENT:Think()
+    if self.removeTime and CurTime() > self.removeTime then
+        self.removeTime = nil
+        self:Remove()
     end
-
-    PrintTable( neighbors )
 end

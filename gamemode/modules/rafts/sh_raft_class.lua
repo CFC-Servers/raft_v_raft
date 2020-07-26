@@ -17,11 +17,8 @@ function raftMeta:AddPiece( position, ent )
     net.Send( self:GetParty().members )
 end
 
-function raftMeta:RemovePiece( ent )
-    self.pieces[ent:EntIndex()] = nil
-end
-
 function raftMeta:Remove()
+    self.removing = true
     RVR.removeRaft( self.id )
 end
 
@@ -132,6 +129,98 @@ function raftMeta:CanBuild( ply )
     return ply:GetPartyID() == self.partyID
 end
 
+function raftMeta:RemovePiece( piece )
+    if self.removing then return end
+    self.pieces[piece:EntIndex()] = nil
+    if piece.removedByRaft then return end
+
+    local grid, piecesGrid = self:GetSegmentingGrid()
+
+    local segments = RVR.Util.segmentGrid( grid )
+
+    if #segments <= 1 then return end
+
+    local maxSize = 0
+    local biggestIdx
+
+    for k, segment in pairs( segments ) do
+        if #segment > maxSize then
+            maxSize = #segment
+            biggestIdx = k
+        end
+    end
+
+    local piecePos = piece:GetRaftGridPosition()
+
+    for k, segment in pairs( segments ) do
+        if k == biggestIdx then continue end
+        for _, pos in pairs( segment ) do
+            local ent = piecesGrid[pos.y][pos.x]
+
+            local entPos = ent:GetRaftGridPosition()
+
+            local gridDist = math.abs( piecePos.x - entPos.x ) + math.abs( piecePos.y - entPos.y )
+
+            ent.removedByRaft = true
+
+            ent:SetRemoveTime( gridDist * 0.2 )
+        end
+    end
+end
+
+function raftMeta:GetSegmentingGrid()
+    if table.IsEmpty( self.pieces ) then return {} end
+
+    local pieceGrid = {}
+
+    local minX = math.huge
+    local minY = math.huge
+    local maxX = -math.huge
+    local maxY = -math.huge
+
+    for _, piece in pairs( self.pieces ) do
+        if not IsValid( piece ) then continue end
+        if piece:GetClass() ~= "raft_foundation" then continue end
+
+        local gridPos = piece:GetRaftGridPosition()
+        pieceGrid[gridPos.y] = pieceGrid[gridPos.y] or {}
+        pieceGrid[gridPos.y][gridPos.x] = piece
+
+        if gridPos.x < minX then
+            minX = gridPos.x
+        end
+        if gridPos.x > maxX then
+            maxX = gridPos.x
+        end
+
+        if gridPos.y < minY then
+            minY = gridPos.y
+        end
+        if gridPos.y > maxY then
+            maxY = gridPos.y
+        end
+    end
+
+    local grid = {}
+    local adjustedPieceGrid = {}
+    for y = minY, maxY do
+        local gridY = y - minY + 1
+
+        grid[gridY] = {}
+        adjustedPieceGrid[gridY] = {}
+
+        for x = minX, maxX do
+            local gridX = x - minX + 1
+
+            local piece = pieceGrid[y] and pieceGrid[y][x]
+            grid[gridY][gridX] = piece ~= nil
+            adjustedPieceGrid[gridY][gridX] = piece
+        end
+    end
+
+    return grid, adjustedPieceGrid
+end
+
 -- util
 function raftMeta.vectorIndex( v )
     -- hopefully someones raft isnt greater than 1000 pieces in a direction
@@ -183,7 +272,6 @@ function RVR.removeRaft( id )
         end
     end
 end
-
 
 if SERVER then
     util.AddNetworkString( "RVR_Raft_NewRaft" )
