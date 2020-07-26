@@ -2,25 +2,42 @@ include( "shared.lua" )
 
 local abs = math.abs
 
-local GHOST_COLOR = Color( 0, 255, 0, 150 )
+local GHOST_VALID = Color( 0, 255, 0, 150 )
+local GHOST_INVALID = Color( 255, 0, 0, 150 )
 local GHOST_INVIS = Color( 0, 0, 0, 0 )
 local INPUT_DELAY = 0.2
+
+local DEFAULT_SELECTED = "raft_foundation"
+
+local defaultSelectedIndex
+
+surface.CreateFont( "RVR_RaftBuilderIngredients", {
+    font = "Bungee Regular",
+    size = ScrH() * 0.045,
+    weight = 500
+} )
 
 function SWEP:Initialize()
     self.ghost = ClientsideModel( "models/rvr/raft/raft_base.mdl", RENDERGROUP_BOTH )
     self:SetSelectedClass( "raft_platform" )
     self.ghost:SetRenderMode( RENDERMODE_TRANSCOLOR )
     self.ghost:SetColor( Color( 0, 0, 0, 0 ) )
+    self.ghost:SetMaterial( "models/debug/debugwhite" )
 
     self.yaw = 0
 
     self.radial = RVR.newRadialMenu()
 
-    for _, placeable in pairs( self.Placeables ) do
+    for i, placeable in pairs( GAMEMODE.Config.Rafts.PLACEABLES ) do
         local clsName = placeable.class
         local cls = baseclass.Get( clsName )
 
-        local mat = RVR.Util.getModelTexture( cls.Model, cls.PreviewPos, cls.PreviewAngle )
+        local mat = Material( placeable.icon )
+
+        if placeable.class == DEFAULT_SELECTED then
+            defaultSelectedIndex = i
+        end
+
         self.radial:AddItem( cls.PrintName, mat, function()
             self:SetSelectedClass( clsName )
         end )
@@ -28,16 +45,29 @@ function SWEP:Initialize()
 
     local raftBuilder = self
     function self.radial:customPaint()
-        draw.NoTexture()
+        self:SetCenterOutlineColor()
         if not self.selectedItem then return end
-        local className = raftBuilder.Placeables[self.selectedItem].class
+        draw.NoTexture()
+        local className = GAMEMODE.Config.Rafts.PLACEABLES[self.selectedItem].class
         local class = baseclass.Get( className )
         local required = class:GetRequiredItems()
 
+        -- Shifted left slightly from center
+        local x = ScrW() * 0.497
+        local spacing = 30
+        local iconHeight = ScrH() * 0.025
         for i, itemData in ipairs( required ) do
-            raftBuilder.drawItemRequirement( ScrW() / 2, ScrH() * 0.48 + i * 40, itemData.item.type, itemData.count, "DermaLarge" )
+            local y = ScrH() * 0.5 + ( i - 1 ) * spacing
+            raftBuilder.drawItemRequirement( x, y, itemData.item.type,
+                itemData.count, "RVR_RaftBuilderIngredients", iconHeight )
         end
     end
+
+    self:SetSelectedClass( DEFAULT_SELECTED )
+end
+
+function SWEP:DoDrawCrosshair( x, y )
+    return self.radial.isOpen
 end
 
 function SWEP:SetSelectedClass( cls )
@@ -51,6 +81,11 @@ function SWEP:OnRemove()
 end
 
 function SWEP:Think()
+    self:UpdateCanMake()
+    self:UpdatePermitted()
+
+    self.radial:SetCenterOutlineColor( self.canMake and Color( 0, 255, 0 ) or Color( 255, 0, 0 ) )
+
     local ent = self:GetAimEntity()
     if not ent or not ent.IsRaft then return self.ghost:SetColor( GHOST_INVIS ) end
 
@@ -88,9 +123,9 @@ function SWEP:WallPreview()
     self.wallYaw = localHitPos:Angle().yaw
 
     self.ghost:SetModel( self.selectedClassTable.Model )
-    self.ghost:SetColor( GHOST_COLOR )
+    self:UpdateGhostColor()
 
-    self.ghost:SetPos( ent:LocalToWorld( pos ) )
+    self.ghost:SetPos( ent:LocalToWorld( pos ) + Vector( 0, 0, 0.1 ) )
     self.ghost:SetAngles( ent:LocalToWorldAngles( Angle( 0, self.wallYaw, 0 ) ) )
 end
 
@@ -129,9 +164,14 @@ function SWEP:PiecePreview()
 
     -- update ghost position
     self.ghost:SetModel( self.selectedClassTable.Model )
-    self.ghost:SetColor( GHOST_COLOR )
-    self.ghost:SetPos( ent:LocalToWorld( localDir * size ) )
+    self:UpdateGhostColor()
+    self.ghost:SetPos( ent:LocalToWorld( localDir * size ) + Vector( 0, 0, 0.1 ) )
     self.ghost:SetAngles( ent:GetAngles() - ent:GetRaftRotationOffset() + Angle( 0, self.yaw, 0 ) )
+end
+
+function SWEP:UpdateGhostColor()
+    local ghostValid = self.canMake and self.permitted
+    self.ghost:SetColor( ghostValid and GHOST_VALID or GHOST_INVALID )
 end
 
 function SWEP:GetAimEntity()
@@ -171,6 +211,8 @@ end
 
 local nextPrimary = 0
 function SWEP:PrimaryAttack()
+    if not ( self.canMake and self.permitted ) then return end
+
     if CurTime() <= nextPrimary then return end
     nextPrimary = CurTime() + INPUT_DELAY
 
@@ -226,7 +268,35 @@ hook.Add( "RVR_InventoryCacheUpdate", "RVR_ItemCountCacheClear", function()
     itemCountCache = {}
 end )
 
-function SWEP.drawItemRequirement( x, y, itemType, requirement, font )
+function SWEP:UpdateCanMake()
+    local className = GAMEMODE.Config.Rafts.PLACEABLES[self.radial.selectedItem or defaultSelectedIndex].class
+    local class = baseclass.Get( className )
+    local required = class:GetRequiredItems()
+
+    local canMake = true
+
+    for _, itemData in pairs( required ) do
+        local itemType, requirement = itemData.item.type, itemData.count
+
+        local count
+        if itemCountCache[itemType] then
+            count = itemCountCache[itemType]
+        else
+            count = RVR.Inventory.selfGetItemCount( itemType )
+
+            itemCountCache[itemType] = count
+        end
+
+        if count < requirement then
+            canMake = false
+            break
+        end
+    end
+
+    self.canMake = canMake
+end
+
+function SWEP.drawItemRequirement( x, y, itemType, requirement, font, h )
     local count
     if itemCountCache[itemType] then
         count = itemCountCache[itemType]
@@ -250,10 +320,11 @@ function SWEP.drawItemRequirement( x, y, itemType, requirement, font )
 
     surface.SetFont( font )
     local textW, textH = surface.GetTextSize( text )
+    h = h or textH
 
-    local iconSize = textH * iconSizeMult
+    local iconSize = h * iconSizeMult
 
-    local w, h = textW + iconSize + 5, textH
+    local w = textW + iconSize + 5
 
     surface.SetDrawColor( 255, 255, 255 )
     surface.SetMaterial( icon )
@@ -267,4 +338,38 @@ function SWEP.drawItemRequirement( x, y, itemType, requirement, font )
 
     surface.SetTextPos( x - w * 0.5 + iconSize + 5, y - textH * 0.5 )
     surface.DrawText( text )
+
+    return count >= requirement
+end
+
+function SWEP:UpdatePermitted()
+    self.permitted = true
+
+    local trace = self:GetOwner():GetEyeTrace()
+    local ent = trace.Entity
+    local isRaftEnt = IsValid( ent ) and ent.IsRaft
+    if not ( isRaftEnt and ent:GetRaft():CanBuild( LocalPlayer() ) ) then
+        self.permitted = false
+        return
+    end
+
+    -- TODO: Check this server side as well
+    local mins, maxs = self.ghost:GetModelBounds()
+    local pos = self.ghost:GetPos()
+
+    local traceData = {
+        start = pos,
+        endpos = pos,
+        filter = self.ghost,
+        mins = mins + Vector( 5, 5, 5 ),
+        maxs = maxs + Vector( -5, -5, 5 ),
+        mask = MASK_ALL,
+        ignoreworld = true
+    }
+
+    local traceResult = util.TraceHull( traceData )
+
+    if traceResult.Hit then
+        self.permitted = false
+    end
 end

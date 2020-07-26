@@ -32,8 +32,8 @@ function party.createParty( partyName, owner, tag, color, joinMode )
     local minLen = GAMEMODE.Config.Party.MIN_PARTY_NAME_LENGTH
     local maxLen = GAMEMODE.Config.Party.MAX_PARTY_NAME_LENGTH
     if #partyName < minLen or #partyName > maxLen or tonumber( partyName ) then
-        return nil, "Invalid party name, must be between " .. minLen .. " and " ..
-            maxLen .. " characters and contain at least one non-numeric character"
+        return nil, "Party name must be between " .. minLen .. " and " ..
+            maxLen .. " characters and contain at least one letter"
     end
 
     if color.a ~= 255 then
@@ -85,6 +85,8 @@ function party.removeParty( id )
     end
 
     party.parties[id] = nil
+
+    hook.Run( "RVR_Party_PartyRemoved", partyData )
 
     updateClientPartyData( id )
 
@@ -365,11 +367,10 @@ end )
 hook.Add( "RVR_SuccessfulPlayerSpawn", "RVR_Party_Raft_Spawn", function( ply )
     local partyData = ply:GetParty()
     if not partyData then return end -- This should never happen, but just to be sure.
-
-    --[[ Uncomment this whenever raft builder is implemented
-    local raftData = partyData.raft
-    local spawnPos = RVR.Raft.getSpawnPos( raftData )
+    
+    local raft = RVR.getRaft( partyData.raftID )
+    
+    local spawnPos = raft:GetSpawnPosition( ply )
 
     ply:SetPos( spawnPos )
-    ]]
 end )

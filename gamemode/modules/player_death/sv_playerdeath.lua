@@ -14,6 +14,15 @@ end )
 util.AddNetworkString( "RVR_PlayerDeath" )
 util.AddNetworkString( "RVR_SuccessfulPlayerSpawn" )
 
+local function dropInventory( ply )
+    if RVR.Inventory.isEmpty( ply ) then return end
+
+    local deathBox = ents.Create( "rvr_death_box" )
+    deathBox:SetPos( ply:GetPos() )
+    deathBox:Spawn()
+    deathBox:TakeFromPlayer( ply )
+end
+
 -- Create our own RVR_PlayerDeath event which is shared, not relaying normal PlayerDeath as some other addons may do this
 -- Could lead to duplicate calls
 hook.Add( "PlayerDeath", "RVR_RelayPlayerDeath", function( victim, inflictor, attacker )
@@ -25,12 +34,11 @@ hook.Add( "PlayerDeath", "RVR_RelayPlayerDeath", function( victim, inflictor, at
         net.WriteEntity( attacker or game.GetWorld() )
     net.Broadcast()
 
-    if RVR.Inventory.isEmpty( victim ) then return end
+    dropInventory( victim )
+end )
 
-    local deathBox = ents.Create( "rvr_death_box" )
-    deathBox:SetPos( victim:GetPos() )
-    deathBox:Spawn()
-    deathBox:TakeFromPlayer( victim )
+hook.Add( "PlayerDisconnected", "RVR_DropInventory", function( ply )
+    dropInventory( ply )
 end )
 
 hook.Add( "RVR_SuccessfulPlayerSpawn", "RVR_Cooldown", function( ply )

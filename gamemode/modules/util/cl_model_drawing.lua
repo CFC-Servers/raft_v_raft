@@ -3,10 +3,13 @@ local viewSize = 1024
 RVR.Util = RVR.Util or {}
 
 local mats = {}
-function RVR.Util.getModelTexture( model, pos, ang )
+function RVR.Util.getModelTexture( model, pos, ang, entMat, entCol )
     if mats[model] then return mats[model] end
     pos = pos or Vector( 0, 0, 0 )
     ang = ang or Angle()
+
+    entMat = entMat or ""
+    entCol = entCol or Color( 255, 255, 255 )
 
     local texture = GetRenderTargetEx( "rvr_model_" .. model, viewSize, viewSize, RT_SIZE_DEFAULT, MATERIAL_RT_DEPTH_SHARED, 0, CREATERENDERTARGETFLAGS_UNFILTERABLE_OK, IMAGE_FORMAT_RGBA8888 )
 
@@ -14,6 +17,8 @@ function RVR.Util.getModelTexture( model, pos, ang )
     ent:SetNoDraw( true )
     ent:SetPos( pos )
     ent:SetAngles( ang )
+    ent:SetMaterial( entMat )
+    ent:SetColor( entCol )
 
     render.PushRenderTarget( texture )
         render.OverrideAlphaWriteEnable( true, true )
