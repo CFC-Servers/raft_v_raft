@@ -121,10 +121,17 @@ end
 
 function raftMeta:SetPartyID( partyID )
     self.partyID = partyID
+
+    if not SERVER then return end
+
+    net.Start( "RVR_Raft_SetPartyID" )
+        net.WriteInt( self.id, 32 )
+        net.WriteInt( partyID, 32 )
+    net.Broadcast()
 end
 
 function raftMeta:CanBuild( ply )
-    if ply:IsSuperAdmin() then return true end
+    if ply:IsAdmin() then return true end
 
     return ply:GetPartyID() == self.partyID
 end
@@ -273,11 +280,16 @@ function RVR.removeRaft( id )
     end
 end
 
+function RVR.getRaft( id )
+    return RVR.raftLookup[id]
+end
+
 if SERVER then
     util.AddNetworkString( "RVR_Raft_NewRaft" )
     util.AddNetworkString( "RVR_Raft_RemoveRaft" )
     util.AddNetworkString( "RVR_Raft_NewRaftPiece" )
     util.AddNetworkString( "RVR_Raft_RequestRaftPieces" )
+    util.AddNetworkString( "RVR_Raft_SetPartyID" )
 
     net.Receive( "RVR_Raft_RequestRaftPieces", function( _, ply )
         for _, raft in pairs( RVR.raftLookup ) do
@@ -313,13 +325,23 @@ if CLIENT then
         local position = net.ReadVector()
         timer.Simple( 0.1, function() -- entity is not created when net message arrives
             local ent = Entity( entindex )
-            local raft = RVR.raftLookup[raftid]
+            local raft = RVR.getRaft( raftid )
 
             if not IsValid( ent ) then return end
 
             raft.pieces[entindex] = ent
             raft.grid[raft.vectorIndex( position )] = ent
         end )
+    end )
+
+    net.Receive( "RVR_Raft_SetPartyID", function()
+        local raftID = net.ReadInt( 32 )
+        local partyID = net.ReadInt( 32 )
+
+        local raft = RVR.getRaft( raftID )
+        if not raft then return end
+
+        raft:SetPartyID( partyID )
     end )
 
     hook.Add( "InitPostEntity", "RVR_RequestRaftPieces", function()

@@ -72,14 +72,15 @@ hook.Add( "RVR_Party_PartyCreated", "RVR_Raft_createRaft", function( partyData )
     builder.expandRaft( raft:GetPiece( Vector( 0, 0, 0 ) ), "raft_foundation", Vector( 0, 1, 0 ), Angle( 0, 180, 0 ) )
     builder.expandRaft( raft:GetPiece( Vector( 1, 0, 0 ) ), "raft_foundation", Vector( 0, 1, 0 ))
 
-    partyData.raft = raft
+    partyData.raftID = raft.id
 end )
 
 hook.Add( "RVR_Party_PartyRemoved", "RVR_Raft_removeRaft", function( partyData )
-    if not partyData.raft then return end
+    if not partyData.raftID then return end
 
-    if partyData.raft then
-        partyData.raft:Remove()
+    local raft = RVR.getRaft( partyData.raftID )
+    if raft then
+        raft:Remove()
     end
 end )
 
