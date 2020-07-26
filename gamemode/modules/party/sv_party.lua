@@ -254,6 +254,7 @@ function party.invite( id, inviter, ply )
 
     net.Start( "RVR_Party_inviteSent" )
         net.WriteUInt( id, 32 )
+        net.WriteEntity( inviter )
     net.Send( ply )
 
     return true
