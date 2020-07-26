@@ -123,7 +123,7 @@ items.items = {
         icon = "materials/rvr/items/storage_box_large.png",
         placeable = true,
         placeableClass = "rvr_storage_large",
-        viewModelOffset = Vector( 30, 50, -9 )
+        viewModelOffset = Vector( 50, 50, -9 )
     },
     {
         type = "workbench",
