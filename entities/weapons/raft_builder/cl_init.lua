@@ -45,7 +45,7 @@ function SWEP:Initialize()
 
     local raftBuilder = self
     function self.radial:customPaint()
-        self:SetCenterOutlineColor()
+        self:SetShowCenterOutline( false )
         if not self.selectedItem then return end
         draw.NoTexture()
         local className = GAMEMODE.Config.Rafts.PLACEABLES[self.selectedItem].class
@@ -84,7 +84,8 @@ function SWEP:Think()
     self:UpdateCanMake()
     self:UpdatePermitted()
 
-    self.radial:SetCenterOutlineColor( self.canMake and Color( 0, 255, 0 ) or Color( 255, 0, 0 ) )
+    self.radial:SetShowCenterOutline( true )
+    self.radial.secondarySelectedColor = self.canMake and Color( 0, 255, 0 ) or Color( 255, 0, 0 )
 
     local ent = self:GetAimEntity()
     if not ent or not ent.IsRaft then return self.ghost:SetColor( GHOST_INVIS ) end
