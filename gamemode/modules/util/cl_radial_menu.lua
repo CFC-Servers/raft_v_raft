@@ -55,8 +55,8 @@ function radialMeta:Paint()
 
     local centerX, centerY = ScrW() / 2, ScrH() / 2
 
-    if self.centerOutlineColor then
-        drawCircle( centerX, centerY, self.infoCircleRadius + 4, self.centerOutlineColor )
+    if self.showCenterOutline then
+        drawCircle( centerX, centerY, self.infoCircleRadius + 4, self.secondarySelectedColor )
     end
 
     drawCircle( centerX, centerY, self.infoCircleRadius, self.infoCircleColor )
@@ -164,8 +164,8 @@ function radialMeta:DrawSelected()
     draw.DrawText( item.name, "RVR_RadialMenu_Title", x, y, self.titleColor, TEXT_ALIGN_CENTER )
 end
 
-function radialMeta:SetCenterOutlineColor( col )
-    self.centerOutlineColor = col
+function radialMeta:SetShowCenterOutline( show )
+    self.showCenterOutline = show
 end
 
 function radialMeta:DrawSegment( start, size, color )
