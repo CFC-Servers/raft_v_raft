@@ -2,6 +2,20 @@ RVR.Party = RVR.Party or {}
 local party = RVR.Party
 party.invites = {}
 
+local mouseEnabled = false
+
+local lastClick = 0
+hook.Add( "PlayerButtonDown", "RVR_Party_ToggleMouse", function( ply, key )
+    -- This hook gets called like a million times
+    if CurTime() - lastClick < 0.05 then return end
+    lastClick = CurTime()
+
+    if key ~= KEY_F3 then return end
+
+    mouseEnabled = not mouseEnabled
+    gui.EnableScreenClicker( mouseEnabled )
+end )
+
 function party.tryCreateParty( name, tag, color, joinMode, callback )
     if not party.joinModeStrs[joinMode] then return end
     if party.createPartyCallback then return end
@@ -59,9 +73,17 @@ local function sendFriendData()
     net.SendToServer()
 end
 
-hook.Add( "InitPostEntity", "RVR_Party_sendFriendData", sendFriendData )
+hook.Add( "InitPostEntity", "RVR_Party_sendFriendData", function()
+    sendFriendData()
+    net.Start( "RVR_Party_requestFullUpdate" )
+    net.SendToServer()
+end )
 net.Receive( "RVR_Party_updateFriends", sendFriendData )
 timer.Create( "RVR_Party_updateFriends", 300, 0, sendFriendData )
+
+net.Receive( "RVR_Party_requestFullUpdate", function()
+    party.parties = net.ReadTable()
+end )
 
 hook.Add( "PreDrawHalos", "RVR_Party", function()
     local ownParty = LocalPlayer():GetParty()
