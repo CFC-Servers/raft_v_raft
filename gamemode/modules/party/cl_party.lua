@@ -165,8 +165,9 @@ end )
 
 net.Receive( "RVR_Party_inviteSent", function()
     local partyID = net.ReadUInt( 32 )
+    local inviter = net.ReadEntity()
 
     party.invites[partyID] = CurTime()
 
-    hook.Run( "RVR_Party_gotInvite", partyID )
+    hook.Run( "RVR_Party_gotInvite", partyID, inviter )
 end )

@@ -2,6 +2,8 @@ RVR.Party = RVR.Party or {}
 local party = RVR.Party
 party.menuEnabled = true
 
+party.menuY = ScrH() * 0.35
+
 local bgMat = Material( "rvr/backgrounds/party_menu_player.png" )
 local bgMatOwner = Material( "rvr/backgrounds/party_menu_owner.png" )
 local aspectRatio = bgMat:Height() / ( bgMat:Width() * 1.2 )
@@ -56,7 +58,7 @@ function party.reloadMenu()
     party.menu:SetTitle( "" )
     party.menu:ShowCloseButton( false )
     party.menu:SetDraggable( false )
-    party.menu:SetPos( 0, ScrH() * 0.35 )
+    party.menu:SetPos( 0, party.menuY )
     party.menu:SetSize( w, h )
     party.menu:DockPadding( 0, 0, 0, 0 )
     party.menu.Paint = nil
