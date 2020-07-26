@@ -83,24 +83,41 @@ function GM:SetupMove( ply, mv , cmd )
 end
 
 function GM:FinishMove( ply, mv )
-    if ply:GetMoveType() == MOVETYPE_NOCLIP then return end
+    if ply:GetMoveType() == MOVETYPE_NOCLIP then 
+        ply.lastMovedBase = nil
+        return
+    end
     
     local ground = getGroundIfRaft( ply )
-    if not ground then return end
+    if not ground then 
+        ply:SetCollisionGroup(COLLISION_GROUP_PLAYER)
+        ply.lastMovedBase = nil
+        return 
+    end
 
     mv:SetVelocity( ground:GetVelocity() )
     
-    -- Why am i dividing this by 2?
-    local pos = tryMove( ply, ply:GetPos(), mv:GetVelocity() / 2 + ply.RVRMovement )
+    local pos
+    if ply.lastMovedBase and ply.RVRMovement:IsZero() and ply.lastMoved and ply.lastMoved + 0.2 < CurTime() then
+        pos = ply.lastMovedBase:LocalToWorld( ply.lastMovedPos )
+        local movement = pos - ply:GetPos()
+        pos = tryMove( ply, pos, movement ) 
+    else 
+        pos = tryMove( ply, ply:GetPos(), mv:GetVelocity() / 2 + ply.RVRMovement )
+
+        if not ply.RVRMovement:IsZero() then 
+            ply.lastMoved = CurTime()
+            ply.lastMovedBase = ground
+            ply.lastMovedPos = ground:WorldToLocal( ply:GetPos() )
+        end
+    end
 
     ply:SetLocalVelocity( ground:GetVelocity() + ply.RVRMovement)
-	ply:SetAbsVelocity( ground:GetVelocity() + ply.RVRMovement)
+    ply:SetAbsVelocity( ground:GetVelocity() + ply.RVRMovement)
 	ply:SetLocalAngles( ground:GetAngles() )
     
-    if not pos then return true end
-
-    pos.z = math.ceil(pos.z)      
-    
+    if not pos then return end
+    ply:SetCollisionGroup(COLLISION_GROUP_WORLD)
     ply:SetPos( pos )
     ply:SetLocalPos( pos )
     ply:SetNetworkOrigin( pos )

@@ -10,8 +10,14 @@ function ENT:PhysicsUpdate( phys )
     
     if difference > 1000 then return end
 
-    local force = Vector( -5, 10, difference ) - phys:GetVelocity() * 0.7
+    local force = Vector( 0, 0, difference ) - phys:GetVelocity() * 0.9 + self:GetMovementVector()
     phys:ApplyForceCenter( force * mass)
 
     RVR.Util.keepAnglesThink( phys )
+end
+
+function ENT:GetMovementVector()
+    local raft = self:GetRaft()
+    if not raft then return Vector(0,0,0) end
+    return raft:GetMovement()
 end

@@ -137,6 +137,13 @@ function raftMeta:CanBuild( ply )
     return ply:GetPartyID() == self.partyID
 end
 
+function raftMeta:SetMovement( movement )
+    self.movement = movement
+end
+
+function raftMeta:GetMovement() 
+    return self.movement or Vector( 0, 0, 0 )
+end
 -- util
 function raftMeta.vectorIndex( v )
     -- hopefully someones raft isnt greater than 1000 pieces in a direction

@@ -356,7 +356,8 @@ function SWEP:UpdatePermitted()
     -- TODO: Check this server side as well
     local mins, maxs = self.ghost:GetModelBounds()
     local pos = self.ghost:GetPos()
-
+    
+    do return end
     local traceData = {
         start = pos,
         endpos = pos,
