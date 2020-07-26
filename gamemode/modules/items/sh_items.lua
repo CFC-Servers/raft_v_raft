@@ -93,6 +93,20 @@ items.items = {
         viewModelAng = Angle( 0, -15, 0 )
     },
     {
+        type = "dirty_water",
+        displayName = "Dirty Water bottle",
+        description = "THIS WATER IS FILTYH!!!",
+        maxCount = 5,
+        model = "models/rvr/items/bottle.mdl",
+        icon = "materials/rvr/items/dirty_waterbottle.png",
+        stackable = true,
+        consumable = true,
+        water = -5,
+        health = -10,
+        viewModelOffset = Vector( -2, 5, -9 ),
+        viewModelAng = Angle( 0, -15, 0 )
+    },
+    {
         type = "storage_box",
         displayName = "Storage Box",
         description = "Store all your items!",

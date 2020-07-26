@@ -36,9 +36,11 @@ config.RECIPES = {
         recipes = {
             {
                 item = "water",
-                count = 6,
-                timeToCraft = 60,
-                ingredients = { }
+                count = 1,
+                timeToCraft = 39,
+                ingredients = {
+                    dirty_water =  1
+                }
             }
         }
     },
