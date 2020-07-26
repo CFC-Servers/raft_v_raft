@@ -9,13 +9,12 @@ end
 
 if CLIENT then entCreate = ents.CreateClientProp end
 
-
 local modelBoundsCache = {}
 
 function RVR.Util.GetModelBounds( model )
     local cached = modelBoundsCache[model]
     if cached then
-        return unpack(cached)
+        return unpack( cached )
     end
 
     local ent = entCreate( model )
