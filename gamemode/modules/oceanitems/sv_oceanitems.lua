@@ -2,41 +2,39 @@ local possibleItems = GM.Config.Trash.POSSIBLE_ENTITIES
 local boxItems =  GM.Config.Trash.SCRAP_BARREL_ITEMS
 RVR.Trash = RVR.Trash or {}
 
-table.sort( boxItems, function( a, b ) return a.weight < b.weight end )
-local function preProcessTrashItems( tbl )
-    table.sort( tbl, function(a, b) return a.weight < b.weight end )
-    
-    for _, item in pairs( tbl ) do
-        if item.class == "rvr_scrap_barrel" then
-            item.afterSpawn = function( ent )
-                ent:SetItems( RVR.Trash.getRandomBoxItems( 40 ) )
-            end
-        end
+local function sorter( a, b ) return a.weight < b.weight end
+table.sort( boxItems, sorter )
+table.sort( possibleItems, sorter )
 
-        if item.itemType then 
-            item.class = "rvr_dropped_item" 
-            item.beforeSpawn = function( ent ) 
-                ent:Setup( RVR.Items.getItemData( item.itemType ), item.count or 1 )
-            end
+for _, item in pairs( possibleItems ) do
+    if item.class == "rvr_scrap_barrel" then
+        item.afterSpawn = function( ent )
+            ent:SetItems( RVR.Trash.getRandomBoxItems( 40 ) )
+        end
+    end
+
+    if item.itemType then
+        item.class = "rvr_dropped_item"
+        item.beforeSpawn = function( ent )
+            ent:Setup( RVR.Items.getItemData( item.itemType ), item.count or 1 )
         end
     end
 end
-preProcessTrashItems( possibleItems )
 
 local function calculateCumulativeWeights( tbl )
-    for i=1, #tbl do
+    for i = 1, #tbl do
         local item = tbl[i]
         local previous = tbl[i-1]
-        local prevWeight = previous and previous.weight or 0
+        local previousWeight = previous and previous.weight or 0
 
-        item.cumWeight = item.weight + prevWeight
+        item.cumWeight = item.weight + previousWeight
     end
 end
 
 function RVR.Trash.getRandomWeightedValue( tbl )
     local lastItem = tbl[#tbl]
-    if not lastItem.cumWeight then 
-        calculateCumulativeWeights( tbl ) 
+    if not lastItem.cumWeight then
+        calculateCumulativeWeights( tbl )
     end
 
     local randNum = math.random( 1, lastItem.cumWeight )
@@ -51,7 +49,6 @@ function RVR.Trash.getRandomBoxItems( amount )
     local items = {}
     for i=1, amount do
         local item = RVR.Trash.getRandomWeightedValue( boxItems )
-        
         table.insert( items, item )
     end
 
@@ -71,30 +68,31 @@ local function getRandomPly()
     return plys[math.random(1, #plys-1)]
 end
 
-local trash = {}
+RVR.Trash.spawnedTrashList = {}
 local function createTrash( amount )
     local config = GAMEMODE.Config.Trash
     for i=1, amount do
         local ply = getRandomPly()
 
         local pos = getRandomPosition( ply:GetPos(), config.SPAWN_RADIUS, config.SPAWN_WIDTH )
-        pos.z = RVR.waterSurfaceZ + config.SPAWN_Z_OFFSET 
+        pos.z = RVR.waterSurfaceZ + config.SPAWN_Z_OFFSET
+
         local item = RVR.Trash.getRandomWeightedValue( possibleItems )
 
         if util.IsInWorld( pos ) then
-            local ent = ents.Create( item.class )   
+            local ent = ents.Create( item.class )
             ent:SetPos( pos )
             if item.beforeSpawn then item.beforeSpawn( ent ) end
-            ent:Spawn() 
+            ent:Spawn()
             if item.afterSpawn then item.afterSpawn( ent ) end
-            table.insert( trash, ent )
+            table.insert( RVR.Trash.spawnedTrashList, ent )
         end
     end
 end
 
 timer.Create( "RVR_CreateTrash", 5, 0, function()
     local amountPerPlayer = GAMEMODE.Config.Trash.MAX_TRASH_PER_PlAYER
-    local amount = amountPerPlayer * #player.GetHumans() - #trash
+    local amount = amountPerPlayer * #player.GetHumans() - #RVR.Trash.spawnedTrashList 
 
     amount = math.min( amount, amountPerPlayer )
     createTrash( amount )
@@ -107,7 +105,7 @@ end
 
 timer.Create( "RVR_CleanupTrash", 10, 0, function()
     local keysToRemove = {}
-    for k, ent in pairs( trash ) do
+    for k, ent in pairs( RVR.Trash.spawnedTrashList ) do
         if not shouldExist( ent ) then
             table.insert( keysToRemove, k )
         end
