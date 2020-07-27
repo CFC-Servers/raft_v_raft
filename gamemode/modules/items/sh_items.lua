@@ -167,12 +167,12 @@ items.items = {
         displayName = "Grill",
         description = "Cook your food. Or eat it, rawr~",
         maxCount = 1,
-        model = "models/props_c17/furnitureStove001a.mdl", -- TODO a better model?
-        icon = "materials/rvr/items/water_bottle.png", -- TODO proper icon
+        model = "models/rvr/props/grill.mdl",
+        icon = "materials/rvr/items/grill.png",
         placeable = true,
         placeableClass = "rvr_grill",
         viewModelOffset = Vector( 10, 40, -20 ),
-        viewModelAng = Angle( 0, -40, 0 ) 
+        viewModelAng = Angle( 0, -40, 0 )
     },
     {
         type = "physgun",
