@@ -209,6 +209,14 @@ items.items = {
         stackable = false,
         swep = "weapon_physgun",
         icon = "materials/icon16/shield.png"
+    },
+    {
+        type  = "bigger_gun",
+        displayName = "AR2",
+        description = "pew pew!",
+        swep = "weapon_ar2",
+        stackable = false,
+        icon = "materials/icon16/sheild.png"
     }
 }
 

@@ -15,6 +15,5 @@ Config.POSSIBLE_ITEMS = {
 
 Config.SCRAP_BARREL_ITEMS = {
     { itemType = "wood", weight = 10, mincount = 2, maxcount = 10 },
-    { itemType = nil, weight = 30 },
     { itemType = "nail", weight = 10, mincount = 5, maxcount = 20 }
 }
