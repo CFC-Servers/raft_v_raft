@@ -18,6 +18,7 @@ function ENT:SetRemoveTime( t )
 end
 
 function ENT:Think()
+    BaseClass.Think( self )
     if self.removeTime and CurTime() > self.removeTime then
         self.removeTime = nil
         self:Remove()
