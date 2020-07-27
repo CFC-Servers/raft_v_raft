@@ -139,6 +139,14 @@ end
 function raftMeta:RemovePiece( piece )
     if self.removing then return end
     self.pieces[piece:EntIndex()] = nil
+
+    if table.IsEmpty( self.pieces ) then
+        self:Remove()
+        return
+    end
+
+    if piece:GetClass() ~= "raft_foundation" then return end
+
     if piece.removedByRaft then return end
 
     local grid, piecesGrid = self:GetSegmentingGrid()
@@ -268,6 +276,10 @@ function RVR.removeRaft( id )
     RVR.raftLookup[id] = nil
 
     if not SERVER then return end
+
+    if raft.partyID then
+        RVR.Party.removeParty( raft.partyID )
+    end
 
     net.Start( "RVR_Raft_RemoveRaft" )
         net.WriteInt( id, 32 )

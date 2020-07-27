@@ -18,8 +18,8 @@ function ENT:Initialize()
 end
 
 function ENT:OnRemove()
-   if self._removing then return end
-   self._removing = true
+    if self._removing then return end
+    self._removing = true
 
     local raft = self:GetRaft()
     if not raft then return end
@@ -36,6 +36,11 @@ function ENT:OnRemove()
             wall:Remove()
         end
     end
+
+    local raft = self:GetRaft()
+    if not raft then return end
+
+    raft:RemovePiece( self )
 end
 
 -- should the raft piece still exist e.g. a platform must have a foundation bellow it
