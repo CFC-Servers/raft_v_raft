@@ -133,7 +133,7 @@ timer.Create( "RVR_CleanupTrash", 10, 0, function()
     end
 
     for _, key in pairs( keysToRemove ) do
-        local ent = table.remove( trash, key )
+        local ent = table.remove( RVR.Trash.spawnedTrashList, key )
         if IsValid( ent ) then ent:Remove() end
     end
 end )
