@@ -1,13 +1,13 @@
 RVR.Trash = RVR.Trash or {}
-Config = GM.Config.Trash
+local config = GM.Config.Trash
 
 local getRandomBoxItems
 
 local function sorter( a, b ) return a.weight < b.weight end
-table.sort( Config.SCRAP_BARREL_ITEMS, sorter )
-table.sort( Config.POSSIBLE_ITEMS, sorter )
+table.sort( config.SCRAP_BARREL_ITEMS, sorter )
+table.sort( config.POSSIBLE_ITEMS, sorter )
 
-for _, item in pairs( Config.POSSIBLE_ITEMS ) do
+for _, item in pairs( config.POSSIBLE_ITEMS ) do
     if item.class == "rvr_scrap_barrel" then
         item.afterSpawn = function( ent )
             ent:SetItems( getRandomBoxItems( 40 ) )
@@ -48,10 +48,10 @@ local function getRandomWeightedValue( tbl )
 end
 
 
-local function getRandomBoxItems( amount )
+function getRandomBoxItems( amount )
     local items = {}
     for i=1, amount do
-        local item = getRandomWeightedValue( Config.SCRAP_BARREL_ITEMS )
+        local item = getRandomWeightedValue( config.SCRAP_BARREL_ITEMS )
         table.insert( items, item )
     end
 
@@ -71,7 +71,7 @@ local function getRandomPly()
     local alivePlayers = {}
     for _, ply in pairs( plys ) do
         if ply:Alive() then
-            alivePlayers[#players+1] = ply
+            alivePlayers[#plys+1] = ply
         end
     end
     if #alivePlayers == 0 then return nil end
@@ -88,7 +88,8 @@ local function createTrashForPlayer( ply )
 
     if not util.IsInWorld( pos ) then return end
 
-    local item = getRandomWeightedValue( pConfig.SCRAP_BARREL_ITEMS )
+    local item = getRandomWeightedValue( config.POSSIBLE_ITEMS )
+    if not item.class then return  end
 
     local ent = ents.Create( item.class )
     ent:SetPos( pos )
@@ -101,7 +102,6 @@ local function createTrashForPlayer( ply )
 end
 
 local function createTrash( amount )
-    local config = GAMEMODE.Config.Trash
     for i=1, amount do
         local ply = getRandomPly()
 
@@ -112,7 +112,7 @@ local function createTrash( amount )
 end
 
 timer.Create( "RVR_CreateTrash", 5, 0, function()
-    local amountPerPlayer = Config.MAX_TRASH_PER_PlAYER
+    local amountPerPlayer = config.MAX_TRASH_PER_PlAYER
     local amount = amountPerPlayer * #player.GetHumans() - #RVR.Trash.spawnedTrashList
 
     amount = math.min( amount, amountPerPlayer )
