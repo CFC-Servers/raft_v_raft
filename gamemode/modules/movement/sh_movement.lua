@@ -98,12 +98,12 @@ function GM:FinishMove( ply, mv )
     mv:SetVelocity( ground:GetVelocity() )
     
     local pos
-    if ply.lastMovedBase and ply.RVRMovement:IsZero() and ply.lastMoved and ply.lastMoved + 0.2 < CurTime() then
-        pos = ply.lastMovedBase:LocalToWorld( ply.lastMovedPos )
-        local movement = pos - ply:GetPos()
-        pos = tryMove( ply, pos, movement ) 
-    else 
-        pos = tryMove( ply, ply:GetPos(), mv:GetVelocity() / 2 + ply.RVRMovement )
+    if ply.lastMovedBase and ply.RVRMovement:IsZero() and ply.lastMoved and ply.lastMoved  <= CurTime() then
+        targetPos = ply.lastMovedBase:LocalToWorld( ply.lastMovedPos )
+        local movement = targetPos - ply:GetPos()
+        pos = tryMove( ply, ply:GetPos(), movement ) 
+    else     
+        pos = tryMove( ply, ply:GetPos(), ply.RVRMovement + mv:GetVelocity() ) 
 
         if not ply.RVRMovement:IsZero() then 
             ply.lastMoved = CurTime()

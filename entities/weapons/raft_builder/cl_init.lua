@@ -80,7 +80,7 @@ function SWEP:OnRemove()
     self.ghost:Remove()
 end
 
-function SWEP:Think()
+function SWEP:DrawHUD()
     self:UpdateCanMake()
     self:UpdatePermitted()
 
