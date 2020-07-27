@@ -98,22 +98,20 @@ function GM:FinishMove( ply, mv )
     mv:SetVelocity( ground:GetVelocity() )
 
     local pos
-    if ply.lastMovedBase and ply.RVRMovement:IsZero() and ply.lastMoved and ply.lastMoved <= CurTime() then
+    if ply.lastMovedBase and ply.RVRMovement:IsZero() and ply.lastMoved and ply.lastMoved + 1 <= CurTime() then
         targetPos = ply.lastMovedBase:LocalToWorld( ply.lastMovedPos )
         local movement = targetPos - ply:GetPos()
-        pos = tryMove( ply, ply:GetPos(), movement )
+        pos = tryMove( ply, ply:GetPos(), movement ) or targetPos
     else
         pos = tryMove( ply, ply:GetPos(), ply.RVRMovement + mv:GetVelocity() )
 
-        if not ply.RVRMovement:IsZero() then
-            ply.lastMoved = CurTime()
-            ply.lastMovedBase = ground
-            ply.lastMovedPos = ground:WorldToLocal( ply:GetPos() )
-        end
+        ply.lastMoved = CurTime()
+        ply.lastMovedBase = ground
+        ply.lastMovedPos = ground:WorldToLocal( ply:GetPos() )
     end
 
-    ply:SetLocalVelocity( ground:GetVelocity() + ply.RVRMovement)
-    ply:SetAbsVelocity( ground:GetVelocity() + ply.RVRMovement)
+    ply:SetLocalVelocity( ply.RVRMovement)
+    ply:SetAbsVelocity( ply.RVRMovement)
 	ply:SetLocalAngles( ground:GetAngles() )
 
     if not pos then return end
