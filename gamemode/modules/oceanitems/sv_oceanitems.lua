@@ -10,7 +10,7 @@ table.sort( config.POSSIBLE_ITEMS, sorter )
 for _, item in pairs( config.POSSIBLE_ITEMS ) do
     if item.class == "rvr_scrap_barrel" then
         item.afterSpawn = function( ent )
-            ent:SetItems( getRandomBoxItems( 40 ) )
+            ent:SetItems( getRandomBoxItems( config.SCRAP_BARREL_ITEM_AMOUNT ) )
         end
     end
 
