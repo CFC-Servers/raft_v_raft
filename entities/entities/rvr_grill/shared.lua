@@ -1,5 +1,5 @@
 ENT.Base = "rvr_crafter"
-ENT.Model = "models/props_c17/furnitureStove001a.mdl" -- TODO better model
+ENT.Model = "models/rvr/props/grill.mdl"
 ENT.Tier = 1
 ENT.CrafterName = "Grill"
 ENT.CrafterType = "cooking"
