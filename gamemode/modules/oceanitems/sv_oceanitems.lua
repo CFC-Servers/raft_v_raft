@@ -1,15 +1,16 @@
-local possibleItems = GM.Config.Trash.POSSIBLE_ENTITIES
-local boxItems =  GM.Config.Trash.SCRAP_BARREL_ITEMS
 RVR.Trash = RVR.Trash or {}
+Config = GM.Config.Trash
+
+local getRandomBoxItems
 
 local function sorter( a, b ) return a.weight < b.weight end
-table.sort( boxItems, sorter )
-table.sort( possibleItems, sorter )
+table.sort( Config.SCRAP_BARREL_ITEMS, sorter )
+table.sort( Config.POSSIBLE_ITEMS, sorter )
 
-for _, item in pairs( possibleItems ) do
+for _, item in pairs( Config.POSSIBLE_ITEMS ) do
     if item.class == "rvr_scrap_barrel" then
         item.afterSpawn = function( ent )
-            ent:SetItems( RVR.Trash.getRandomBoxItems( 40 ) )
+            ent:SetItems( getRandomBoxItems( 40 ) )
         end
     end
 
@@ -21,6 +22,7 @@ for _, item in pairs( possibleItems ) do
     end
 end
 
+
 local function calculateCumulativeWeights( tbl )
     for i = 1, #tbl do
         local item = tbl[i]
@@ -31,7 +33,7 @@ local function calculateCumulativeWeights( tbl )
     end
 end
 
-function RVR.Trash.getRandomWeightedValue( tbl )
+local function getRandomWeightedValue( tbl )
     local lastItem = tbl[#tbl]
     if not lastItem.cumWeight then
         calculateCumulativeWeights( tbl )
@@ -45,10 +47,11 @@ function RVR.Trash.getRandomWeightedValue( tbl )
     return lastItem
 end
 
-function RVR.Trash.getRandomBoxItems( amount )
+
+local function getRandomBoxItems( amount )
     local items = {}
     for i=1, amount do
-        local item = RVR.Trash.getRandomWeightedValue( boxItems )
+        local item = getRandomWeightedValue( Config.SCRAP_BARREL_ITEMS )
         table.insert( items, item )
     end
 
@@ -65,34 +68,52 @@ end
 
 local function getRandomPly()
     local plys = player.GetHumans()
+    local alivePlayers = {}
+    for _, ply in pairs( plys ) do
+        if ply:Alive() then
+            alivePlayers[#players+1] = ply
+        end
+    end
+    if #alivePlayers == 0 then return nil end
+
     return plys[math.random(1, #plys-1)]
 end
 
+
 RVR.Trash.spawnedTrashList = {}
+
+local function createTrashForPlayer( ply )
+    local pos = getRandomPosition( ply:GetPos(), config.SPAWN_RADIUS, config.SPAWN_WIDTH )
+    pos.z = RVR.waterSurfaceZ + config.SPAWN_Z_OFFSET
+
+    if not util.IsInWorld( pos ) then return end
+
+    local item = getRandomWeightedValue( pConfig.SCRAP_BARREL_ITEMS )
+
+    local ent = ents.Create( item.class )
+    ent:SetPos( pos )
+
+    if item.beforeSpawn then item.beforeSpawn( ent ) end
+    ent:Spawn()
+    if item.afterSpawn then item.afterSpawn( ent ) end
+
+    table.insert( RVR.Trash.spawnedTrashList, ent )
+end
+
 local function createTrash( amount )
     local config = GAMEMODE.Config.Trash
     for i=1, amount do
         local ply = getRandomPly()
 
-        local pos = getRandomPosition( ply:GetPos(), config.SPAWN_RADIUS, config.SPAWN_WIDTH )
-        pos.z = RVR.waterSurfaceZ + config.SPAWN_Z_OFFSET
+        if not ply then break end
 
-        local item = RVR.Trash.getRandomWeightedValue( possibleItems )
-
-        if util.IsInWorld( pos ) then
-            local ent = ents.Create( item.class )
-            ent:SetPos( pos )
-            if item.beforeSpawn then item.beforeSpawn( ent ) end
-            ent:Spawn()
-            if item.afterSpawn then item.afterSpawn( ent ) end
-            table.insert( RVR.Trash.spawnedTrashList, ent )
-        end
+        createTrashForPlayer( ply )
     end
 end
 
 timer.Create( "RVR_CreateTrash", 5, 0, function()
-    local amountPerPlayer = GAMEMODE.Config.Trash.MAX_TRASH_PER_PlAYER
-    local amount = amountPerPlayer * #player.GetHumans() - #RVR.Trash.spawnedTrashList 
+    local amountPerPlayer = Config.MAX_TRASH_PER_PlAYER
+    local amount = amountPerPlayer * #player.GetHumans() - #RVR.Trash.spawnedTrashList
 
     amount = math.min( amount, amountPerPlayer )
     createTrash( amount )
