@@ -37,9 +37,6 @@ function ENT:OnRemove()
         end
     end
 
-    local raft = self:GetRaft()
-    if not raft then return end
-
     raft:RemovePiece( self )
 end
 
