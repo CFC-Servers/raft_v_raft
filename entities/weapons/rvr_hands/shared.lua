@@ -3,7 +3,6 @@ AddCSLuaFile()
 SWEP.PrintName = "Hands"
 SWEP.Author = "CFC Dev Team"
 
-SWEP.ViewModel = Model( "" )
 SWEP.WorldModel = Model( "" )
 
 SWEP.DrawAmmo = false
@@ -37,5 +36,9 @@ function SWEP:OnDrop()
 end
 
 function SWEP:ShouldDropOnDie()
+    return false
+end
+
+function SWEP:ShouldDrawViewModel()
     return false
 end

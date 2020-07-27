@@ -11,10 +11,16 @@ SWEP.DrawCrosshair = false
 
 SWEP.Zoomed = false
 
+
+SWEP.Primary.Ammo = ""
 SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.DefaultClip = -1
 SWEP.Secondary.Automatic = false
-SWEP.Secondary.Ammo = "None"
+SWEP.Secondary.Ammo = ""
+
+hook.Add( "PlayerConnected", "RVR_Binoculars_disableZoom", function( ply )
+    ply:SetCanZoom( false )
+end )
 
 function SWEP:Initialize()
     self:SetWeaponHoldType( "camera" )
