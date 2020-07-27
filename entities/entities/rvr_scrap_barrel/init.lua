@@ -41,10 +41,10 @@ end
 function ENT:OnRemove()
     if self.timerIdentifier then
         timer.Remove( self.timerIdentifier )
-    end
+    end 
+end
 
-    if self.despawning then return end
-
+function ENT:SpawnItems()
     for i, itemData in pairs( self.items ) do
         local itemInstance = RVR.Items.getItemInstance( itemData.itemType )
 
@@ -57,6 +57,7 @@ end
 
 function ENT:OnTakeDamage()
     self:Remove()
+    self:SpawnItems()
 end
 
 function ENT:SetItems( items )
