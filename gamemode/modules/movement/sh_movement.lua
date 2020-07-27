@@ -111,8 +111,8 @@ function GM:FinishMove( ply, mv )
         ply.lastMovedPos = ground:WorldToLocal( ply:GetPos() )
     end
 
-    ply:SetLocalVelocity( ply.RVRMovement)
-    ply:SetAbsVelocity( ply.RVRMovement)
+    ply:SetLocalVelocity( ply.RVRMovement )
+    ply:SetAbsVelocity( ply.RVRMovement )
 	ply:SetLocalAngles( ground:GetAngles() )
 
     if not pos then return end
