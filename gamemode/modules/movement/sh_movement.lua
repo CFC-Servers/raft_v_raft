@@ -84,6 +84,7 @@ end
 
 function GM:FinishMove( ply, mv )
     if ply:GetMoveType() == MOVETYPE_NOCLIP then
+        ply:SetCollisionGroup(COLLISION_GROUP_PLAYER)
         ply.lastMovedBase = nil
         return
     end
