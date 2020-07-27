@@ -107,6 +107,14 @@ items.items = {
         stackable = false,
         swep = "weapon_physgun",
         icon = "materials/icon16/shield.png"
+    },
+    {
+        type = "paddle",
+        displayName = "Paddle",
+        description = "Move your raft",
+        stackabel = false,
+        swep = "rvr_paddle",
+        icon = "materials/rvr/items/wooden_paddle.png"
     }
 }
 

@@ -144,6 +144,24 @@ end
 function raftMeta:GetMovement() 
     return self.movement or Vector( 0, 0, 0 )
 end
+
+function raftMeta:AddPaddleMovement( vel )
+    local newVel = self:GetPaddleMovement() + vel
+    local length = newVel:Length()
+
+    if length > GAMEMODE.Config.Rafts.MAX_PADDLE_SPEED then return end
+
+    self.paddleMovement = newVel
+end
+
+function raftMeta:SetPaddleMovement( vel )
+    self.paddleMovement = vel
+end
+
+function raftMeta:GetPaddleMovement()
+    return self.paddleMovement or Vector( 0, 0, 0 )
+end
+
 -- util
 function raftMeta.vectorIndex( v )
     -- hopefully someones raft isnt greater than 1000 pieces in a direction
