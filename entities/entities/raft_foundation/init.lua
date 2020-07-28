@@ -30,6 +30,6 @@ end
 
 function ENT:GetMovementVector()
     local raft = self:GetRaft()
-    if not raft then return Vector(0,0,0) end
+    if not raft then return Vector( 0, 0, 0 ) end
     return raft:GetMovement() + raft:GetPaddleMovement()
 end
