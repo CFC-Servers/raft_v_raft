@@ -4,6 +4,7 @@ local nextPrimary = 0
 function SWEP:PrimaryAttack()
     if CurTime() <= nextPrimary then return end
     nextPrimary = CurTime() + 0.5
+
     local trace = self:DoPaddleTrace()
     if not trace.Hit then return end
 
