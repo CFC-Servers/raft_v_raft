@@ -379,6 +379,6 @@ end )
 
 net.Receive( "RVR_Party_requestFullUpdate", function( len, ply )
     net.Start( "RVR_Party_requestFullUpdate" )
-    net.WriteTable( party.parties )
+        net.WriteTable( party.parties )
     net.Send( ply )
 end )
