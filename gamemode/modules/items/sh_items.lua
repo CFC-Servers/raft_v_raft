@@ -112,7 +112,7 @@ items.items = {
         type = "paddle",
         displayName = "Paddle",
         description = "Move your raft in the direction that you paddle!",
-        stackabel = false,
+        stackable = false,
         swep = "rvr_paddle",
         icon = "materials/rvr/items/wooden_paddle.png"
     }
