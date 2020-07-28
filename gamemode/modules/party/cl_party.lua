@@ -3,14 +3,8 @@ local party = RVR.Party
 party.invites = {}
 
 local mouseEnabled = false
-
-local lastClick = 0
-hook.Add( "PlayerButtonDown", "RVR_Party_ToggleMouse", function( ply, key )
-    -- This hook gets called like a million times
-    if CurTime() - lastClick < 0.05 then return end
-    lastClick = CurTime()
-
-    if key ~= KEY_F3 then return end
+hook.Add( "PlayerBindPress", "RVR_Party_freeCursor", function( ply, bind, pressed )
+    if not ( pressed and bind == "gm_showspare1" ) then return end
 
     mouseEnabled = not mouseEnabled
     gui.EnableScreenClicker( mouseEnabled )
