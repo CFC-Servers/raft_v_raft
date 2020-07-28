@@ -77,23 +77,23 @@ local config = ( GAMEMODE or GM ).Config.Rafts
 local function getValidSpawnPos( ply, raftPiece, plyMins, plyMaxs )
     if not IsValid( raftPiece ) then return end
 
-    if config.SPAWNPOINT_PARTS[raftPiece:GetClass()] then
-        local size = raftPiece:OBBMaxs() - raftPiece:OBBMins()
-        local center = raftPiece:OBBCenter()
-        local top = raftPiece:GetPos() + center + Vector( 0, 0, size.z * 0.5 + 1 )
+    if not config.SPAWNPOINT_PARTS[raftPiece:GetClass()] then return end
 
-        local traceResult = util.TraceHull {
-            start = top,
-            endpos = top,
-            filter = ply,
-            mins = plyMins,
-            maxs = plyMaxs,
-            mask = MASK_PLAYERSOLID
-        }
+    local size = raftPiece:OBBMaxs() - raftPiece:OBBMins()
+    local center = raftPiece:OBBCenter()
+    local top = raftPiece:GetPos() + center + Vector( 0, 0, size.z * 0.5 + 1 )
 
-        if not traceResult.Hit then
-            return top
-        end
+    local traceResult = util.TraceHull {
+        start = top,
+        endpos = top,
+        filter = ply,
+        mins = plyMins,
+        maxs = plyMaxs,
+        mask = MASK_PLAYERSOLID
+    }
+
+    if not traceResult.Hit then
+        return top
     end
 end
 
