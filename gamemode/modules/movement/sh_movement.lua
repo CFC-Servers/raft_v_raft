@@ -113,7 +113,7 @@ function GM:FinishMove( ply, mv )
 
     ply:SetLocalVelocity( ply.RVRMovement )
     ply:SetAbsVelocity( ply.RVRMovement )
-	ply:SetLocalAngles( ground:GetAngles() )
+    ply:SetLocalAngles( ground:GetAngles() )
 
     if not pos then return end
     ply:SetCollisionGroup(COLLISION_GROUP_WORLD)
