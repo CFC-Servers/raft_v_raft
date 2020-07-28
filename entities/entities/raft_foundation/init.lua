@@ -18,7 +18,7 @@ function ENT:PhysicsUpdate( phys )
     local mass = phys:GetMass()
 
     local zPos = self:GetPos().z
-    local difference = RVR.waterSurfaceZ+10 - zPos
+    local difference = RVR.waterSurfaceZ + 10 - zPos
 
     if difference > 1000 then return end
 
