@@ -28,7 +28,7 @@ hook.Add( "Tick", "RVR_Fish_Think", function()
     if theTime >= nextTick then
         for _, fishData in pairs( config.fish ) do
             for _, ply in pairs( player.GetAll() ) do
-                local shouldSpawn = math.random( 1, 100 ) <= fishData.chance
+                local shouldSpawn = ply:Alive() and math.random( 1, 100 ) <= fishData.chance
 
                 if shouldSpawn and canSpawnFish( ply:GetPos().z ) then
                     local pos = randomWaterPos( ply )
