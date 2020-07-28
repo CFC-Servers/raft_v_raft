@@ -3,7 +3,7 @@ AddCSLuaFile( "shared.lua" )
 include( "shared.lua" )
 
 function ENT:PaddleMovementDecay( )
-    local  raft = self:GetRaft()
+    local raft = self:GetRaft()
     if not raft then return end
 
     local movement = raft:GetPaddleMovement()
