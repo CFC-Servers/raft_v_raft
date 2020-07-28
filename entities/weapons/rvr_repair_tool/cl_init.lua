@@ -57,24 +57,24 @@ function SWEP:AddHalo()
     halo.Add( { aimEnt }, col, 5, 5, 2 )
 end
 
-function SWEP:GetHudIdentifier()
+function SWEP:GetHookIdentifier()
     return "RVR_RepairTool_HudDraw" .. tostring( self )
 end
 
 function SWEP:Initialize()
     local this = self
-    hook.Add( "HUDPaint", this:GetHudIdentifier(), function()
+    hook.Add( "HUDPaint", this:GetHookIdentifier(), function()
         this:HudDraw()
     end )
 
-    hook.Add( "PreDrawHalos", this:GetHudIdentifier(), function()
+    hook.Add( "PreDrawHalos", this:GetHookIdentifier(), function()
         this:AddHalo()
     end )
 end
 
 function SWEP:OnRemove()
-    hook.Remove( "HUDPaint", self:GetHudIdentifier() )
-    hook.Remove( "PreDrawHalos", self:GetHudIdentifier() )
+    hook.Remove( "HUDPaint", self:GetHookIdentifier() )
+    hook.Remove( "PreDrawHalos", self:GetHookIdentifier() )
 end
 
 function SWEP:Think()

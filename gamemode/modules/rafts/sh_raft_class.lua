@@ -72,36 +72,41 @@ function raftMeta:GetPosition( piece )
     return piece:GetRaftGridPosition()
 end
 
+local config = ( GAMEMODE or GM ).Config.Rafts
+
+local function getValidSpawnPos( ply, raftPiece, plyMins, plyMaxs )
+    if not IsValid( raftPiece ) then return end
+
+    if config.SPAWNPOINT_PARTS[raftPiece:GetClass()] then
+        local size = raftPiece:OBBMaxs() - raftPiece:OBBMins()
+        local center = raftPiece:OBBCenter()
+        local top = raftPiece:GetPos() + center + Vector( 0, 0, size.z * 0.5 + 1 )
+
+        local traceResult = util.TraceHull {
+            start = top,
+            endpos = top,
+            filter = ply,
+            mins = plyMins,
+            maxs = plyMaxs,
+            mask = MASK_PLAYERSOLID
+        }
+
+        if not traceResult.Hit then
+            return top
+        end
+    end
+end
+
 -- Attempts to find a spawnable part that can fit a player on, else spawns significantly above the highest part
 function raftMeta:GetSpawnPosition( ply )
-    local config = GAMEMODE.Config.Rafts
-
     local mins, maxs = ply:GetCollisionBounds()
     local _, highestPiece = next( self.pieces )
 
     for _, raftPiece in pairs( self.pieces ) do
-        if not IsValid( raftPiece ) then continue end
+        local pos = getValidSpawnPos( ply, raftPiece, mins, maxs )
+        if pos then return pos end
 
-        if config.SPAWNPOINT_PARTS[raftPiece:GetClass()] then
-            local size = raftPiece:OBBMaxs() - raftPiece:OBBMins()
-            local center = raftPiece:OBBCenter()
-            local top = raftPiece:GetPos() + center + Vector( 0, 0, size.z * 0.5 + 1 )
-
-            local traceResult = util.TraceHull {
-                start = top,
-                endpos = top,
-                filter = ply,
-                mins = mins,
-                maxs = maxs,
-                mask = MASK_PLAYERSOLID
-            }
-
-            if not traceResult.Hit then
-                return top
-            end
-        end
-
-        if raftPiece:GetPos().z > highestPiece:GetPos().z then
+        if not IsValid( raftPiece ) and raftPiece:GetPos().z > highestPiece:GetPos().z then
             highestPiece = raftPiece
         end
     end
