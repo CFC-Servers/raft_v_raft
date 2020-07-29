@@ -51,7 +51,7 @@ end
 
 function getRandomBoxItems( amount )
     local items = {}
-    for i=1, amount do
+    for i = 1, amount do
         local item = getRandomWeightedValue( config.SCRAP_BARREL_ITEMS )
         local count = math.random( item.mincount or 1, item.maxcount or 1 )
         table.insert( items, { itemType = item.itemType, count = count } )
