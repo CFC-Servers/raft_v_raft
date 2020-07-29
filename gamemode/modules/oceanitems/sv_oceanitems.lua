@@ -17,7 +17,7 @@ for _, item in pairs( config.POSSIBLE_ITEMS ) do
     if item.itemType then
         item.class = "rvr_dropped_item"
         item.beforeSpawn = function( ent )
-            local count = math.random( item.mincount or 1, item.maxcount  or 1 )
+            local count = math.random( item.mincount or 1, item.maxcount or 1 )
             ent:Setup( RVR.Items.getItemData( item.itemType ), count )
         end
     end
