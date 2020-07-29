@@ -27,21 +27,21 @@ function ENT:Initialize()
     self:SetMoveType( MOVETYPE_VPHYSICS )
     self:SetSolid( SOLID_VPHYSICS )
     self:SetUseType( SIMPLE_USE )
-    self:SetCollisionGroup( COLLISION_GROUP_WEAPON )
+    self:SetCollisionGroup( COLLISION_GROUP_INTERACTIVE )
 
     local physObj = self:GetPhysicsObject()
 
     if physObj:IsValid() then
+        physObj:SetBuoyancyRatio( 0.02 )
         physObj:Wake()
         physObj:EnableMotion( true )
-        physObj:SetBuoyancyRatio( 0.2 )
     end
 end
 
 function ENT:OnRemove()
     if self.timerIdentifier then
         timer.Remove( self.timerIdentifier )
-    end 
+    end
 end
 
 function ENT:SpawnItems()
