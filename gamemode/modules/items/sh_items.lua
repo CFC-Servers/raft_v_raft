@@ -95,7 +95,7 @@ items.items = {
     {
         type = "dirty_water",
         displayName = "Dirty Water bottle",
-        description = "THIS WATER IS FILTYH!!!",
+        description = "This water is filthy, I wouldn't drink it if I were you!",
         maxCount = 5,
         model = "models/rvr/items/bottle.mdl",
         icon = "materials/rvr/items/dirty_waterbottle.png",
@@ -156,11 +156,11 @@ items.items = {
         displayName = "Water Purifier",
         description = "Makes water from air? is this magick?",
         maxCount = 1,
-        model = "models/props_borealis/bluebarrel001.mdl", -- TODO a better model?
-        icon = "materials/rvr/items/water_bottle.png", -- TODO proper icon
+        model = "models/props_borealis/bluebarrel001.mdl",
+        icon = "materials/rvr/items/water_purifier.png",
         placeable = true,
         placeableClass = "rvr_water_purifier",
-        viewModelOffset = Vector( 30, 50, -9 )
+        viewModelOffset = Vector( 30, 50, -30 )
     },
     {
         type = "grill",
