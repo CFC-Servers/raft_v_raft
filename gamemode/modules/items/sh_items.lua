@@ -106,7 +106,7 @@ items.items = {
         description = "pew pew!",
         swep = "weapon_ar2",
         stackable = false,
-        icon = "materials/icon16/sheild.png"
+        icon = "materials/icon16/cancel.png"
     }
 }
 
