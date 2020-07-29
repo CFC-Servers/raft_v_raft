@@ -64,7 +64,7 @@ local function getRandomPosition( origin, innerRadius, width )
     local randomAngle = math.random() * 2 * math.pi
     local radius = innerRadius + math.random() * width
 
-    local x, y = math.cos(randomAngle) * radius, math.sin(randomAngle) * radius
+    local x, y = math.cos( randomAngle ) * radius, math.sin( randomAngle ) * radius
     return origin + Vector( x, y, 0 )
 end
 
