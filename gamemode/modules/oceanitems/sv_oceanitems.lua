@@ -104,7 +104,7 @@ local function createTrashForPlayer( ply )
 end
 
 local function createTrash( amount )
-    for i=1, amount do
+    for i = 1, amount do
         local ply = getRandomPly()
 
         if not ply then break end
