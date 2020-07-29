@@ -73,7 +73,7 @@ local function getRandomPly()
     local alivePlayers = {}
     for _, ply in pairs( plys ) do
         if ply:Alive() then
-            alivePlayers[#plys+1] = ply
+            table.insert( alivePlayers, ply )
         end
     end
     if #alivePlayers == 0 then return nil end
