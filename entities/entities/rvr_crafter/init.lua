@@ -27,6 +27,6 @@ local nextUse = 0
 function ENT:Use( activator, caller )
     if CurTime() <= nextUse then return end
     nextUse = CurTime() + 0.2
-    
+
     RVR.Crafting.openMenu( caller, self )
 end
