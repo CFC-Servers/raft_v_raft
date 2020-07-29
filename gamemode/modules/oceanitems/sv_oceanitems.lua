@@ -78,7 +78,7 @@ local function getRandomPly()
     end
     if #alivePlayers == 0 then return nil end
 
-    return plys[math.random( 1, #ply )]
+    return plys[math.random( 1, #plys )]
 end
 
 
