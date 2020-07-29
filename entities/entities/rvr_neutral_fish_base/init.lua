@@ -18,9 +18,9 @@ end
 function ENT:ShouldSelfDestruct()
     for _, ply in pairs( player.GetAll() ) do
         local dist = self:GetPos():DistToSqr( ply:GetPos() )
-        local spawnRadius = GAMEMODE.Config.Fish.spawnRadius
+        local spawnRadius = GAMEMODE.Config.Fish.DESPAWN_RADIUS
 
-        if dist <= ( spawnRadius * spawnRadius ) then
+        if dist <= spawnRadius ^ 2 then
             return false
         end
     end
