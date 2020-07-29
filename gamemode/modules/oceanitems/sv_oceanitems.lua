@@ -17,7 +17,7 @@ for _, item in pairs( config.POSSIBLE_ITEMS ) do
     if item.itemType then
         item.class = "rvr_dropped_item"
         item.beforeSpawn = function( ent )
-            local count = math.random( item.mincount or 1, item.maxcount or 1 )
+            local count = math.random( item.minCount or 1, item.maxCount or 1 )
             ent:Setup( RVR.Items.getItemData( item.itemType ), count )
         end
     end
@@ -53,7 +53,7 @@ function getRandomBoxItems( amount )
     local items = {}
     for i = 1, amount do
         local item = getRandomWeightedValue( config.SCRAP_BARREL_ITEMS )
-        local count = math.random( item.mincount or 1, item.maxcount or 1 )
+        local count = math.random( item.minCount or 1, item.maxCount or 1 )
         table.insert( items, { itemType = item.itemType, count = count } )
     end
 
