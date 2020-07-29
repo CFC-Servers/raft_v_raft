@@ -101,6 +101,26 @@ items.items = {
         worldModelOffset = Vector( -2, 1, 7 )
     },
     {
+        type = "gun",
+        displayName = "Gun",
+        description = "G U N",
+        swep = "weapon_pistol",
+        icon = "materials/icon16/cross.png",
+        stackable = false
+    },
+    {
+        type = "tape",
+        displayName = "Tape",
+        description = "Fixes up raft parts",
+        swep = "rvr_repair_tool",
+        icon = "materials/rvr/items/duct_tape.png",
+        model = "models/rvr/items/tape.mdl",
+        stackable = false,
+        hasDurability = true,
+        maxDurability = 1000,
+        durabilityUse = 1
+    },
+    {
         type = "physgun",
         displayName = "Physics gun",
         description = "Gmod physics gun, how did you get this?!",

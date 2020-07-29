@@ -1,9 +1,16 @@
-ENT.Base = "base_anim"
-ENT.Type = "anim"
+ENT.Base = "raft_breakable_base"
 ENT.Author = "THE Gaft Gals ;)"
 ENT.PrintName = "Wall"
 ENT.Model = "models/rvr/raft/wall.mdl"
 ENT.IsWall = true
+
+function ENT:SetRaft( raft )
+    self:SetRaftID( raft.id )
+end
+
+function ENT:GetRaft( raft )
+    return RVR.raftLookup[self:GetRaftID()]
+end
 
 function ENT:GetRequiredItems()
     local requirements = {}
@@ -19,4 +26,12 @@ function ENT:GetRequiredItems()
     end
 
     return requirements
+end
+
+function ENT:SetupDataTables()
+    self:NetworkVar( "Int", 0, "RaftID" )
+
+    if SERVER then
+        self:SetRaftID( 0 )
+    end
 end

@@ -1,5 +1,4 @@
-ENT.Base = "base_anim"
-ENT.Type = "anim"
+ENT.Base = "raft_breakable_base"
 ENT.Author = "CFC"
 ENT.PrintName = ""
 ENT.Model = ""
