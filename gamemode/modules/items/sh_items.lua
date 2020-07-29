@@ -114,6 +114,7 @@ items.items = {
         description = "Fixes up raft parts",
         swep = "rvr_repair_tool",
         icon = "materials/rvr/items/duct_tape.png",
+        model = "models/rvr/items/tape.mdl",
         stackable = false,
         hasDurability = true,
         maxDurability = 1000,

@@ -15,6 +15,8 @@ SWEP.SwayScale = 0
 SWEP.DrawAmmo = false
 SWEP.Cooldown = 0.04
 SWEP.RepairAmount = 1
+SWEP.ViewModel = "models/rvr/items/tape.mdl"
+SWEP.WorldModel = "models/rvr/items/tape.mdl"
 
 function SWEP:SecondaryAttack()
 end

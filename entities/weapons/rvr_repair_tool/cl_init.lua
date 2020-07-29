@@ -62,6 +62,8 @@ function SWEP:GetHookIdentifier()
 end
 
 function SWEP:Initialize()
+    self.pitch = 0
+
     local this = self
     hook.Add( "HUDPaint", this:GetHookIdentifier(), function()
         this:HudDraw()
@@ -80,20 +82,28 @@ end
 function SWEP:Think()
     local mouseDown = input.IsMouseDown( input.GetKeyCode( input.LookupBinding( "+attack" ) ) )
 
-    if mouseDown and self.animProg < 1 then
-        self.animProg = math.min( self.animProg + FrameTime() * 5, 1 )
-    elseif not mouseDown and self.animProg > 0 then
-        self.animProg = math.max( self.animProg - FrameTime() * 5, 0 )
+    if mouseDown and self.animSpeed < 1 then
+        self.animSpeed = math.min( self.animSpeed + FrameTime(), 1 )
+    elseif not mouseDown and self.animSpeed > 0 then
+        self.animSpeed = math.max( self.animSpeed - FrameTime(), 0 )
     end
 end
 
 function SWEP:GetViewModelPosition( eyePos, eyeAng )
-    eyeAng, eyePos = self.BaseClass.GetViewModelPosition( self, eyePos, eyeAng )
+    eyePos, eyeAng = self.BaseClass.GetViewModelPosition( self, eyePos, eyeAng )
 
-    self.animProg = self.animProg or 0
+    self.animSpeed = self.animSpeed or 0
 
-    eyePos.x = eyePos.x + self.animProg * 5
-    eyePos.y = eyePos.y + self.animProg * 5
+    self.pitch = self.pitch + self.animSpeed * FrameTime() * 100
 
-    return eyeAng, eyePos
+    eyePos = Vector( eyePos.x, eyePos.y, eyePos.z )
+    eyeAng = Angle( eyeAng.x, eyeAng.y, eyeAng.z )
+
+    local offset = Vector( 12, -6, -5 )
+    offset:Rotate( eyeAng )
+    eyePos = eyePos + offset
+
+    eyeAng = eyeAng + Angle( self.pitch, 0, 0 )
+
+    return eyePos, eyeAng
 end
