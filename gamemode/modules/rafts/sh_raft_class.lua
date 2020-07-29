@@ -151,11 +151,9 @@ function raftMeta:RemovePiece( piece )
     end
 
     if piece:GetClass() ~= "raft_foundation" then return end
-
     if piece.removedByRaft then return end
 
     local grid, piecesGrid = self:GetSegmentingGrid()
-
     local segments = RVR.Util.segmentGrid( grid )
 
     if #segments <= 1 then return end
