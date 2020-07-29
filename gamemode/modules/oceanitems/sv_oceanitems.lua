@@ -76,7 +76,7 @@ local function getRandomPly()
             table.insert( alivePlayers, ply )
         end
     end
-    if #alivePlayers == 0 then return nil end
+    if #alivePlayers == 0 then return end
 
     return plys[math.random( 1, #plys )]
 end
