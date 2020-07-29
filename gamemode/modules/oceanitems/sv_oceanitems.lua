@@ -122,8 +122,7 @@ timer.Create( "RVR_CreateTrash", 5, 0, function()
 end )
 
 local function shouldExist( trash )
-    if not IsValid( trash ) then return false end
-    return true
+    return IsValid( trash )
 end
 
 timer.Create( "RVR_CleanupTrash", 10, 0, function()
