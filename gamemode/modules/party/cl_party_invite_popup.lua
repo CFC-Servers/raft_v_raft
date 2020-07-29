@@ -42,7 +42,7 @@ local function makeLabel( text, y, parent, color )
     return label
 end
 
-local function makeButton( text, x, y, h, frame, f )
+local function makeButton( text, x, y, h, frame, callback )
     local w = h * buttonBackgroundAspectRatio
 
     local btn = vgui.Create( "DButton", frame )
@@ -60,13 +60,15 @@ local function makeButton( text, x, y, h, frame, f )
 
     function btn:DoClick()
         frame:Remove()
-        if f then f() end
+        if callback then callback() end
     end
 
     return btn
 end
 
 function party.createInvitePopup( partyData, inviter )
+    surface.PlaySound( "garrysmod/balloon_pop_cute.wav" )
+
     local w = ScrW() * 0.23
     local h = w * backgroundAspectRatio
 
