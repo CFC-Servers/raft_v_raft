@@ -23,6 +23,10 @@ function ENT:Initialize()
     RVR.Crafting.makeCrafter( self, self.CrafterName, self.Tier, self.CrafterType )
 end
 
+local nextUse = 0
 function ENT:Use( activator, caller )
+    if CurTime() <= nextUse then return end
+    nextUse = CurTime() + 0.2
+
     RVR.Crafting.openMenu( caller, self )
 end

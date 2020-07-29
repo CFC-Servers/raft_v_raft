@@ -75,7 +75,7 @@ local function expandCallback( ply, piece, class, x, y, z, yaw )
         return "Couldn't place raft piece: " .. err
     end
 
-    local success, itemsMissing = RVR.Inventory.tryTakeItems( ply, required )
+    RVR.Inventory.tryTakeItems( ply, required )
 end
 
 local function deleteCallback( ply, piece )
