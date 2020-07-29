@@ -27,7 +27,7 @@ end
 local function calculateCumulativeWeights( tbl )
     for i = 1, #tbl do
         local item = tbl[i]
-        local previous = tbl[i-1]
+        local previous = tbl[i - 1]
         local previousWeight = previous and previous.weight or 0
 
         item.cumWeight = item.weight + previousWeight
