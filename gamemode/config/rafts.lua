@@ -2,29 +2,32 @@ GM.Config.Rafts = {}
 
 local Config = GM.Config.Rafts
 Config.BUILDING_REQUIREMENTS = {
-    raft_piece_wall = { -- default raft piece requirements
-        wood = 10,
-        nail = 10
-    },
-    raft_foundation = {
+    raft_piece_wall = {
         wood = 15,
         nail = 10
     },
+    raft_foundation = {
+        wood = 35,
+        nail = 20,
+        rope = 5
+    },
     raft_platform = {
-        wood = 20,
-        nail = 10
+        wood = 30,
+        nail = 15,
+        rope = 4
     },
     raft_stairs = {
-        wood = 25,
-        nail = 15
+        wood = 60,
+        nail = 30,
+        rope = 15
     },
     raft_fence = {
         wood = 10,
         nail = 5
     },
     raft_wall = {
-        wood = 20,
-        nail = 10
+        wood = 25,
+        nail = 15
     }
 }
 

@@ -76,6 +76,15 @@ config.RECIPES = {
                     wood = 5
                 }
             },
+            {
+                item = "paddle",
+                timeToCraft = 20,
+                ingredients = {
+                    wood = 50,
+                    nail = 1,
+                    rope = 1
+                }
+            },
         }
     },
     {
