@@ -126,15 +126,11 @@ local function shouldExist( trash )
 end
 
 timer.Create( "RVR_CleanupTrash", 10, 0, function()
-    local keysToRemove = {}
-    for k, ent in pairs( RVR.Trash.spawnedTrashList ) do
+    local spawnedTrash = RVR.Trash.spawnedTrashList
+    for i = #spawnedTrash, 1, -1 do
+        local ent = spawnedTrash[i]
         if not shouldExist( ent ) then
-            table.insert( keysToRemove, k )
+            table.remove( spawnedTrash, i )
         end
-    end
-
-    for _, key in pairs( keysToRemove ) do
-        local ent = table.remove( RVR.Trash.spawnedTrashList, key )
-        if IsValid( ent ) then ent:Remove() end
     end
 end )
