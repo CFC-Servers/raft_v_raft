@@ -78,7 +78,7 @@ local function getRandomPly()
     end
     if #alivePlayers == 0 then return end
 
-    return aliveplayers[math.random( 1, #alivePlayers )]
+    return alivePlayers[math.random( 1, #alivePlayers )]
 end
 
 
