@@ -7,6 +7,7 @@ config.SPAWN_RADIUS = 1000
 config.DESPAWN_RADIUS = 1500
 config.WATER_LEVEL_BIAS = 20
 config.FISH_PER_PLAYER = 10
+config.SCARED_DISTANCE = 200
 
 config.FISH = {
     {

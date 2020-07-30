@@ -23,7 +23,7 @@ local function spawnFishForPlayer( ply )
             local pos = randomWaterPos( ply )
             local ang = Angle( 0, math.random( -180, 180 ), 0 )
 
-            local className = fishData.isHostile and "rvr_hostile_fish_base" or "rvr_neutral_fish_base"
+            local className = "rvr_neutral_fish_base"
             local newFish = ents.Create( className )
             newFish:SetPos( pos )
             newFish:SetAngles( ang )
