@@ -2,9 +2,9 @@ AddCSLuaFile()
 
 SWEP.PrintName = "Sword"
 SWEP.Author = "THE Gaft Gals ;)"
-SWEP.HoltType = "melee"
-SWEP.ViewModel = "models/weapons/v_crowbar.mdl"
-SWEP.WorldModel = "models/weapons/w_crowbar.mdl"
+SWEP.HoldType = "melee"
+SWEP.ViewModel = "models/rvr/items/sword.mdl"
+SWEP.WorldModel = "models/rvr/items/sword.mdl"
 
 --[[ TODO: Add model
 SWEP.ViewModel = Model( "" )
@@ -19,13 +19,19 @@ SWEP.Primary.Damage = 60
 
 SWEP.DrawAmmo = false
 SWEP.DrawCrosshair = false
-
+function SWEP:Initialize()
+    self:SetHoldType( "melee" )
+end
+local nextPrimaryFire = 0
 function SWEP:PrimaryAttack()
-    self:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
-
+    if CurTime() < nextPrimaryFire then return end
+    nextPrimaryFire = CurTime() + self.Primary.Delay
+ 
+    
     local owner = self:GetOwner()
     if not IsValid( owner ) then return end
-
+    self.Owner:SetAnimation( PLAYER_ATTACK1 )
+    self.Weapon:SendWeaponAnim( ACT_RANGE_ATTACK1 )
     owner:LagCompensation( true )
 
     local aimVec = owner:GetAimVector()
@@ -52,25 +58,27 @@ function SWEP:PrimaryAttack()
         }
     end
 
-    local hitEnt = tr.Entity
+    local hitEnt = trace.Entity
 
-    if tr.Hit then
+    if trace.Hit then
         if SERVER then
             self:LoseDurability()
         end
-        util.Decal("ManhackCut", tr.HitPos+tr.HitNormal, tr.HitPos-tr.HitNormal, self:GetOwner() )
+
+        util.Decal("ManhackCut", trace.HitPos+trace.HitNormal, trace.HitPos-trace.HitNormal, self:GetOwner() )
+
         if IsValid( hitEnt ) then
             local eData = EffectData()
             eData:SetStart( traceStart )
-            eData:SetOrigin( tr.HitPos )
-            eData:SetNormal( tr.HitNormal )
+            eData:SetOrigin( trace.HitPos )
+            eData:SetNormal( trace.HitNormal )
             eData:SetEntity( hitEnt )
 
             if hitEnt:IsPlayer() or hitEnt:GetClass() == "prop_ragdoll" then
                 util.Effect( "BloodImpact", eData )
             end
 
-            if SERVER and tr.Hit and tr.HitNonWorld and hitEnt:IsPlayer() then
+            if SERVER and trace.Hit and trace.HitNonWorld and hitEnt:IsPlayer() then
                 local dmg = DamageInfo()
                 dmg:SetDamage( self.Primary.Damage )
                 dmg:SetAttacker( owner )
@@ -87,4 +95,23 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:SecondaryAttack()
+end
+
+function SWEP:DrawWorldModel()
+    if not IsValid( self.Owner ) then return end
+
+    local rightHandID = self.Owner:LookupAttachment("anim_attachment_rh")
+    local rightHand = self.Owner:GetAttachment( rightHandID )
+
+    local pos = rightHand.Pos + rightHand.Ang:Forward() * 1 + rightHand.Ang:Right()  + rightHand.Ang:Up()
+    local ang = rightHand.Ang 
+
+    self:SetRenderOrigin( pos )
+    self:SetRenderAngles( ang )
+
+    self:DrawModel()
+end
+
+function SWEP:GetViewModelPosition( eyePos, eyeAng )
+    return eyePos + eyeAng:Right() * 5 + eyeAng:Forward() * 10 - eyeAng:Up() * 10 , eyeAng
 end
