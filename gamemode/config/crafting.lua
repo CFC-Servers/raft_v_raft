@@ -36,7 +36,6 @@ config.RECIPES = {
         recipes = {
             {
                 item = "water",
-                count = 1,
                 timeToCraft = 39,
                 ingredients = {
                     dirty_water =  1
@@ -51,7 +50,6 @@ config.RECIPES = {
         recipes = {
             {
                 item = "cooked_tuna",
-                count = 1,
                 timeToCraft = 5,
                 ingredients = {
                     tuna = 1,
@@ -71,7 +69,6 @@ config.RECIPES = {
         recipes = {
             {
                 item = "raft_builder",
-                count = 1,
                 timeToCraft = 20,
                 ingredients = {
                     big_rock = 1,
@@ -87,7 +84,6 @@ config.RECIPES = {
         recipes = {
             {
                 item = "big_rock",
-                count = 1,
                 timeToCraft = 10,
                 ingredients = {
                     small_rocks = 10
@@ -95,7 +91,6 @@ config.RECIPES = {
             },
             {
                 item = "rope",
-                count = 1,
                 timeToCraft = 15,
                 ingredients = {
                     cloth = 15
@@ -103,10 +98,9 @@ config.RECIPES = {
             },
             {
                 item = "iron",
-                count = 1,
                 timeToCraft = 10,
                 ingredients = {
-                    small_rocks = 10
+                    scrap_metal = 10
                 }
             },
         }
@@ -117,7 +111,6 @@ config.RECIPES = {
         recipes = {
             {
                 item = "bandage",
-                count = 1,
                 timeToCraft = 10,
                 ingredients = {
                     cloth = 5
@@ -125,7 +118,6 @@ config.RECIPES = {
             },
             {
                 item = "medkit",
-                count = 1,
                 timeToCraft = 15,
                 ingredients = {
                     bandage = 4,
@@ -145,11 +137,70 @@ config.RECIPES = {
     --     icon = "rvr/icons/craftingmenu_category_navigation.png",
     --     recipes = {}
     -- },
-    -- {
-    --     name = "Furniture",
-    --     icon = "rvr/icons/craftingmenu_category_furniture.png",
-    --     recipes = {}
-    -- },
+    {
+        name = "Furniture",
+        icon = "rvr/icons/craftingmenu_category_furniture.png",
+        recipes = {
+            {
+                item = "storage_box_small",
+                timeToCraft = 10,
+                ingredients = {
+                    wood = 30,
+                    nail = 10
+                }
+            },
+            {
+                item = "storage_box",
+                timeToCraft = 20,
+                tier = 2,
+                ingredients = {
+                    wood = 50,
+                    nail = 20,
+                    rope = 5
+                }
+            },
+            {
+                item = "storage_box_large",
+                timeToCraft = 30,
+                tier = 2,
+                ingredients = {
+                    wood = 60,
+                    nail = 30,
+                    rope = 10,
+                    iron = 2
+                }
+            },
+            {
+                item = "workbench",
+                timeToCraft = 10,
+                ingredients = {
+                    wood = 20,
+                    nail = 5,
+                    scrap_metal = 1
+                }
+            },
+            {
+                item = "water_purifier",
+                timeToCraft = 15,
+                tier = 2,
+                ingredients = {
+                    wood = 20,
+                    cloth = 10,
+                    nail = 5
+                }
+            },
+            {
+                item = "grill",
+                timeToCraft = 15,
+                tier = 2,
+                ingredients = {
+                    scrap_metal = 10,
+                    wood = 10,
+                    rope = 2
+                }
+            }
+        }
+    },
     {
         name = "Other",
         icon = "rvr/icons/craftingmenu_category_other.png",
