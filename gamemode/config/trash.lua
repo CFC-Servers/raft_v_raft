@@ -18,7 +18,7 @@ Config.POSSIBLE_ITEMS = {
     },
     {
         class = "rvr_scrap_barrel",
-        weight = 2
+        weight = 1
     },
     {
         itemType = "nail",
