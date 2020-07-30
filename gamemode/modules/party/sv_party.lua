@@ -7,6 +7,7 @@ util.AddNetworkString( "RVR_Party_inviteSent" )
 util.AddNetworkString( "RVR_Party_createParty" )
 util.AddNetworkString( "RVR_Party_joinParty" )
 util.AddNetworkString( "RVR_Party_updateFriends" )
+util.AddNetworkString( "RVR_Party_requestFullUpdate" )
 
 local function updateClientPartyData( id )
     local partyData = party.getParty( id )
@@ -150,7 +151,7 @@ function party.removeMember( id, ply )
     if partyData.owner == ply then
         partyData.owner = partyData.members[1]
 
-        party.broadcastMessage( partyData.id, "The owner ( " .. ply:Nick() .. " has left this party, " .. partyData.owner:Nick() .. " is the new owner." )
+        party.broadcastMessage( partyData.id, "The owner ( " .. ply:Nick() .. " ) has left this party, " .. partyData.owner:Nick() .. " is the new owner." )
     end
 
     updateClientPartyData( id )
@@ -254,6 +255,7 @@ function party.invite( id, inviter, ply )
 
     net.Start( "RVR_Party_inviteSent" )
         net.WriteUInt( id, 32 )
+        net.WriteEntity( inviter )
     net.Send( ply )
 
     return true
@@ -367,10 +369,15 @@ end )
 hook.Add( "RVR_SuccessfulPlayerSpawn", "RVR_Party_Raft_Spawn", function( ply )
     local partyData = ply:GetParty()
     if not partyData then return end -- This should never happen, but just to be sure.
-    
+
     local raft = RVR.getRaft( partyData.raftID )
-    
     local spawnPos = raft:GetSpawnPosition( ply )
 
     ply:SetPos( spawnPos )
+end )
+
+net.Receive( "RVR_Party_requestFullUpdate", function( len, ply )
+    net.Start( "RVR_Party_requestFullUpdate" )
+        net.WriteTable( party.parties )
+    net.Send( ply )
 end )

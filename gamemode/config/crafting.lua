@@ -30,6 +30,37 @@ recipe = {
 
 config.RECIPES = {
     {
+        name = "Water",
+        icon = "materials/rvr/items/water_bottle.png",
+        crafterType = "water",
+        recipes = {
+            {
+                item = "water",
+                count = 1,
+                timeToCraft = 39,
+                ingredients = {
+                    dirty_water =  1
+                }
+            }
+        }
+    },
+    {
+        name = "Grill",
+        icon = "materials/rvr/items/tuna.png",
+        crafterType = "cooking",
+        recipes = {
+            {
+                item = "cooked_tuna",
+                count = 1,
+                timeToCraft = 5,
+                ingredients = {
+                    tuna = 1,
+                    wood = 1
+                }
+            }
+        }
+    },
+    {
         name = "Weapons",
         icon = "rvr/icons/craftingmenu_category_weapons.png",
         recipes = {

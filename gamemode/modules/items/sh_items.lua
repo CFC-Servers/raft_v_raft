@@ -101,6 +101,108 @@ items.items = {
         worldModelOffset = Vector( -2, 1, 7 )
     },
     {
+        type = "gun",
+        displayName = "Gun",
+        description = "G U N",
+        swep = "weapon_pistol",
+        icon = "materials/icon16/cross.png",
+        stackable = false
+    },
+    {
+        type = "tape",
+        displayName = "Tape",
+        description = "Fixes up raft parts",
+        swep = "rvr_repair_tool",
+        icon = "materials/rvr/items/duct_tape.png",
+        model = "models/rvr/items/tape.mdl",
+        stackable = false,
+        hasDurability = true,
+        maxDurability = 1000,
+        durabilityUse = 1
+    },
+    {
+        type = "dirty_water",
+        displayName = "Dirty Water bottle",
+        description = "This water is filthy, I wouldn't drink it if I were you!",
+        maxCount = 5,
+        model = "models/rvr/items/bottle.mdl",
+        icon = "materials/rvr/items/dirty_waterbottle.png",
+        stackable = true,
+        consumable = true,
+        water = -5,
+        health = -10,
+        viewModelOffset = Vector( -2, 5, -9 ),
+        viewModelAng = Angle( 0, -15, 0 )
+    },
+    {
+        type = "storage_box",
+        displayName = "Storage Box",
+        description = "Store all your items!",
+        maxCount = 1,
+        model = "models/props_junk/wood_crate001a.mdl",
+        icon = "materials/rvr/items/storage_box.png",
+        placeable = true,
+        placeableClass = "rvr_storage",
+        viewModelOffset = Vector( 30, 50, -9 )
+    },
+    {
+        type = "storage_box_small",
+        displayName = "Small Storage Box",
+        description = "Store all your items!",
+        maxCount = 1,
+        model = "models/props_junk/cardboard_box002b.mdl",
+        icon = "materials/rvr/items/storage_box_small.png",
+        placeable = true,
+        placeableClass = "rvr_storage_small",
+        viewModelOffset = Vector( 30, 50, -9 )
+    },
+    {
+        type = "storage_box_large",
+        displayName = "Large Storage Box",
+        description = "Store all your items!",
+        maxCount = 1,
+        model = "models/props_junk/wood_crate002a.mdl",
+        icon = "materials/rvr/items/storage_box_large.png",
+        placeable = true,
+        placeableClass = "rvr_storage_large",
+        viewModelOffset = Vector( 50, 50, -9 )
+    },
+    {
+        type = "workbench",
+        displayName = "Work Bench",
+        description = "Crafting.. woah!",
+        maxCount = 1,
+        model = "models/rvr/props/workbench.mdl",
+        icon = "materials/rvr/items/workbench.png",
+        placeable = true,
+        placeableClass = "rvr_crafter",
+        viewModelOffset = Vector( 30, 60, -39 ),
+        viewModelAng = Angle( 0, -40, 0 )
+    },
+    {
+        type = "water_purifier",
+        displayName = "Water Purifier",
+        description = "Makes water from air? is this magick?",
+        maxCount = 1,
+        model = "models/props_borealis/bluebarrel001.mdl",
+        icon = "materials/rvr/items/water_purifier.png",
+        placeable = true,
+        placeableClass = "rvr_water_purifier",
+        viewModelOffset = Vector( 30, 50, -30 )
+    },
+    {
+        type = "grill",
+        displayName = "Grill",
+        description = "Cook your food. Or eat it, rawr~",
+        maxCount = 1,
+        model = "models/rvr/props/grill.mdl",
+        icon = "materials/rvr/items/grill.png",
+        placeable = true,
+        placeableClass = "rvr_grill",
+        viewModelOffset = Vector( 10, 40, -20 ),
+        viewModelAng = Angle( 0, -40, 0 )
+    },
+    {
         type = "physgun",
         displayName = "Physics gun",
         description = "Gmod physics gun, how did you get this?!",

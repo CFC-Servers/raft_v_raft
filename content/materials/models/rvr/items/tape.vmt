@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/rvr/items/tape"
+	"$noclamp" "1"
+	"$clamps" "1"
+	"$clampt" "1"
+}

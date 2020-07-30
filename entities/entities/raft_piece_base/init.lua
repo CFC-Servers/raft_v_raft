@@ -2,7 +2,11 @@ AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "shared.lua" )
 include( "shared.lua" )
 
+DEFINE_BASECLASS( "raft_breakable_base" )
+
 function ENT:Initialize()
+    BaseClass.Initialize( self )
+
     self:SetModel( self.Model )
     self:PhysicsInit( SOLID_VPHYSICS )
     self:SetSolid( SOLID_VPHYSICS )
@@ -16,8 +20,8 @@ function ENT:Initialize()
 end
 
 function ENT:OnRemove()
-   if self._removing then return end
-   self._removing = true
+    if self._removing then return end
+    self._removing = true
 
     local raft = self:GetRaft()
     if not raft then return end
@@ -28,6 +32,14 @@ function ENT:OnRemove()
             ent:Remove()
         end
     end
+
+    if self.walls then
+        for _, wall in pairs( self.walls ) do
+            wall:Remove()
+        end
+    end
+
+    raft:RemovePiece( self )
 end
 
 -- should the raft piece still exist e.g. a platform must have a foundation bellow it

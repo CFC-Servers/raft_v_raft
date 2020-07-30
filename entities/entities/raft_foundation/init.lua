@@ -2,16 +2,14 @@ AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "shared.lua" )
 include( "shared.lua" )
 
+DEFINE_BASECLASS( "raft_piece_base" )
+
 function ENT:PaddleMovementDecay()
     local raft = self:GetRaft()
     if not raft then return end
 
     local movement = raft:GetPaddleMovement()
     raft:SetPaddleMovement( movement * GAMEMODE.Config.Rafts.FOUNDATION_DRAG_MULTIPLIER  )
-end
-
-function ENT:Think()
-    self:PaddleMovementDecay()
 end
 
 function ENT:PhysicsUpdate( phys )
@@ -32,4 +30,18 @@ function ENT:GetMovementVector()
     local raft = self:GetRaft()
     if not raft then return Vector( 0, 0, 0 ) end
     return raft:GetMovement() + raft:GetPaddleMovement()
+end
+
+function ENT:SetRemoveTime( t )
+    self.removeTime = CurTime() + t
+end
+
+function ENT:Think()
+    self:PaddleMovementDecay()
+
+    BaseClass.Think( self )
+    if self.removeTime and CurTime() > self.removeTime then
+        self.removeTime = nil
+        self:Remove()
+    end
 end
