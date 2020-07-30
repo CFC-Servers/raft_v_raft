@@ -20,7 +20,7 @@ function ENT:GetPlayerStatus()
     for _, ply in pairs( player.GetAll() ) do
         local dist = self:GetPos():DistToSqr( ply:GetPos() )
         local spawnRadius = GAMEMODE.Config.Fish.DESPAWN_RADIUS
-        local scaredDistance GAMEMODE.Config.Fish.SCARED_DISTANCE
+        local scaredDistance = GAMEMODE.Config.Fish.SCARED_DISTANCE
 
         if dist <= spawnRadius ^ 2 then
             shouldDie = false
@@ -83,18 +83,15 @@ function ENT:Think()
         end
     else
         local time = CurTime()
-        local shouldMove = true--math.random( 1, 100 ) <= self.moveChance
 
         if time >= self.nextThink then
-            if shouldMove then
-                local waterZ = RVR.waterSurfaceZ - GAMEMODE.Config.Fish.WATER_LEVEL_BIAS
+            local waterZ = RVR.waterSurfaceZ - GAMEMODE.Config.Fish.WATER_LEVEL_BIAS
 
-                self.destination = self:LocalToWorld( VectorRand( -1, 1 ):GetNormalized() * self.moveDistance )
-                self.destination.z = math.Clamp( self.destination.z, -math.huge, waterZ )
-                self.predictedPos = self:GetPos()
-                self.prevPos = self:GetPos()
-                self.isMoving = true
-            end
+            self.destination = self:LocalToWorld( VectorRand( -1, 1 ):GetNormalized() * self.moveDistance )
+            self.destination.z = math.Clamp( self.destination.z, -math.huge, waterZ )
+            self.predictedPos = self:GetPos()
+            self.prevPos = self:GetPos()
+            self.isMoving = true
 
             self.nextThink = time + 3
         end
