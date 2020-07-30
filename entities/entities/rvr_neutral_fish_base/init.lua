@@ -15,17 +15,23 @@ function ENT:Initialize()
     end
 end
 
-function ENT:ShouldSelfDestruct()
+function ENT:GetPlayerStatus()
+    local shouldDie = true
     for _, ply in pairs( player.GetAll() ) do
         local dist = self:GetPos():DistToSqr( ply:GetPos() )
         local spawnRadius = GAMEMODE.Config.Fish.DESPAWN_RADIUS
+        local scaredDistance GAMEMODE.Config.Fish.SCARED_DISTANCE
 
         if dist <= spawnRadius ^ 2 then
-            return false
+            shouldDie = false
+        end
+
+        if dist <= scaredDistance ^ 2 then
+            return false, ply
         end
     end
 
-    return true
+    return shouldDie
 end
 
 function ENT:Setup( fishData )
@@ -34,6 +40,7 @@ function ENT:Setup( fishData )
     self.maxHealth = fishData.health
     self.currentHealth = self.maxHealth
     self.moveDistance = fishData.moveDistance
+    self.defaultMoveDistance = fishData.moveDistance
     self.moveChance = fishData.moveChance
     self.nextThink = CurTime() + 3
     self.isMoving = false
@@ -45,8 +52,19 @@ function ENT:Setup( fishData )
 end
 
 function ENT:Think()
-    if self:ShouldSelfDestruct() then
+    local shouldDie, enemy = self:GetPlayerStatus()
+    if shouldDie then
         self:Remove()
+    end
+ 
+    if IsValid( enemy ) and not self.enemy then
+        self.enemy = enemy
+        self.moveDistance = self.moveDistance * 10
+        self.nextThink = CurTime()
+        self.isMoving = false
+    elseif not IsValid( enemy ) then
+        self.enemy = nil
+        self.moveDistance = self.defaultMoveDistance
     end
 
     if self.isMoving then
@@ -69,9 +87,9 @@ function ENT:Think()
 
         if time >= self.nextThink then
             if shouldMove then
-                local waterZ = RVR.waterSurfaceZ - GAMEMODE.Config.Fish.waterLevelBias
+                local waterZ = RVR.waterSurfaceZ - GAMEMODE.Config.Fish.WATER_LEVEL_BIAS
 
-                self.destination = self:LocalToWorld( VectorRand( -self.moveDistance, self.moveDistance ) )
+                self.destination = self:LocalToWorld( VectorRand( -1, 1 ):GetNormalized() * self.moveDistance )
                 self.destination.z = math.Clamp( self.destination.z, -math.huge, waterZ )
                 self.predictedPos = self:GetPos()
                 self.prevPos = self:GetPos()
