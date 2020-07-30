@@ -135,7 +135,6 @@ items.items = {
         viewModelAng = Angle( 0, -15, 0 )
     },
     {
-<<<<<<< HEAD
         type = "raft_builder",
         displayName = "Raft Builder",
         description = "Build rafts uwu",
@@ -174,6 +173,7 @@ items.items = {
         description = "For lookin' at stuff. uwu",
         swep = "rvr_binoculars",
         stackable = false,
+        model = "models/rvr/items/binoculars.mdl",
         icon = "materials/rvr/items/binoculars.png"
     },
     {
@@ -187,7 +187,8 @@ items.items = {
         maxDurability = 150,
         durabilityUse = 5,
         durabilityUseRandomRange = 6
-=======
+    },
+    {
         type = "storage_box",
         displayName = "Storage Box",
         description = "Store all your items!",
@@ -270,7 +271,6 @@ items.items = {
         swep = "weapon_ar2",
         stackable = false,
         icon = "materials/icon16/cancel.png"
->>>>>>> master
     }
 }
 

@@ -1,10 +1,10 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "Binoculars"
-SWEP.Author = "CFC Dev Team"
+SWEP.Author = "THE Gaft Gals ;)"
 
-SWEP.ViewModel = Model( "" )
-SWEP.WorldModel = Model( "" )
+SWEP.ViewModel = ""
+SWEP.WorldModel = "models/rvr/items/binoculars.mdl"
 
 SWEP.DrawAmmo = false
 SWEP.DrawCrosshair = false
@@ -27,6 +27,10 @@ function SWEP:Initialize()
 end
 
 function SWEP:PrimaryAttack()
+end
+
+function SWEP:DrawWorldModel()
+    self:DrawModel()
 end
 
 function SWEP:SecondaryAttack()
@@ -69,4 +73,19 @@ end
 function SWEP:AdjustMouseSensitivity()
     -- TODO: Adjust this so the sensitivity can never be inverted
     return self.Zoomed and 0.2 or nil
+end
+
+function SWEP:DrawWorldModel()
+    if not IsValid( self.Owner ) then return end
+
+    local rightHandID = self.Owner:LookupAttachment("anim_attachment_rh")
+    local rightHand = self.Owner:GetAttachment( rightHandID )
+
+    local pos = rightHand.Pos + rightHand.Ang:Forward() * 3 + rightHand.Ang:Right() * -2.7 + rightHand.Ang:Up() * 3.6
+    local ang = rightHand.Ang + Angle( 180, 0, 170 )
+
+    self:SetRenderOrigin( pos )
+    self:SetRenderAngles( ang )
+
+    self:DrawModel()
 end

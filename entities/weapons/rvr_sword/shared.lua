@@ -1,7 +1,10 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "Sword"
-SWEP.Author = "CFC Dev Team"
+SWEP.Author = "THE Gaft Gals ;)"
+SWEP.HoltType = "melee"
+SWEP.ViewModel = "models/weapons/v_crowbar.mdl"
+SWEP.WorldModel = "models/weapons/w_crowbar.mdl"
 
 --[[ TODO: Add model
 SWEP.ViewModel = Model( "" )
@@ -27,11 +30,11 @@ function SWEP:PrimaryAttack()
 
     local aimVec = owner:GetAimVector()
     local traceStart = owner:GetShootPos()
-    local traceEnd = traceStart + ( aimVec * 50 )
+    local traceEnd = traceStart + aimVec * 50
 
     local hBoxSize = Vector( 10, 10, 10 )
 
-    local tr = util.TraceHull{
+    local trace = util.TraceHull{
         start = traceStart,
         endpos = traceEnd,
         filter = owner,
@@ -40,8 +43,8 @@ function SWEP:PrimaryAttack()
         maxs = hBoxSize
     }
 
-    if not IsValid( tr.Entity ) then
-        tr = util.TraceLine{
+    if not IsValid( trace.Entity ) then
+        trace = util.TraceLine{
             start = traceStart,
             endpos = traceEnd,
             filter = owner,
@@ -55,7 +58,7 @@ function SWEP:PrimaryAttack()
         if SERVER then
             self:LoseDurability()
         end
-
+        util.Decal("ManhackCut", tr.HitPos+tr.HitNormal, tr.HitPos-tr.HitNormal, self:GetOwner() )
         if IsValid( hitEnt ) then
             local eData = EffectData()
             eData:SetStart( traceStart )
