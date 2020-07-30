@@ -1,7 +1,6 @@
 ENT.Base = "raft_piece_base"
 ENT.PrintName = "Platform"
 ENT.Model = "models/rvr/raft/platform.mdl"
-ENT.PreviewPos = Vector( 150, 0, -30 )
 
 DEFINE_BASECLASS( "raft_piece_base" )
 

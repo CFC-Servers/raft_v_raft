@@ -2,6 +2,14 @@ RVR.Party = RVR.Party or {}
 local party = RVR.Party
 party.invites = {}
 
+local mouseEnabled = false
+hook.Add( "PlayerBindPress", "RVR_Party_freeCursor", function( ply, bind, pressed )
+    if not ( pressed and bind == "gm_showspare1" ) then return end
+
+    mouseEnabled = not mouseEnabled
+    gui.EnableScreenClicker( mouseEnabled )
+end )
+
 function party.tryCreateParty( name, tag, color, joinMode, callback )
     if not party.joinModeStrs[joinMode] then return end
     if party.createPartyCallback then return end
@@ -59,9 +67,17 @@ local function sendFriendData()
     net.SendToServer()
 end
 
-hook.Add( "InitPostEntity", "RVR_Party_sendFriendData", sendFriendData )
+hook.Add( "InitPostEntity", "RVR_Party_sendFriendData", function()
+    sendFriendData()
+    net.Start( "RVR_Party_requestFullUpdate" )
+    net.SendToServer()
+end )
 net.Receive( "RVR_Party_updateFriends", sendFriendData )
 timer.Create( "RVR_Party_updateFriends", 300, 0, sendFriendData )
+
+net.Receive( "RVR_Party_requestFullUpdate", function()
+    party.parties = net.ReadTable()
+end )
 
 hook.Add( "PreDrawHalos", "RVR_Party", function()
     local ownParty = LocalPlayer():GetParty()
@@ -165,8 +181,9 @@ end )
 
 net.Receive( "RVR_Party_inviteSent", function()
     local partyID = net.ReadUInt( 32 )
+    local inviter = net.ReadEntity()
 
     party.invites[partyID] = CurTime()
 
-    hook.Run( "RVR_Party_gotInvite", partyID )
+    hook.Run( "RVR_Party_gotInvite", partyID, inviter )
 end )

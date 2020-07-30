@@ -1,11 +1,8 @@
-ENT.Base = "base_anim"
-ENT.Type = "anim"
+ENT.Base = "raft_breakable_base"
 ENT.Author = "CFC"
 ENT.PrintName = ""
 ENT.Model = ""
 ENT.IsRaft = true
-ENT.PreviewPos = Vector( 100, 0, -5 )
-ENT.PreviewAngle = Angle( -30, 45, -30 )
 
 function ENT:SetRaft( raft )
     self:SetRaftID( raft.id )

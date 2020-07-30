@@ -7,6 +7,7 @@ util.AddNetworkString( "RVR_Party_inviteSent" )
 util.AddNetworkString( "RVR_Party_createParty" )
 util.AddNetworkString( "RVR_Party_joinParty" )
 util.AddNetworkString( "RVR_Party_updateFriends" )
+util.AddNetworkString( "RVR_Party_requestFullUpdate" )
 
 local function updateClientPartyData( id )
     local partyData = party.getParty( id )
@@ -32,8 +33,8 @@ function party.createParty( partyName, owner, tag, color, joinMode )
     local minLen = GAMEMODE.Config.Party.MIN_PARTY_NAME_LENGTH
     local maxLen = GAMEMODE.Config.Party.MAX_PARTY_NAME_LENGTH
     if #partyName < minLen or #partyName > maxLen or tonumber( partyName ) then
-        return nil, "Invalid party name, must be between " .. minLen .. " and " ..
-            maxLen .. " characters and contain at least one non-numeric character"
+        return nil, "Party name must be between " .. minLen .. " and " ..
+            maxLen .. " characters and contain at least one letter"
     end
 
     if color.a ~= 255 then
@@ -85,6 +86,8 @@ function party.removeParty( id )
     end
 
     party.parties[id] = nil
+
+    hook.Run( "RVR_Party_PartyRemoved", partyData )
 
     updateClientPartyData( id )
 
@@ -148,7 +151,7 @@ function party.removeMember( id, ply )
     if partyData.owner == ply then
         partyData.owner = partyData.members[1]
 
-        party.broadcastMessage( partyData.id, "The owner ( " .. ply:Nick() .. " has left this party, " .. partyData.owner:Nick() .. " is the new owner." )
+        party.broadcastMessage( partyData.id, "The owner ( " .. ply:Nick() .. " ) has left this party, " .. partyData.owner:Nick() .. " is the new owner." )
     end
 
     updateClientPartyData( id )
@@ -252,6 +255,7 @@ function party.invite( id, inviter, ply )
 
     net.Start( "RVR_Party_inviteSent" )
         net.WriteUInt( id, 32 )
+        net.WriteEntity( inviter )
     net.Send( ply )
 
     return true
@@ -366,10 +370,14 @@ hook.Add( "RVR_SuccessfulPlayerSpawn", "RVR_Party_Raft_Spawn", function( ply )
     local partyData = ply:GetParty()
     if not partyData then return end -- This should never happen, but just to be sure.
 
-    --[[ Uncomment this whenever raft builder is implemented
-    local raftData = partyData.raft
-    local spawnPos = RVR.Raft.getSpawnPos( raftData )
+    local raft = RVR.getRaft( partyData.raftID )
+    local spawnPos = raft:GetSpawnPosition( ply )
 
     ply:SetPos( spawnPos )
-    ]]
+end )
+
+net.Receive( "RVR_Party_requestFullUpdate", function( len, ply )
+    net.Start( "RVR_Party_requestFullUpdate" )
+        net.WriteTable( party.parties )
+    net.Send( ply )
 end )

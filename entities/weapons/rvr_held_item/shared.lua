@@ -67,8 +67,16 @@ function SWEP:PrimaryAttack()
 
     local itemData = RVR.Items.getItemData( itemType )
     local owner = self:GetOwner()
+    if not itemData then return end
 
-    if not itemData or not itemData.consumable then return end
+    if SERVER and itemData.placeable then
+        self.itemData = itemData
+        local parentPiece, item, pos, ang = self:GetPlacementInfo()
+         
+        if item then RVR.Builder.tryPlaceItem( owner, parentPiece, item, pos, ang ) end
+    end
+
+    if not itemData.consumable then return end
     if not itemData:canConsume( owner ) then return end
 
 
@@ -90,6 +98,7 @@ function SWEP:PrimaryAttack()
 
             hook.Remove( "RVR_PreventInventory", hookID )
             hook.Remove( "RVR_PreventCraftingMenu", hookID )
+            hook.Remove( "RVR_PreventDropItem", hookID )
         end )
 
         timer.Simple( self.Cooldown * 0.5, function()
@@ -105,6 +114,11 @@ function SWEP:PrimaryAttack()
             if ply ~= owner then return end
             return true
         end )
+
+        hook.Add( "RVR_PreventDropItem", hookID, function( ply, itemData )
+            if ply ~= owner then return end
+            return true
+        end )
     else
         self.consumeAnimStart = SysTime()
 
@@ -115,4 +129,41 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:SecondaryAttack()
+end
+
+function SWEP:GetPlacementInfo()
+    local trace = self:GetOwner():GetEyeTrace()
+    if not self.itemData then return end
+    if not self.itemData.placeable then return end
+    if not trace.Hit then return end
+
+    local class = baseclass.Get( self.itemData.placeableClass )
+    if not class then return end
+    if not IsValid( trace.Entity ) then return end
+    if not trace.Entity.IsRaft then return end
+
+    local offset = class.PlacementOffset or Vector( 0, 0, 0 )
+    local pos = trace.HitPos + offset
+    if not class.Model then return end
+
+    local mins, maxs = RVR.Util.GetModelBounds( class.Model )
+
+    local traceData = {
+        start = pos,
+        endpos = pos,
+        filter = ghost,
+        mins = mins + Vector( 5, 5, 5 ),
+        maxs = maxs - Vector( 5 ,5, 5 ),
+        mask = MASK_ALL,
+        ignoreworld = true
+    }
+    
+    local traceResult = util.TraceHull( traceData )
+    if traceResult.Hit then return end
+
+    local ang = self:GetOwner():EyeAngles()
+    ang.pitch = 0
+    ang.roll = 0
+
+    return trace.Entity, self.itemData, pos, ang
 end

@@ -1,5 +1,13 @@
 include( "shared.lua" )
 
+
+local GHOST_COLOR = Color( 0, 255, 0, 150 )
+local GHOST_INVIS = Color( 0, 0, 0, 0 )
+
+local ghost = ClientsideModel( "models/rvr/raft/raft_base.mdl", RENDERGROUP_BOTH ) 
+ghost:SetRenderMode( RENDERMODE_TRANSCOLOR )
+ghost:SetColor( GHOST_INVIS )
+
 function SWEP:GetItemModel()
     return self.itemData and self.WorldModel or ""
 end
@@ -102,6 +110,7 @@ function SWEP:OnRemove()
     if IsValid( self.WorldModelEnt ) then
         self.WorldModelEnt:Remove()
     end
+    ghost:SetColor( GHOST_INVIS )
 end
 
 -- Taken from wiki, might not all be needed, but idk
@@ -131,4 +140,15 @@ function SWEP:DrawWorldModel()
     end
 
     self.WorldModelEnt:DrawModel()
+end
+
+function SWEP:Think()
+    local _, item, pos, ang = self:GetPlacementInfo()
+    if not item then return ghost:SetColor( GHOST_INVIS ) end
+    local class = baseclass.Get( item.placeableClass )
+    
+    ghost:SetColor( GHOST_COLOR )
+    ghost:SetModel( class.Model )
+    ghost:SetPos( pos )
+    ghost:SetAngles( ang )
 end
