@@ -31,7 +31,7 @@ recipe = {
 config.RECIPES = {
     {
         name = "Water",
-        icon = "materials/rvr/items/water_bottle.png",
+        icon = "rvr/icons/craftingmenu_category_food.png",
         crafterType = "water",
         recipes = {
             {
@@ -46,7 +46,7 @@ config.RECIPES = {
     },
     {
         name = "Grill",
-        icon = "materials/rvr/items/tuna.png",
+        icon = "rvr/icons/craftingmenu_category_food.png",
         crafterType = "cooking",
         recipes = {
             {
@@ -63,70 +63,93 @@ config.RECIPES = {
     {
         name = "Weapons",
         icon = "rvr/icons/craftingmenu_category_weapons.png",
-        recipes = {
-            {
-                item = "wood",
-                count = 4,
-                ingredients = {
-                    nail = 5,
-                    wood = 3
-                },
-                timeToCraft = 120
-            },
-            {
-                item = "wood",
-                ingredients = {
-                    nail = 5
-                },
-                timeToCraft = 3
-            },
-            {
-                item = "wood",
-                ingredients = {
-                    nail = 5
-                },
-                timeToCraft = 3
-            }
-        }
+        recipes = {}
     },
     {
         name = "Tools",
         icon = "rvr/icons/craftingmenu_category_tools.png",
         recipes = {
             {
-                item = "wood",
+                item = "raft_builder",
+                count = 1,
+                timeToCraft = 20,
                 ingredients = {
-                    nail = 5
-                },
-                timeToCraft = 3
-            }
+                    big_rock = 1,
+                    nail = 1,
+                    wood = 5
+                }
+            },
         }
-    },
-    {
-        name = "Food",
-        icon = "rvr/icons/craftingmenu_category_weapons.png",
-        recipes = {}
     },
     {
         name = "Resources",
         icon = "rvr/icons/craftingmenu_category_resources.png",
-        recipes = {}
+        recipes = {
+            {
+                item = "big_rock",
+                count = 1,
+                timeToCraft = 10,
+                ingredients = {
+                    small_rocks = 10
+                }
+            },
+            {
+                item = "rope",
+                count = 1,
+                timeToCraft = 15,
+                ingredients = {
+                    cloth = 15
+                }
+            },
+            {
+                item = "iron",
+                count = 1,
+                timeToCraft = 10,
+                ingredients = {
+                    small_rocks = 10
+                }
+            },
+        }
+    },
+    {
+        name = "Medical",
+        icon = "rvr/icons/craftingmenu_category_medical.png",
+        recipes = {
+            {
+                item = "bandage",
+                count = 1,
+                timeToCraft = 10,
+                ingredients = {
+                    cloth = 5
+                }
+            },
+            {
+                item = "medkit",
+                count = 1,
+                timeToCraft = 15,
+                ingredients = {
+                    bandage = 4,
+                    water = 1,
+                    rope = 1
+                }
+            },
+        }
     },
     {
         name = "Equipment",
         icon = "rvr/icons/craftingmenu_category_armor.png",
         recipes = {}
     },
-    {
-        name = "Navigation",
-        icon = "rvr/icons/craftingmenu_category_navigation.png",
-        recipes = {}
-    },
-    {
-        name = "Furniture",
-        icon = "rvr/icons/craftingmenu_category_furniture.png",
-        recipes = {}
-    },
+    -- {
+    --     name = "Navigation",
+    --     icon = "rvr/icons/craftingmenu_category_navigation.png",
+    --     recipes = {}
+    -- },
+    -- {
+    --     name = "Furniture",
+    --     icon = "rvr/icons/craftingmenu_category_furniture.png",
+    --     recipes = {}
+    -- },
     {
         name = "Other",
         icon = "rvr/icons/craftingmenu_category_other.png",

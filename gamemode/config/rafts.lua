@@ -1,4 +1,3 @@
-GM.Config = GM.Config or {}
 GM.Config.Rafts = {}
 
 local Config = GM.Config.Rafts

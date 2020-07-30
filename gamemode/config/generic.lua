@@ -1,4 +1,3 @@
-GM.Config = GM.Config or {}
 GM.Config.Generic = GM.Config.Generic or {}
 
 local config = GM.Config.Generic

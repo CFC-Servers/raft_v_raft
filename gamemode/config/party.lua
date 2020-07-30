@@ -1,4 +1,3 @@
-GM.Config = GM.Config or {}
 GM.Config.Party = GM.Config.Party or {}
 
 local config = GM.Config.Party

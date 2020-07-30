@@ -1,4 +1,3 @@
-GM.Config = GM.Config or {}
 GM.Config.Drowning = GM.Config.Drowning or {}
 
 local config = GM.Config.Drowning

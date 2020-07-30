@@ -1,5 +1,3 @@
-GM.Config = GM.Config or  {}
-
 GM.Config.Hunger = {}
 local Config = GM.Config.Hunger
 
