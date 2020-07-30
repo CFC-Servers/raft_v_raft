@@ -30,20 +30,20 @@ local function calculateCumulativeWeights( tbl )
         local previous = tbl[i - 1]
         local previousWeight = previous and previous.weight or 0
 
-        item.cumWeight = item.weight + previousWeight
+        item.cumulativeWeight = item.weight + previousWeight
     end
 end
 
 local function getRandomWeightedValue( tbl )
     local lastItem = tbl[#tbl]
-    if not lastItem.cumWeight then
+    if not lastItem.cumulativeWeight then
         calculateCumulativeWeights( tbl )
     end
 
-    local randNum = math.random( 1, lastItem.cumWeight )
+    local randNum = math.random( 1, lastItem.cumulativeWeight )
 
     for _, item in next, tbl do
-        if randNum <= item.cumWeight then return item end
+        if randNum <= item.cumulativeWeight then return item end
     end
     return lastItem
 end
@@ -78,7 +78,7 @@ local function getRandomPly()
     end
     if #alivePlayers == 0 then return end
 
-    return plys[math.random( 1, #plys )]
+    return aliveplayers[math.random( 1, #alivePlayers )]
 end
 
 
