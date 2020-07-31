@@ -17,7 +17,7 @@ SWEP.DrawCrosshair = false
 SWEP.AttackRange = 50
 
 function SWEP:Initialize()
-    self:SetHoldType( "melee" )
+    self:SetHoldType( self.HoldType )
     self.lastAttacked = 0
 end
 

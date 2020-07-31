@@ -2,6 +2,7 @@ AddCSLuaFile()
 
 SWEP.PrintName = "Stone Spear"
 SWEP.Base = "rvr_melee_base"
+SWEP.HoldType = "knife"
 SWEP.ViewModel = "models/rvr/items/stone_spear.mdl"
 SWEP.WorldModel = "models/rvr/items/stone_spear.mdl"
 SWEP.Primary.Damage = 40
@@ -13,4 +14,20 @@ function SWEP:GetViewModelPosition( eyePos, eyeAng )
     local y =  Lerp( timeSince / 0.3, 0, 40 ) - 20
     eyePos = eyePos + eyeAng:Up() * y
     return eyePos, eyeAng
+end
+
+function SWEP:DrawWorldModel()
+    if not IsValid( self.Owner ) then return end
+
+    local rightHandID = self.Owner:LookupAttachment("anim_attachment_rh")
+    local rightHand = self.Owner:GetAttachment( rightHandID )
+
+    local pos = rightHand.Pos + rightHand.Ang:Right() - rightHand.Ang:Up() * 30
+
+    local ang = rightHand.Ang
+
+    self:SetRenderOrigin( pos )
+    self:SetRenderAngles( ang )
+
+    self:DrawModel()
 end
