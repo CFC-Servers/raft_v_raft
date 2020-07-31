@@ -13,8 +13,10 @@ function ENT:Initialize()
 
     local phys = self:GetPhysicsObject()
     if IsValid( phys ) then
-        phys:EnableMotion( false )
+        phys:EnableMotion( true )
     end
+
+    phys:SetMass( self.DefaultMass )
 end
 
 function ENT:OnRemove()
@@ -43,7 +45,4 @@ end
 -- should the raft piece still exist e.g. a platform must have a foundation bellow it
 function ENT:ShouldExist()
     return true
-end
-
-function ENT:PhysicsSimulate( phys, deltaTime )
 end
