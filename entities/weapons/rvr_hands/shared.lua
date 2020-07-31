@@ -3,7 +3,7 @@ AddCSLuaFile()
 SWEP.PrintName = "Hands"
 SWEP.Author = "CFC Dev Team"
 
-SWEP.WorldModel = Model( "" )
+SWEP.WorldModel = ""
 
 SWEP.DrawAmmo = false
 SWEP.DrawCrosshair = false
