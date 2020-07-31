@@ -19,10 +19,10 @@ function ENT:GetPlayerStatus()
     local shouldDie = true
     for _, ply in pairs( player.GetAll() ) do
         local dist = self:GetPos():DistToSqr( ply:GetPos() )
-        local spawnRadius = GAMEMODE.Config.Fish.DESPAWN_RADIUS
+        local despawnRadius = GAMEMODE.Config.Fish.DESPAWN_RADIUS
         local scaredDistance = GAMEMODE.Config.Fish.SCARED_DISTANCE
 
-        if dist <= spawnRadius ^ 2 then
+        if dist <= despawnRadius ^ 2 then
             shouldDie = false
         end
 
