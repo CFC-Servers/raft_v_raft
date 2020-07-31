@@ -205,6 +205,7 @@ config.itemDefinitions = {
         consumable = true,
         health = 10,
         viewModelOffset = Vector( 3, 0, -10 ),
+        worldModelOffset = Vector( 0, 0, 3 ),
         isBag = true
     },
     {
