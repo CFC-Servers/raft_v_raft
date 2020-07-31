@@ -21,13 +21,14 @@ SWEP.DrawAmmo = false
 SWEP.DrawCrosshair = false
 function SWEP:Initialize()
     self:SetHoldType( "melee" )
+    self.lastAttacked = 0
 end
 local nextPrimaryFire = 0
 function SWEP:PrimaryAttack()
     if CurTime() < nextPrimaryFire then return end
     nextPrimaryFire = CurTime() + self.Primary.Delay
- 
-    
+    self.lastAttacked = CurTime()
+
     local owner = self:GetOwner()
     if not IsValid( owner ) then return end
     self.Owner:SetAnimation( PLAYER_ATTACK1 )
@@ -113,5 +114,10 @@ function SWEP:DrawWorldModel()
 end
 
 function SWEP:GetViewModelPosition( eyePos, eyeAng )
-    return eyePos + eyeAng:Right() * 5 + eyeAng:Forward() * 10 - eyeAng:Up() * 10, eyeAng
+    eyePos = eyePos + eyeAng:Right() * 5 + eyeAng:Forward() * 10 - eyeAng:Up() * 10
+    local timeSince = math.max( self.lastAttacked + 0.1 - CurTime(), 0 )
+    local pitch = Lerp( timeSince / 0.1, 0, 60)
+
+    eyeAng = eyeAng + Angle( pitch, 0, 0)
+    return eyePos, eyeAng
 end
