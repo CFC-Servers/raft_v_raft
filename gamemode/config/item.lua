@@ -193,6 +193,91 @@ config.itemDefinitions = {
         durabilityUse = 1
     },
 
+    -- weapons
+    {
+        type = "stone_spear",
+        displayName = "Stone Spear",
+        description = "For hittin' stuff. uwu",
+        swep = "rvr_stone_spear",
+        stackable = false,
+        icon = "materials/rvr/items/stone_spear.png",
+        hasDurability = true,
+        maxDurability = 150,
+        durabilityUse = 10,
+        durabilityUseRandomRange = 10
+    },
+    {
+        type = "wooden_spear",
+        displayName = "Wooden Spear",
+        description = "For hittin' stuff. uwu",
+        swep = "rvr_wooden_spear",
+        stackable = false,
+        icon = "materials/rvr/items/wooden_spear.png",
+        hasDurability = true,
+        maxDurability = 150,
+        durabilityUse = 10,
+        durabilityUseRandomRange = 10
+    },
+    {
+        type = "metal_spear",
+        displayName = "metal Spear",
+        description = "For hittin' stuff. uwu",
+        swep = "rvr_metal_spear",
+        stackable = false,
+        icon = "materials/rvr/items/metal_spear.png",
+        hasDurability = true,
+        maxDurability = 150,
+        durabilityUse = 10,
+        durabilityUseRandomRange = 10
+    },
+    {
+        type = "metal_axe",
+        displayName = "Metal Axe",
+        description = "For hittin' stuff. uwu",
+        swep = "rvr_metal_axe",
+        stackable = false,
+        icon = "materials/rvr/items/metal_axe.png",
+        hasDurability = true,
+        maxDurability = 150,
+        durabilityUse = 5,
+        durabilityUseRandomRange = 6
+    },
+    {
+        type = "wooden_axe",
+        displayName = "Wooden Axe",
+        description = "For hittin' stuff. uwu",
+        swep = "rvr_wooden_axe",
+        stackable = false,
+        icon = "materials/rvr/items/wooden_axe.png",
+        hasDurability = true,
+        maxDurability = 150,
+        durabilityUse = 5,
+        durabilityUseRandomRange = 6
+    },
+    {
+        type = "stone_axe",
+        displayName = "Stone Axe",
+        description = "For hittin' stuff. uwu",
+        swep = "rvr_stone_axe",
+        stackable = false,
+        icon = "materials/rvr/items/stone_axe.png",
+        hasDurability = true,
+        maxDurability = 150,
+        durabilityUse = 5,
+        durabilityUseRandomRange = 6
+    },
+    {
+        type = "sword",
+        displayName = "Sword",
+        description = "For hittin' stuff. uwu",
+        swep = "rvr_sword",
+        stackable = false,
+        icon = "materials/rvr/items/sword.png",
+        hasDurability = true,
+        maxDurability = 150,
+        durabilityUse = 5,
+        durabilityUseRandomRange = 6
+    },
     -- Placables
     {
         type = "storage_box",
@@ -280,4 +365,5 @@ config.itemDefinitions = {
         swep = "weapon_physgun",
         icon = "materials/icon16/shield.png"
     }
+
 }

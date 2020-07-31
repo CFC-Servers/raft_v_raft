@@ -1,5 +1,4 @@
 "VertexLitGeneric"
 {
 	"$basetexture" "models/rvr/props/barrel"
-	"$noclamp" "1"
 }

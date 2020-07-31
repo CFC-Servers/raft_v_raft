@@ -66,6 +66,14 @@ end
 hook.Add( "RVR_Party_PartyCreated", "RVR_Raft_createRaft", function( partyData )
     local raft = RVR.Builder.createRaft( builder.getNewRaftPosition() )
 
+    local firstPiece = raft:GetPiece( Vector( 0, 0, 0 ) )
+    local physObj = firstPiece:GetPhysicsObject()
+
+    if physObj:IsValid() then
+        physObj:Wake()
+        physObj:EnableMotion( true )
+    end
+
     raft:SetPartyID( partyData.id )
 
     builder.expandRaft( raft:GetPiece( Vector( 0, 0, 0 ) ), "raft_foundation", Vector( 1, 0, 0 ))

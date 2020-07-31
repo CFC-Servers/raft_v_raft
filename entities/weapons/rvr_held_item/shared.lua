@@ -1,12 +1,16 @@
 SWEP.PrintName = "<held_item>"
+SWEP.Author = "CFC Dev Team"
+
 SWEP.Primary.ClipSize = -1
 SWEP.Primary.DefaultClip = -1
 SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "None"
+
 SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.DefaultClip = -1
 SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = "None"
+
 SWEP.BobScale = 0.1
 SWEP.SwayScale = 0
 SWEP.DrawAmmo = false
@@ -124,6 +128,9 @@ function SWEP:PrimaryAttack()
     end
 end
 
+function SWEP:SecondaryAttack()
+end
+
 function SWEP:GetPlacementInfo()
     local trace = self:GetOwner():GetEyeTrace()
     if not self.itemData then return end
@@ -136,9 +143,9 @@ function SWEP:GetPlacementInfo()
     if not trace.Entity.IsRaft then return end
 
     local offset = class.PlacementOffset or Vector( 0, 0, 0 )
-    local pos = trace.HitPos + offset 
+    local pos = trace.HitPos + offset
     if not class.Model then return end
-    
+
     local mins, maxs = RVR.Util.GetModelBounds( class.Model )
 
     local traceData = {

@@ -26,6 +26,7 @@ function items.getItemInstance( itemType )
 end
 
 items.items = GM.Config.Items.itemDefinitions
+
 local config = GM.Config.Hunger
 
 for k, item in pairs( items.items ) do

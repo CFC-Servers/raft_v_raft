@@ -3,14 +3,17 @@ local vectorUp = Vector( 0, 0, 1 )
 local function isEmptyPos( ply, pos )
     local mins, maxs = ply:GetCollisionBounds()
 
+    local filter = player.GetAll()
+
     local trace = util.TraceHull{
         start = pos,
         endpos = pos,
-        filter = ply,
+        filter = filter,
         mins = mins,
         maxs = maxs,
         mask = MASK_PLAYERSOLID
     }
+
     return not trace.Hit
 end
 
@@ -26,20 +29,22 @@ end
 local function calculateStepPos( ply, pos )
     local mins, maxs = ply:GetCollisionBounds()
 
+    local filter = player.GetAll()
+
     if not isEmptyPos( ply, pos ) then
         local trace = util.TraceHull{
             start = pos + vectorUp * ply:GetStepSize(),
             endpos = pos,
-            filter = ply,
+            filter = filter,
             mins = mins,
             maxs = maxs,
             mask = MASK_PLAYERSOLID
         }
 
         -- player is stuck
-        if trace.StartSolid then return nil end
+        if trace.StartSolid then return end
         -- player is floating
-        if not trace.Hit then return nil end
+        if not trace.Hit then return end
 
         return trace.HitPos
     end
@@ -47,7 +52,7 @@ local function calculateStepPos( ply, pos )
     local trace = util.TraceHull{
         start = pos,
         endpos = pos - vectorUp * ply:GetStepSize(),
-        filter = ply,
+        filter = filter,
         mins = mins,
         maxs = maxs,
         mask = MASK_PLAYERSOLID
@@ -57,15 +62,15 @@ local function calculateStepPos( ply, pos )
 end
 
 local function tryMove( ply, pos, vel )
-    local pos = calculateStepPos( ply, pos + vel * FrameTime() )
-    if not pos then return nil end
+    pos = calculateStepPos( ply, pos + vel * FrameTime() )
+    if not pos then return end
 
-    if not isEmptyPos( ply, pos ) then return nil end
+    if not isEmptyPos( ply, pos ) then return end
 
     return pos
 end
 
-function GM:SetupMove( ply, mv , cmd )
+function GM:SetupMove( ply, mv, cmd )
     local ang = cmd:GetViewAngles()
     ang.pitch = 0
     ang.roll = 0
@@ -86,13 +91,13 @@ end
 
 function GM:FinishMove( ply, mv )
     if ply:GetMoveType() == MOVETYPE_NOCLIP then
-        ply:SetCollisionGroup(COLLISION_GROUP_PLAYER)
+        ply:SetCollisionGroup( COLLISION_GROUP_PASSABLE_DOOR )
         return
     end
 
     local ground = getGroundIfRaft( ply )
     if not ground then
-        ply:SetCollisionGroup( COLLISION_GROUP_PLAYER )
+        ply:SetCollisionGroup( COLLISION_GROUP_PASSABLE_DOOR )
         return
     end
 
@@ -100,12 +105,15 @@ function GM:FinishMove( ply, mv )
 
     local pos = tryMove( ply, ply:GetPos(), ply.RVRMovement + mv:GetVelocity() )
 
-
     ply:SetLocalVelocity( ply.RVRMovement )
     ply:SetAbsVelocity( ply.RVRMovement )
     ply:SetLocalAngles( ground:GetAngles() )
 
-    if not pos then return true end
+    if not pos then
+        ply:SetCollisionGroup( COLLISION_GROUP_PASSABLE_DOOR )
+        return true
+    end
+
     ply:SetCollisionGroup( COLLISION_GROUP_WORLD )
     ply:SetPos( pos )
     ply:SetLocalPos( pos )
