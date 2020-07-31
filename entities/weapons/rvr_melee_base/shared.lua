@@ -102,8 +102,8 @@ function SWEP:DrawWorldModel()
     local rightHandID = self.Owner:LookupAttachment("anim_attachment_rh")
     local rightHand = self.Owner:GetAttachment( rightHandID )
 
-    local pos = rightHand.Pos + rightHand.Ang:Forward() - rightHand.Ang:Right() * 2 + rightHand.Ang:Up() * 7
-    local ang = rightHand.Ang + Angle( 0, 90 ,0 )
+    local pos = rightHand.Pos + rightHand.Ang:Forward() + rightHand.Ang:Right() - rightHand.Ang:Up() * 2
+    local ang = rightHand.Ang + Angle( 0, 0,0 )
 
     self:SetRenderOrigin( pos )
     self:SetRenderAngles( ang )
@@ -116,6 +116,6 @@ function SWEP:GetViewModelPosition( eyePos, eyeAng )
     local timeSince = math.max( self.lastAttacked + 0.1 - CurTime(), 0 )
     local pitch = Lerp( timeSince / 0.1, 0, 60)
     -- TODO cleanup code
-    eyeAng = eyeAng + Angle( pitch, 90, pitch )
+    eyeAng = eyeAng + Angle( pitch, 0, 0 )
     return eyePos, eyeAng
 end
