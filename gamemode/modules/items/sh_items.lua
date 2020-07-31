@@ -211,12 +211,21 @@ items.items = {
         icon = "materials/icon16/shield.png"
     },
     {
+
         type = "paddle",
         displayName = "Paddle",
         description = "Move your raft in the direction that you paddle!",
         stackable = false,
         swep = "rvr_paddle",
         icon = "materials/rvr/items/wooden_paddle.png"
+    },
+    {
+        type  = "bigger_gun",
+        displayName = "AR2",
+        description = "pew pew!",
+        swep = "weapon_ar2",
+        stackable = false,
+        icon = "materials/icon16/cancel.png"
     }
 }
 
