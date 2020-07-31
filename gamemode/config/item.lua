@@ -117,6 +117,33 @@ config.itemDefinitions = {
         worldModelAng = Angle( -90, 0, 90 )
     },
     {
+        type = "horse_mackerel",
+        displayName = "Horse Mackerel",
+        description = "A living horse mackerel, eating it would not only make you a monster, but also hurt you!",
+        maxCount = 10,
+        model = "models/rvr/items/horse_mackerel.mdl",
+        icon = "materials/rvr/items/horse_mackerel.png",
+        stackable = true,
+        consumable = true,
+        food = 5,
+        health = -5,
+        worldModelOffset = Vector( -1, 2, -8 ),
+        worldModelAng = Angle( -90, 0, 90 )
+    },
+    {
+        type = "cooked_horse_mackerel",
+        displayName = "Cooked Horse Mackerel",
+        description = "A cooked horse mackerel, yum?",
+        maxCount = 10,
+        model = "models/rvr/items/horse_mackerel_cooked.mdl",
+        icon = "materials/rvr/items/cooked_horse_mackerel.png",
+        stackable = true,
+        consumable = true,
+        food = 15,
+        worldModelOffset = Vector( -1, 2, -8 ),
+        worldModelAng = Angle( -90, 0, 90 )
+    },
+    {
         type = "water",
         displayName = "Water bottle",
         description = "A non-brand bottle of water, how convenient!",
