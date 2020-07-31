@@ -141,6 +141,31 @@ function raftMeta:CanBuild( ply )
     return ply:GetPartyID() == self.partyID
 end
 
+function raftMeta:SetMovement( movement )
+    self.movement = movement
+end
+
+function raftMeta:GetMovement()
+    return self.movement or Vector( 0, 0, 0 )
+end
+
+function raftMeta:AddPaddleMovement( vel )
+    local newVel = self:GetPaddleMovement() + vel
+    local length = newVel:Length()
+
+    if length > GAMEMODE.Config.Rafts.MAX_PADDLE_SPEED then return end
+
+    self.paddleMovement = newVel
+end
+
+function raftMeta:SetPaddleMovement( vel )
+    self.paddleMovement = vel
+end
+
+function raftMeta:GetPaddleMovement()
+    return self.paddleMovement or Vector( 0, 0, 0 )
+end
+
 function raftMeta:RemovePiece( piece )
     if self.removing then return end
     self.pieces[piece:EntIndex()] = nil

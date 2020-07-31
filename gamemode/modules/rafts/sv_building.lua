@@ -66,6 +66,14 @@ end
 hook.Add( "RVR_Party_PartyCreated", "RVR_Raft_createRaft", function( partyData )
     local raft = RVR.Builder.createRaft( builder.getNewRaftPosition() )
 
+    local firstPiece = raft:GetPiece( Vector( 0, 0, 0 ) )
+    local physObj = firstPiece:GetPhysicsObject()
+
+    if physObj:IsValid() then
+        physObj:Wake()
+        physObj:EnableMotion( true )
+    end
+
     raft:SetPartyID( partyData.id )
 
     builder.expandRaft( raft:GetPiece( Vector( 0, 0, 0 ) ), "raft_foundation", Vector( 1, 0, 0 ))
@@ -124,7 +132,13 @@ function builder.expandRaft( piece, class, dir, rotation )
     newEnt:SetPos( piece:LocalToWorld( localDir * size ) )
     newEnt:SetRaftRotationOffset( rotation )
     newEnt:SetRaft( piece:GetRaft() )
+
     raft:AddPiece( raft:GetPosition( piece ) + dir, newEnt )
+    
+    for _, neighbor in pairs( raft:GetNeighbors( newEnt ) ) do 
+        constraint.Weld( newEnt, neighbor, 0, 0, 0, true, false )
+    end
+
     return newEnt, nil
 end
 
@@ -140,6 +154,7 @@ function builder.placeWall( piece, class, yaw )
     newEnt:SetAngles( piece:LocalToWorldAngles( Angle( 0, yaw, 0 ) ) )
     newEnt:SetRaft( piece:GetRaft() )
     piece.walls[yaw] = newEnt
+    newEnt:SetParent( piece )
     return newEnt
 end
 
@@ -181,4 +196,3 @@ function builder.tryPlaceItem( ply, parentPiece, item, pos, angle )
 
     RVR.Inventory.tryTakeItems( ply, required )
 end
-

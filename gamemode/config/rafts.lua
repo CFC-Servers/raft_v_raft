@@ -78,3 +78,7 @@ Config.Map["rvr_water"] = {
     -- This should be set to the maximum corner in x and y
     MAP_MAX = Vector( 15000, 15000 )
 }
+
+Config.FOUNDATION_DRAG_MULTIPLIER = 0.999
+Config.MAX_PADDLE_SPEED = 100
+Config.PADDLE_FORCE = 0.5

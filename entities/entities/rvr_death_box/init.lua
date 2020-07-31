@@ -35,20 +35,8 @@ end
 function ENT:Think()
     -- TODO: understand/improve this
     local phys = self:GetPhysicsObject()
-
-    local entAng = phys:GetAngles()
-    local forward = Vector( 1, 0, 0 ):Angle()
-
-    local pitch = math.rad( math.AngleDifference( entAng.pitch, forward.pitch ) )
-    local yaw = 0
-    local roll = math.rad( math.AngleDifference( entAng.roll, forward.roll ) )
-
-    local damp = 0.75
-    local strength = 100
-    local divAng = Vector( pitch, yaw, 0 )
-    divAng:Rotate( Angle( 0, -entAng.roll, 0 ) )
-
-    phys:AddAngleVelocity( ( -Vector( roll, divAng.x, divAng.y ) * strength ) - ( phys:GetAngleVelocity() * damp ) )
+    
+    RVR.Util.keepAnglesThink( phys )
 end
 
 function ENT:OnRemove()
