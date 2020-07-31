@@ -248,19 +248,6 @@ config.itemDefinitions = {
         icon = "materials/rvr/items/wooden_paddle.png"
     },
     {
-        type = "spear",
-        displayName = "Spear",
-        description = "For hittin' stuff. uwu",
-        swep = "rvr_spear",
-        stackable = false,
-        icon = "materials/rvr/items/wooden_spear.png",
-        hasDurability = true,
-        maxDurability = 150,
-        durabilityUse = 10,
-        durabilityUseRandomRange = 10
-    },
-
-    {
         type = "binoculars",
         displayName = "Binoculars",
         description = "For lookin' at stuff. uwu",
