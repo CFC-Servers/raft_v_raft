@@ -192,6 +192,14 @@ config.itemDefinitions = {
         maxDurability = 1000,
         durabilityUse = 1
     },
+    {
+        type = "paddle",
+        displayName = "Paddle",
+        description = "Move your raft in the direction that you paddle!",
+        stackable = false,
+        swep = "rvr_paddle",
+        icon = "materials/rvr/items/wooden_paddle.png"
+    },
 
     -- Placables
     {
