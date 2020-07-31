@@ -31,7 +31,9 @@ config.itemDefinitions = {
         maxCount = 25,
         model = "models/rvr/items/rocks.mdl",
         icon = "materials/rvr/items/rocks.png",
-        stackable = true
+        stackable = true,
+        viewModelOffset = Vector( 5, -1, -3 ),
+        worldModelOffset = Vector( 0, 0, 2 ),
     },
     {
         type = "big_rock",
@@ -40,7 +42,9 @@ config.itemDefinitions = {
         maxCount = 10,
         model = "models/rvr/items/big_rock.mdl",
         icon = "materials/rvr/items/big_rock.png",
-        stackable = true
+        stackable = true,
+        viewModelOffset = Vector( 5, -1, -3 ),
+        worldModelOffset = Vector( 3, 0, 5 ),
     },
     {
         type = "straw",
@@ -49,7 +53,10 @@ config.itemDefinitions = {
         maxCount = 30,
         model = "models/rvr/items/straw.mdl",
         icon = "materials/rvr/items/straw.png",
-        stackable = true
+        stackable = true,
+        viewModelOffset = Vector( 8, -19, -7 ),
+        viewModelAng = Angle( 0, 90, 0 ),
+        worldModelOffset = Vector( -2, 1, 4 )
     },
     {
         type = "cloth",
@@ -67,7 +74,9 @@ config.itemDefinitions = {
         maxCount = 10,
         model = "models/rvr/items/rope.mdl",
         icon = "materials/rvr/items/rope.png",
-        stackable = true
+        stackable = true,
+        viewModelOffset = Vector( 10, 8, 15 ),
+        viewModelAng = Angle( 0, 0, 90 ),
     },
     {
         type = "iron",
@@ -76,7 +85,11 @@ config.itemDefinitions = {
         maxCount = 5,
         model = "models/rvr/items/iron.mdl",
         icon = "materials/rvr/items/iron.png",
-        stackable = true
+        stackable = true,
+        viewModelOffset = Vector( -20, 1, -4 ),
+        viewModelAng = Angle( 0, -90, 0 ),
+        worldModelOffset = Vector( 3, 0, 3 ),
+        worldModelAng = Angle( 90, 90, 0 )
     },
     {
         type = "scrap_metal",
@@ -85,7 +98,11 @@ config.itemDefinitions = {
         maxCount = 10,
         model = "models/rvr/items/scrap_metal.mdl",
         icon = "materials/rvr/items/scrap_metal.png",
-        stackable = true
+        stackable = true,
+        viewModelOffset = Vector( -13, -25, -5 ),
+        viewModelAng = Angle( 0, 180, 0 ),
+        worldModelOffset = Vector( 0, 2, 0 ),
+        worldModelAng = Angle( -90, 180, 0 )
     },
 
     -- Food
