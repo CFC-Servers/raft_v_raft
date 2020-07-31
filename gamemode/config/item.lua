@@ -22,7 +22,8 @@ config.itemDefinitions = {
         model = "models/rvr/items/nail.mdl",
         icon = "materials/rvr/items/nail.png",
         stackable = true,
-        worldModelOffset = Vector( -2, 1, 3 )
+        worldModelOffset = Vector( -2, 1, 3 ),
+        isBag = true
     },
     {
         type = "small_rocks",
@@ -56,7 +57,8 @@ config.itemDefinitions = {
         stackable = true,
         viewModelOffset = Vector( 8, -19, -7 ),
         viewModelAng = Angle( 0, 90, 0 ),
-        worldModelOffset = Vector( -2, 1, 4 )
+        worldModelOffset = Vector( -2, 1, 4 ),
+        isBag = true
     },
     {
         type = "cloth",
@@ -201,7 +203,9 @@ config.itemDefinitions = {
         icon = "materials/rvr/items/bandage.png",
         stackable = true,
         consumable = true,
-        health = 10
+        health = 10,
+        viewModelOffset = Vector( 3, 0, -10 ),
+        isBag = true
     },
     {
         type = "medkit",
@@ -213,7 +217,8 @@ config.itemDefinitions = {
         stackable = true,
         consumable = true,
         health = 50,
-        viewModelOffset = Vector( 1, 0, -5 )
+        viewModelOffset = Vector( 1, 0, -5 ),
+        isBag = true
     },
 
     -- Tools
