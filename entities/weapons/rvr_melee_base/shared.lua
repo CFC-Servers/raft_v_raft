@@ -14,9 +14,10 @@ SWEP.Primary.Damage = 60
 
 SWEP.DrawAmmo = false
 SWEP.DrawCrosshair = false
+SWEP.AttackRange = 50
 
 function SWEP:Initialize()
-    self:SetHoldType( "melee" )
+    self:SetHoldType( self.HoldType )
     self.lastAttacked = 0
 end
 
@@ -34,7 +35,7 @@ function SWEP:PrimaryAttack()
 
     local aimVec = owner:GetAimVector()
     local traceStart = owner:GetShootPos()
-    local traceEnd = traceStart + aimVec * 50
+    local traceEnd = traceStart + aimVec * self.AttackRange
 
     local hBoxSize = Vector( 10, 10, 10 )
 
@@ -101,8 +102,8 @@ function SWEP:DrawWorldModel()
     local rightHandID = self.Owner:LookupAttachment("anim_attachment_rh")
     local rightHand = self.Owner:GetAttachment( rightHandID )
 
-    local pos = rightHand.Pos + rightHand.Ang:Forward() * 1 + rightHand.Ang:Right() - rightHand.Ang:Up() * 5
-    local ang = rightHand.Ang
+    local pos = rightHand.Pos + rightHand.Ang:Forward() + rightHand.Ang:Right() - rightHand.Ang:Up() * 4
+    local ang = rightHand.Ang + Angle( 0, 0,0 )
 
     self:SetRenderOrigin( pos )
     self:SetRenderAngles( ang )
@@ -115,6 +116,6 @@ function SWEP:GetViewModelPosition( eyePos, eyeAng )
     local timeSince = math.max( self.lastAttacked + 0.1 - CurTime(), 0 )
     local pitch = Lerp( timeSince / 0.1, 0, 60)
     -- TODO cleanup code
-    eyeAng = eyeAng + Angle( pitch, 0, 0)
+    eyeAng = eyeAng + Angle( pitch, 0, 0 )
     return eyePos, eyeAng
 end

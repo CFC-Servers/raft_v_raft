@@ -144,18 +144,6 @@ items.items = {
         icon = "materials/rvr/items/raft_builder.png"
     },
     {
-        type = "spear",
-        displayName = "Spear",
-        description = "For hittin' stuff. uwu",
-        swep = "rvr_spear",
-        stackable = false,
-        icon = "materials/rvr/items/wooden_spear.png",
-        hasDurability = true,
-        maxDurability = 150,
-        durabilityUse = 10,
-        durabilityUseRandomRange = 10
-    },
-    {
         type = "tape",
         displayName = "Tape",
         description = "For repairin' stuff. uwu",
@@ -304,6 +292,54 @@ items.items = {
         swep = "weapon_ar2",
         stackable = false,
         icon = "materials/icon16/cancel.png"
+    },
+    {
+        type = "stone_spear",
+        displayName = "Stone Spear",
+        description = "For hittin' stuff. uwu",
+        swep = "rvr_stone_spear",
+        stackable = false,
+        icon = "materials/rvr/items/stone_spear.png",
+        hasDurability = true,
+        maxDurability = 150,
+        durabilityUse = 10,
+        durabilityUseRandomRange = 10
+    },
+    {
+        type = "wooden_spear",
+        displayName = "Wooden Spear",
+        description = "For hittin' stuff. uwu",
+        swep = "rvr_wooden_spear",
+        stackable = false,
+        icon = "materials/rvr/items/wooden_spear.png",
+        hasDurability = true,
+        maxDurability = 150,
+        durabilityUse = 10,
+        durabilityUseRandomRange = 10
+    },
+    {
+        type = "metal_spear",
+        displayName = "metal Spear",
+        description = "For hittin' stuff. uwu",
+        swep = "rvr_metal_spear",
+        stackable = false,
+        icon = "materials/rvr/items/metal_spear.png",
+        hasDurability = true,
+        maxDurability = 150,
+        durabilityUse = 10,
+        durabilityUseRandomRange = 10
+    },
+    {
+        type = "metal_axe",
+        displayName = "Metal Axe",
+        description = "For hittin' stuff. uwu",
+        swep = "rvr_metal_axe",
+        stackable = false,
+        icon = "materials/rvr/items/metal_axe.png",
+        hasDurability = true,
+        maxDurability = 150,
+        durabilityUse = 5,
+        durabilityUseRandomRange = 6
     }
 }
 
