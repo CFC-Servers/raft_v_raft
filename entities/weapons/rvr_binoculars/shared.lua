@@ -78,7 +78,7 @@ end
 function SWEP:DrawWorldModel()
     if not IsValid( self.Owner ) then return end
 
-    local rightHandID = self.Owner:LookupAttachment("anim_attachment_rh")
+    local rightHandID = self.Owner:LookupAttachment( "anim_attachment_rh" )
     local rightHand = self.Owner:GetAttachment( rightHandID )
 
     local pos = rightHand.Pos + rightHand.Ang:Forward() * 3 + rightHand.Ang:Right() * -2.7 + rightHand.Ang:Up() * 3.6

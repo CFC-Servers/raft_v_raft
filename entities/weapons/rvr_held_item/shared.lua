@@ -82,7 +82,7 @@ function SWEP:PrimaryAttack()
     if SERVER and itemData.placeable then
         self.itemData = itemData
         local parentPiece, item, pos, ang = self:GetPlacementInfo()
-         
+
         if item then RVR.Builder.tryPlaceItem( owner, parentPiece, item, pos, ang ) end
     end
 
@@ -163,11 +163,11 @@ function SWEP:GetPlacementInfo()
         endpos = pos,
         filter = ghost,
         mins = mins + Vector( 5, 5, 5 ),
-        maxs = maxs - Vector( 5 ,5, 5 ),
+        maxs = maxs - Vector( 5, 5, 5 ),
         mask = MASK_ALL,
         ignoreworld = true
     }
-    
+
     local traceResult = util.TraceHull( traceData )
     if traceResult.Hit then return end
 

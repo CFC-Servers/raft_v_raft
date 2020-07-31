@@ -35,7 +35,7 @@ end
 function ENT:Think()
     -- TODO: understand/improve this
     local phys = self:GetPhysicsObject()
-    
+
     RVR.Util.keepAnglesThink( phys )
 end
 

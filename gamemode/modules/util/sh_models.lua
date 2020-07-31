@@ -3,7 +3,7 @@ RVR.Util = RVR.Util or {}
 local function entCreate( model )
     local ent = ents.Create( "prop_physics" )
     ent:SetModel( model )
-    
+
     return ent
 end
 
@@ -20,9 +20,9 @@ function RVR.Util.GetModelBounds( model )
     local ent = entCreate( model )
 
     local min, max = ent:GetModelBounds()
-    ent:Remove() 
-    
+    ent:Remove()
+
     modelBoundsCache[model] = { min, max }
-    
+
     return min, max
 end

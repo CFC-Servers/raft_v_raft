@@ -127,7 +127,7 @@ function PANEL:SetItem( item )
 
     self:ClearIcons()
     updateIsMaterial( item )
-    
+
     if item.isMaterial then
         self:AddIcon( "craftable" )
     end

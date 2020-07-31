@@ -76,9 +76,9 @@ hook.Add( "RVR_Party_PartyCreated", "RVR_Raft_createRaft", function( partyData )
 
     raft:SetPartyID( partyData.id )
 
-    builder.expandRaft( raft:GetPiece( Vector( 0, 0, 0 ) ), "raft_foundation", Vector( 1, 0, 0 ))
+    builder.expandRaft( raft:GetPiece( Vector( 0, 0, 0 ) ), "raft_foundation", Vector( 1, 0, 0 ) )
     builder.expandRaft( raft:GetPiece( Vector( 0, 0, 0 ) ), "raft_foundation", Vector( 0, 1, 0 ), Angle( 0, 180, 0 ) )
-    builder.expandRaft( raft:GetPiece( Vector( 1, 0, 0 ) ), "raft_foundation", Vector( 0, 1, 0 ))
+    builder.expandRaft( raft:GetPiece( Vector( 1, 0, 0 ) ), "raft_foundation", Vector( 0, 1, 0 ) )
 
     partyData.raftID = raft.id
 end )
@@ -134,8 +134,8 @@ function builder.expandRaft( piece, class, dir, rotation )
     newEnt:SetRaft( piece:GetRaft() )
 
     raft:AddPiece( raft:GetPosition( piece ) + dir, newEnt )
-    
-    for _, neighbor in pairs( raft:GetNeighbors( newEnt ) ) do 
+
+    for _, neighbor in pairs( raft:GetNeighbors( newEnt ) ) do
         constraint.Weld( newEnt, neighbor, 0, 0, 0, true, false )
     end
 
@@ -158,18 +158,18 @@ function builder.placeWall( piece, class, yaw )
     return newEnt
 end
 
-function builder.placeItem( parentPiece, item, pos, angle ) 
+function builder.placeItem( parentPiece, item, pos, angle )
     local newEnt = ents.Create( item.placeableClass )
     newEnt:SetPos( pos )
     newEnt:SetAngles( angle )
     newEnt:SetParent( parentPiece )
     if item.beforeSpawn then item.beforeSpawn( ent ) end
     newEnt:Spawn()
- 
+
     return newEnt
 end
 
-function builder.tryPlaceItem( ply, parentPiece, item, pos, angle ) 
+function builder.tryPlaceItem( ply, parentPiece, item, pos, angle )
     if not parentPiece.IsRaft then return end
     if not item.placeable then return end
     local raft = parentPiece:GetRaft()
