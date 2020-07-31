@@ -18,7 +18,7 @@ function ENT:Draw()
 
     if opacity == 0 then return end
 
-    local pos = self:GetPos()
+    local pos = self:WorldSpaceCenter()
     local size = self:OBBMaxs() - self:OBBMins()
 
     local maxSide = math.max( size.x, size.y, size.z )

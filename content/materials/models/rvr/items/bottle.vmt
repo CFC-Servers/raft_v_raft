@@ -1,5 +1,4 @@
 "VertexLitGeneric"
 {
 	"$basetexture" "models/rvr/items/bottle"
-	"$translucent" 1
 }
