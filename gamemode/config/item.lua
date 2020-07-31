@@ -63,7 +63,9 @@ config.itemDefinitions = {
         displayName = "Cloth",
         description = "A little scrap of cloth",
         maxCount = 20,
-        model = "models/rvr/items/cloth.mdl",
+        model = "models/props_junk/garbage_newspaper001a.mdl",
+        material = "models/debug/debugwhite",
+        color = Color( 220, 220, 190 ),
         icon = "materials/rvr/items/cloth.png",
         stackable = true
     },

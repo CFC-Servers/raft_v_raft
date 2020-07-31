@@ -47,6 +47,16 @@ function SWEP:Initialize()
         else
             self.WorldModelEnt:SetModel( mdl )
         end
+
+        if self.WorldModelEnt then
+            if itemData.material then
+                self.WorldModelEnt:SetMaterial( itemData.material )
+            end
+
+            if itemData.color then
+                self.WorldModelEnt:SetColor( itemData.color )
+            end
+        end
     end )
 end
 

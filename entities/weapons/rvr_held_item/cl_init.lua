@@ -62,6 +62,14 @@ function SWEP:PreDrawViewModel( vm, weapon, ply )
 
     if mdl ~= "" and mdl ~= vm:GetModel() then
         vm:SetWeaponModel( mdl, self )
+
+        if self.itemData.material then
+            vm:SetMaterial( self.itemData.material )
+        end
+
+        if self.itemData.color then
+            vm:SetColor( self.itemData.color )
+        end
     end
 end
 

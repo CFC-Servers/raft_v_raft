@@ -58,6 +58,14 @@ function ENT:Setup( item, count )
         end
     end
 
+    if itemData.material then
+        self:SetMaterial( itemData.material )
+    end
+
+    if itemData.color then
+        self:SetColor( itemData.color )
+    end
+
     self.item = item
 end
 
