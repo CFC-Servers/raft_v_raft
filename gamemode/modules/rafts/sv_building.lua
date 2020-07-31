@@ -146,7 +146,7 @@ function builder.placeWall( piece, class, yaw )
     newEnt:SetAngles( piece:LocalToWorldAngles( Angle( 0, yaw, 0 ) ) )
     newEnt:SetRaft( piece:GetRaft() )
     piece.walls[yaw] = newEnt
-    newEnt:SetParent(piece)
+    newEnt:SetParent( piece )
     return newEnt
 end
 
@@ -188,4 +188,3 @@ function builder.tryPlaceItem( ply, parentPiece, item, pos, angle )
 
     RVR.Inventory.tryTakeItems( ply, required )
 end
-

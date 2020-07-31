@@ -1,6 +1,6 @@
 AddCSLuaFile( "shared.lua" )
 AddCSLuaFile( "cl_init.lua" )
-include("shared.lua")
+include( "shared.lua" )
 function SWEP:PrimaryAttack() 
     local trace = self:DoPaddleTrace()
 

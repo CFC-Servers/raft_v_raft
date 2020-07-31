@@ -16,7 +16,7 @@ function ENT:Initialize()
         phys:EnableMotion( true )
     end
 
-    phys:SetMass(self.DefaultMass)
+    phys:SetMass( self.DefaultMass )
 end
 
 function ENT:OnRemove()

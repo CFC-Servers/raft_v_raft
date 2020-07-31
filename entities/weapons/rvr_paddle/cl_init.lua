@@ -1,4 +1,4 @@
-include("shared.lua")
+include( "shared.lua" )
 local nextPrimary = 0
 
 function SWEP:PrimaryAttack()

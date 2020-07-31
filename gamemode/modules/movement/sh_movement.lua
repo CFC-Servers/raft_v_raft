@@ -92,7 +92,7 @@ function GM:FinishMove( ply, mv )
 
     local ground = getGroundIfRaft( ply )
     if not ground then
-        ply:SetCollisionGroup(COLLISION_GROUP_PLAYER)
+        ply:SetCollisionGroup( COLLISION_GROUP_PLAYER )
         return
     end
 
@@ -106,7 +106,7 @@ function GM:FinishMove( ply, mv )
     ply:SetLocalAngles( ground:GetAngles() )
 
     if not pos then return true end
-    ply:SetCollisionGroup(COLLISION_GROUP_WORLD)
+    ply:SetCollisionGroup( COLLISION_GROUP_WORLD )
     ply:SetPos( pos )
     ply:SetLocalPos( pos )
     ply:SetNetworkOrigin( pos )
