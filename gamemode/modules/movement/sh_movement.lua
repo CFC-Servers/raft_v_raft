@@ -104,7 +104,6 @@ function GM:FinishMove( ply, mv )
 
     local pos = tryMove( ply, ply:GetPos(), ply.RVRMovement + mv:GetVelocity() )
 
-
     ply:SetLocalVelocity( ply.RVRMovement )
     ply:SetAbsVelocity( ply.RVRMovement )
     ply:SetLocalAngles( ground:GetAngles() )
@@ -116,5 +115,46 @@ function GM:FinishMove( ply, mv )
     ply:SetNetworkOrigin( pos )
     mv:SetOrigin( pos )
 
+    --ply:DoAnimationEvent( 
+
     return true
 end
+
+hook.Add( "PrePlayerDraw", "RVR_Anti_Interpolation", function( ply )
+    local ground = getGroundIfRaft( ply )
+    if not ground then return end
+
+    local vel = ground:GetVelocity()
+
+    local ang = ply:EyeAngles()
+    ang.pitch = 0
+    ang.roll = 0
+
+    local move_x, move_y = vel:Dot( ang:Forward() ), vel:Dot( ang:Right() )
+    local maxMoveSpeed =  ply:GetSequenceGroundSpeed( ply:GetSequence() )
+
+    if maxMoveSpeed <= 1 then
+        maxMoveSpeed = 1
+    end
+
+    print( move_x)
+    print( ply:GetPoseParameter( "move_x" ), move_x * ply:GetPlaybackRate() / maxMoveSpeed )
+
+
+    --ply:SetPoseParameter( "move_x", move_x * ply:GetPlaybackRate() / maxMoveSpeed )
+    --ply:SetPoseParameter( "move_y", move_y * ply:GetPlaybackRate() / maxMoveSpeed )
+
+    ply:InvalidateBoneCache()
+    ply:SetupBones()
+
+    local wep = ply:GetActiveWeapon()
+
+    if IsValid( wep ) then
+        wep:InvalidateBoneCache()
+        wep:SetupBones()
+    end
+end )
+
+hook.Add( "DoAnimationEvent", "RVR_DoAnimationEvent", function( ply, event, data )
+    print(event)
+end )
