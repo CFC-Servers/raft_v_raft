@@ -105,7 +105,7 @@ function inv.fullPlayerUpdate( ply )
     net.Send( ply )
 end
 
-net.Receive( "RVR_Inventory_Close", function( len, ply )
+function inv.closeInventory( ply )
     local invEnt = ply.RVR_Inventory_Open
     invEnt.RVR_Inventory.ActivePlayer = nil
 
@@ -124,6 +124,14 @@ net.Receive( "RVR_Inventory_Close", function( len, ply )
     end
 
     ply.RVR_Inventory.CursorSlot = nil
+end
+
+net.Receive( "RVR_Inventory_Close", function( len, ply )
+    inv.closeInventory( ply )
+end )
+
+hook.Add( "PlayerDeath", "RVR_Inventory_Close", function( ply )
+    inv.closeInventory( ply )
 end )
 
 net.Receive( "RVR_Inventory_CursorHold", function( len, ply )

@@ -22,7 +22,8 @@ config.itemDefinitions = {
         model = "models/rvr/items/nail.mdl",
         icon = "materials/rvr/items/nail.png",
         stackable = true,
-        worldModelOffset = Vector( -2, 1, 3 )
+        worldModelOffset = Vector( -2, 1, 3 ),
+        isBag = true
     },
     {
         type = "small_rocks",
@@ -31,7 +32,9 @@ config.itemDefinitions = {
         maxCount = 25,
         model = "models/rvr/items/rocks.mdl",
         icon = "materials/rvr/items/rocks.png",
-        stackable = true
+        stackable = true,
+        viewModelOffset = Vector( 5, -1, -3 ),
+        worldModelOffset = Vector( 0, 0, 2 ),
     },
     {
         type = "big_rock",
@@ -40,7 +43,9 @@ config.itemDefinitions = {
         maxCount = 10,
         model = "models/rvr/items/big_rock.mdl",
         icon = "materials/rvr/items/big_rock.png",
-        stackable = true
+        stackable = true,
+        viewModelOffset = Vector( 5, -1, -3 ),
+        worldModelOffset = Vector( 3, 0, 5 ),
     },
     {
         type = "straw",
@@ -49,14 +54,20 @@ config.itemDefinitions = {
         maxCount = 30,
         model = "models/rvr/items/straw.mdl",
         icon = "materials/rvr/items/straw.png",
-        stackable = true
+        stackable = true,
+        viewModelOffset = Vector( 8, -19, -7 ),
+        viewModelAng = Angle( 0, 90, 0 ),
+        worldModelOffset = Vector( -2, 1, 4 ),
+        isBag = true
     },
     {
         type = "cloth",
         displayName = "Cloth",
         description = "A little scrap of cloth",
         maxCount = 20,
-        model = "models/rvr/items/cloth.mdl",
+        model = "models/props_junk/garbage_newspaper001a.mdl",
+        material = "models/debug/debugwhite",
+        color = Color( 220, 220, 190 ),
         icon = "materials/rvr/items/cloth.png",
         stackable = true
     },
@@ -67,7 +78,9 @@ config.itemDefinitions = {
         maxCount = 10,
         model = "models/rvr/items/rope.mdl",
         icon = "materials/rvr/items/rope.png",
-        stackable = true
+        stackable = true,
+        viewModelOffset = Vector( 10, 8, 15 ),
+        viewModelAng = Angle( 0, 0, 90 ),
     },
     {
         type = "iron",
@@ -76,7 +89,11 @@ config.itemDefinitions = {
         maxCount = 5,
         model = "models/rvr/items/iron.mdl",
         icon = "materials/rvr/items/iron.png",
-        stackable = true
+        stackable = true,
+        viewModelOffset = Vector( -20, 1, -4 ),
+        viewModelAng = Angle( 0, -90, 0 ),
+        worldModelOffset = Vector( 3, 0, 3 ),
+        worldModelAng = Angle( 90, 90, 0 )
     },
     {
         type = "scrap_metal",
@@ -85,7 +102,11 @@ config.itemDefinitions = {
         maxCount = 10,
         model = "models/rvr/items/scrap_metal.mdl",
         icon = "materials/rvr/items/scrap_metal.png",
-        stackable = true
+        stackable = true,
+        viewModelOffset = Vector( -13, -25, -5 ),
+        viewModelAng = Angle( 0, 180, 0 ),
+        worldModelOffset = Vector( 0, 2, 0 ),
+        worldModelAng = Angle( -90, 180, 0 )
     },
 
     -- Food
@@ -114,6 +135,33 @@ config.itemDefinitions = {
         consumable = true,
         food = 30,
         worldModelOffset = Vector( -1, 2, -8 ),
+        worldModelAng = Angle( -90, 0, 90 )
+    },
+    {
+        type = "horse_mackerel",
+        displayName = "Horse Mackerel",
+        description = "A living horse mackerel, eating it would not only make you a monster, but also hurt you!",
+        maxCount = 10,
+        model = "models/rvr/items/horse_mackerel.mdl",
+        icon = "materials/rvr/items/horse_mackerel.png",
+        stackable = true,
+        consumable = true,
+        food = 5,
+        health = -5,
+        worldModelOffset = Vector( -1, 1.5, -3 ),
+        worldModelAng = Angle( -90, 0, 90 )
+    },
+    {
+        type = "cooked_horse_mackerel",
+        displayName = "Cooked Horse Mackerel",
+        description = "A cooked horse mackerel, yum?",
+        maxCount = 10,
+        model = "models/rvr/items/horse_mackerel_cooked.mdl",
+        icon = "materials/rvr/items/cooked_horse_mackerel.png",
+        stackable = true,
+        consumable = true,
+        food = 15,
+        worldModelOffset = Vector( -1, 1.5, -3 ),
         worldModelAng = Angle( -90, 0, 90 )
     },
     {
@@ -155,7 +203,10 @@ config.itemDefinitions = {
         icon = "materials/rvr/items/bandage.png",
         stackable = true,
         consumable = true,
-        health = 10
+        health = 10,
+        viewModelOffset = Vector( 3, 0, -10 ),
+        worldModelOffset = Vector( 0, 0, 3 ),
+        isBag = true
     },
     {
         type = "medkit",
@@ -166,7 +217,9 @@ config.itemDefinitions = {
         icon = "materials/rvr/items/pills.png",
         stackable = true,
         consumable = true,
-        health = 50
+        health = 50,
+        viewModelOffset = Vector( 1, 0, -5 ),
+        isBag = true
     },
 
     -- Tools
@@ -191,6 +244,59 @@ config.itemDefinitions = {
         hasDurability = true,
         maxDurability = 1000,
         durabilityUse = 1
+    },
+    {
+        type = "paddle",
+        displayName = "Paddle",
+        description = "Move your raft in the direction that you paddle!",
+        stackable = false,
+        swep = "rvr_paddle",
+        icon = "materials/rvr/items/wooden_paddle.png"
+    },
+    {
+        type = "binoculars",
+        displayName = "Binoculars",
+        description = "For lookin' at stuff. uwu",
+        swep = "rvr_binoculars",
+        stackable = false,
+        model = "models/rvr/items/binoculars.mdl",
+        icon = "materials/rvr/items/binoculars.png"
+    },
+    {
+        type = "sword",
+        displayName = "Sword",
+        description = "For hittin' stuff. uwu",
+        swep = "rvr_sword",
+        stackable = false,
+        icon = "materials/rvr/items/sword.png",
+        hasDurability = true,
+        maxDurability = 150,
+        durabilityUse = 5,
+        durabilityUseRandomRange = 6
+    },
+    {
+        type = "wooden_axe",
+        displayName = "Wooden Axe",
+        description = "For hittin' stuff. uwu",
+        swep = "rvr_wooden_axe",
+        stackable = false,
+        icon = "materials/rvr/items/wooden_axe.png",
+        hasDurability = true,
+        maxDurability = 150,
+        durabilityUse = 5,
+        durabilityUseRandomRange = 6
+    },
+    {
+        type = "stone_axe",
+        displayName = "Stone Axe",
+        description = "For hittin' stuff. uwu",
+        swep = "rvr_stone_axe",
+        stackable = false,
+        icon = "materials/rvr/items/stone_axe.png",
+        hasDurability = true,
+        maxDurability = 150,
+        durabilityUse = 5,
+        durabilityUseRandomRange = 6
     },
 
     -- weapons

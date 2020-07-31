@@ -43,6 +43,8 @@ function inv.openPlayerInventory( inventory )
     invScroller:SetSlotsPerRow( 4 )
     invScroller:SetInventory( inventory, config.PLAYER_HOTBAR_SLOTS + 1, inventory.MaxSlots )
 
+--[[ DISABLED UNTIL EQUIPMENT ITEMS ADDED
+
     -- equipment slots
     local eSlotXMult = 0.38
     local eSlotYMult = 0.19
@@ -70,6 +72,7 @@ function inv.openPlayerInventory( inventory )
             slot:SetItemData( itemInfo.item, itemInfo.count )
         end
     end
+]]
 
     local icon = vgui.Create( "DModelPanel", frame )
     icon:SetPos( w * 0.1, h * 0.15 )

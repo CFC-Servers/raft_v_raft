@@ -37,7 +37,7 @@ function SWEP:Initialize()
             local wep = weapons.Get( this.itemData.swep )
             if not wep then return end
 
-            mdl = wep.Model
+            mdl = wep.WorldModel
         end
 
         this.WorldModel = mdl
@@ -50,6 +50,16 @@ function SWEP:Initialize()
             end
         else
             self.WorldModelEnt:SetModel( mdl )
+        end
+
+        if self.WorldModelEnt then
+            if itemData.material then
+                self.WorldModelEnt:SetMaterial( itemData.material )
+            end
+
+            if itemData.color then
+                self.WorldModelEnt:SetColor( itemData.color )
+            end
         end
     end )
 end
