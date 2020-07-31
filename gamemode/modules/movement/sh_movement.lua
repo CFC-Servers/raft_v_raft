@@ -13,6 +13,7 @@ local function isEmptyPos( ply, pos )
         maxs = maxs,
         mask = MASK_PLAYERSOLID
     }
+
     return not trace.Hit
 end
 
@@ -41,9 +42,9 @@ local function calculateStepPos( ply, pos )
         }
 
         -- player is stuck
-        if trace.StartSolid then return nil end
+        if trace.StartSolid then return end
         -- player is floating
-        if not trace.Hit then return nil end
+        if not trace.Hit then return end
 
         return trace.HitPos
     end
@@ -61,15 +62,15 @@ local function calculateStepPos( ply, pos )
 end
 
 local function tryMove( ply, pos, vel )
-    local pos = calculateStepPos( ply, pos + vel * FrameTime() )
-    if not pos then return nil end
+    pos = calculateStepPos( ply, pos + vel * FrameTime() )
+    if not pos then return end
 
-    if not isEmptyPos( ply, pos ) then return nil end
+    if not isEmptyPos( ply, pos ) then return end
 
     return pos
 end
 
-function GM:SetupMove( ply, mv , cmd )
+function GM:SetupMove( ply, mv, cmd )
     local ang = cmd:GetViewAngles()
     ang.pitch = 0
     ang.roll = 0
@@ -104,12 +105,15 @@ function GM:FinishMove( ply, mv )
 
     local pos = tryMove( ply, ply:GetPos(), ply.RVRMovement + mv:GetVelocity() )
 
-
     ply:SetLocalVelocity( ply.RVRMovement )
     ply:SetAbsVelocity( ply.RVRMovement )
     ply:SetLocalAngles( ground:GetAngles() )
 
-    if not pos then return true end
+    if not pos then
+        ply:SetCollisionGroup( COLLISION_GROUP_PASSABLE_DOOR )
+        return true
+    end
+
     ply:SetCollisionGroup( COLLISION_GROUP_WORLD )
     ply:SetPos( pos )
     ply:SetLocalPos( pos )
