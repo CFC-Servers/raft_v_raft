@@ -357,21 +357,6 @@ function SWEP:UpdatePermitted()
     -- TODO: Check this server side as well
     local mins, maxs = self.ghost:GetModelBounds()
     local pos = self.ghost:GetPos()
-    
-    do return end
-    local traceData = {
-        start = pos,
-        endpos = pos,
-        filter = self.ghost,
-        mins = mins + Vector( 5, 5, 5 ),
-        maxs = maxs + Vector( -5, -5, 5 ),
-        mask = MASK_ALL,
-        ignoreworld = true
-    }
 
-    local traceResult = util.TraceHull( traceData )
-
-    if traceResult.Hit then
-        self.permitted = false
-    end
+    -- TODO reimplement collision checking
 end

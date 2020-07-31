@@ -1,3 +1,5 @@
+local vectorUp = Vector( 0, 0, 1 )
+
 local function isEmptyPos( ply, pos )
     local mins, maxs = ply:GetCollisionBounds()
 
@@ -26,7 +28,7 @@ local function calculateStepPos( ply, pos )
 
     if not isEmptyPos( ply, pos ) then
         local trace = util.TraceHull{
-            start = pos + vector_up * ply:GetStepSize(),
+            start = pos + vectorUp * ply:GetStepSize(),
             endpos = pos,
             filter = ply,
             mins = mins,
@@ -44,7 +46,7 @@ local function calculateStepPos( ply, pos )
 
     local trace = util.TraceHull{
         start = pos,
-        endpos = pos - vector_up * ply:GetStepSize(),
+        endpos = pos - vectorUp * ply:GetStepSize(),
         filter = ply,
         mins = mins,
         maxs = maxs,
@@ -85,37 +87,25 @@ end
 function GM:FinishMove( ply, mv )
     if ply:GetMoveType() == MOVETYPE_NOCLIP then
         ply:SetCollisionGroup(COLLISION_GROUP_PLAYER)
-        ply.lastMovedBase = nil
         return
     end
 
     local ground = getGroundIfRaft( ply )
     if not ground then
         ply:SetCollisionGroup(COLLISION_GROUP_PLAYER)
-        ply.lastMovedBase = nil
         return
     end
 
     mv:SetVelocity( ground:GetVelocity() )
 
-    local pos
-    if ply.lastMovedBase and ply.RVRMovement:IsZero() and ply.lastMoved and ply.lastMoved + 1 <= CurTime() then
-        targetPos = ply.lastMovedBase:LocalToWorld( ply.lastMovedPos )
-        local movement = targetPos - ply:GetPos()
-        pos = tryMove( ply, ply:GetPos(), movement ) or targetPos
-    else
-        pos = tryMove( ply, ply:GetPos(), ply.RVRMovement + mv:GetVelocity() )
+    local pos = tryMove( ply, ply:GetPos(), ply.RVRMovement + mv:GetVelocity() )
 
-        ply.lastMoved = CurTime()
-        ply.lastMovedBase = ground
-        ply.lastMovedPos = ground:WorldToLocal( ply:GetPos() )
-    end
 
     ply:SetLocalVelocity( ply.RVRMovement )
     ply:SetAbsVelocity( ply.RVRMovement )
     ply:SetLocalAngles( ground:GetAngles() )
 
-    if not pos then return end
+    if not pos then return true end
     ply:SetCollisionGroup(COLLISION_GROUP_WORLD)
     ply:SetPos( pos )
     ply:SetLocalPos( pos )
