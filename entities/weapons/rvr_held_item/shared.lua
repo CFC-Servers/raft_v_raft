@@ -33,7 +33,7 @@ function SWEP:Initialize()
             local wep = weapons.Get( this.itemData.swep )
             if not wep then return end
 
-            mdl = wep.Model
+            mdl = wep.WorldModel
         end
 
         this.WorldModel = mdl

@@ -212,7 +212,8 @@ config.itemDefinitions = {
         icon = "materials/rvr/items/pills.png",
         stackable = true,
         consumable = true,
-        health = 50
+        health = 50,
+        viewModelOffset = Vector( 1, 0, -5 )
     },
 
     -- Tools
