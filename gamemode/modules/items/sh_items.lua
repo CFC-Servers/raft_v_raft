@@ -144,12 +144,12 @@ items.items = {
         icon = "materials/rvr/items/raft_builder.png"
     },
     {
-        type = "spear",
-        displayName = "Spear",
+        type = "stone_spear",
+        displayName = "Stone Spear",
         description = "For hittin' stuff. uwu",
-        swep = "rvr_spear",
+        swep = "rvr_stone_spear",
         stackable = false,
-        icon = "materials/rvr/items/wooden_spear.png",
+        icon = "materials/rvr/items/stone_spear.png",
         hasDurability = true,
         maxDurability = 150,
         durabilityUse = 10,

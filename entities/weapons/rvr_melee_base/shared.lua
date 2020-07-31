@@ -14,6 +14,7 @@ SWEP.Primary.Damage = 60
 
 SWEP.DrawAmmo = false
 SWEP.DrawCrosshair = false
+SWEP.AttackRange = 50
 
 function SWEP:Initialize()
     self:SetHoldType( "melee" )
@@ -34,7 +35,7 @@ function SWEP:PrimaryAttack()
 
     local aimVec = owner:GetAimVector()
     local traceStart = owner:GetShootPos()
-    local traceEnd = traceStart + aimVec * 50
+    local traceEnd = traceStart + aimVec * self.AttackRange
 
     local hBoxSize = Vector( 10, 10, 10 )
 
