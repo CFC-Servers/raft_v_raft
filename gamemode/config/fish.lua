@@ -19,5 +19,15 @@ config.FISH = {
         moveDistance = 50,
         moveChance = 75,
         isHostile = false
+    },
+    {
+        type = "horse_mackerel",
+        item = "horse_mackerel",
+        model = "models/rvr/items/horse_mackerel.mdl",
+        chance = 100,
+        health = 10,
+        moveDistance = 25,
+        moveChance = 75,
+        isHostile = false
     }
 }
