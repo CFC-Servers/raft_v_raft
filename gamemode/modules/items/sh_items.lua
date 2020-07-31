@@ -189,6 +189,30 @@ items.items = {
         durabilityUseRandomRange = 6
     },
     {
+        type = "wooden_axe",
+        displayName = "Wooden Axe",
+        description = "For hittin' stuff. uwu",
+        swep = "rvr_wooden_axe",
+        stackable = false,
+        icon = "materials/rvr/items/wooden_axe.png",
+        hasDurability = true,
+        maxDurability = 150,
+        durabilityUse = 5,
+        durabilityUseRandomRange = 6
+    }, 
+    {
+        type = "stone_axe",
+        displayName = "Stone Axe",
+        description = "For hittin' stuff. uwu",
+        swep = "rvr_stone_axe",
+        stackable = false,
+        icon = "materials/rvr/items/stone_axe.png",
+        hasDurability = true,
+        maxDurability = 150,
+        durabilityUse = 5,
+        durabilityUseRandomRange = 6
+    },
+    {
         type = "storage_box",
         displayName = "Storage Box",
         description = "Store all your items!",
