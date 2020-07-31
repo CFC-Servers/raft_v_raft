@@ -144,7 +144,7 @@ config.itemDefinitions = {
         consumable = true,
         food = 5,
         health = -5,
-        worldModelOffset = Vector( -1, 2, -8 ),
+        worldModelOffset = Vector( -1, 1.5, -3 ),
         worldModelAng = Angle( -90, 0, 90 )
     },
     {
@@ -157,7 +157,7 @@ config.itemDefinitions = {
         stackable = true,
         consumable = true,
         food = 15,
-        worldModelOffset = Vector( -1, 2, -8 ),
+        worldModelOffset = Vector( -1, 1.5, -3 ),
         worldModelAng = Angle( -90, 0, 90 )
     },
     {
