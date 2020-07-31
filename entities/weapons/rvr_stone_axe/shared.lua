@@ -4,4 +4,4 @@ SWEP.PrintName = "Stone Axe"
 SWEP.Base = "rvr_wooden_axe"
 SWEP.ViewModel = "models/rvr/items/stone_axe.mdl"
 SWEP.WorldModel = "models/rvr/items/stone_axe.mdl"
-SWEP.Primary.Damage = 40
+SWEP.Primary.Damage = 25
