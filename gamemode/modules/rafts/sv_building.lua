@@ -124,7 +124,13 @@ function builder.expandRaft( piece, class, dir, rotation )
     newEnt:SetPos( piece:LocalToWorld( localDir * size ) )
     newEnt:SetRaftRotationOffset( rotation )
     newEnt:SetRaft( piece:GetRaft() )
+
     raft:AddPiece( raft:GetPosition( piece ) + dir, newEnt )
+    
+    for _, neighbor in pairs( raft:GetNeighbors( newEnt ) ) do 
+        constraint.Weld( newEnt, neighbor, 0, 0, 0, true, false )
+    end
+
     return newEnt, nil
 end
 
@@ -140,6 +146,7 @@ function builder.placeWall( piece, class, yaw )
     newEnt:SetAngles( piece:LocalToWorldAngles( Angle( 0, yaw, 0 ) ) )
     newEnt:SetRaft( piece:GetRaft() )
     piece.walls[yaw] = newEnt
+    newEnt:SetParent( piece )
     return newEnt
 end
 
@@ -181,4 +188,3 @@ function builder.tryPlaceItem( ply, parentPiece, item, pos, angle )
 
     RVR.Inventory.tryTakeItems( ply, required )
 end
-
