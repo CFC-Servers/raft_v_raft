@@ -9,7 +9,8 @@ function ENT:PaddleMovementDecay()
     if not raft then return end
 
     local movement = raft:GetPaddleMovement()
-    local deltaVel = ( self:GetVelocity() - ( self.prevVelocity or Vector( 0, 0, 0 ) ) )
+    local prevVelocity = self.prevVelocity or Vector( 0, 0, 0 )
+    local deltaVel = self:GetVelocity() - prevVelocity
     local velMultiplier = 1
 
     -- TODO: Make this less of a hacky solution for colliding into walls
