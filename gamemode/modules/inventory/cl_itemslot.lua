@@ -89,7 +89,7 @@ function PANEL:OnMousePressed( code )
         -- taking item from slot
 
         local count = self.itemCount
-        
+
         if code == MOUSE_RIGHT then
             count = math.ceil( count / 2 )
         end

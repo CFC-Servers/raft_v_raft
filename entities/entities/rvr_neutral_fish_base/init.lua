@@ -56,7 +56,7 @@ function ENT:Think()
     if shouldDie then
         self:Remove()
     end
- 
+
     if IsValid( enemy ) and not self.enemy then
         self.enemy = enemy
         self.moveDistance = self.moveDistance * 10

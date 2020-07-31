@@ -38,7 +38,7 @@ config.RECIPES = {
                 item = "water",
                 timeToCraft = 39,
                 ingredients = {
-                    dirty_water =  1
+                    dirty_water = 1
                 }
             }
         }
@@ -305,4 +305,4 @@ config.RECIPES = {
     --     icon = "rvr/icons/craftingmenu_category_other.png",
     --     recipes = {}
     -- }
-}
+ }

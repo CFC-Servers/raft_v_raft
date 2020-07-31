@@ -60,7 +60,7 @@ local function drowningCheck()
             if ply.IsInWater then
                 alertPlayerOfLeaveWater( ply )
             end
-            
+
             ply.IsInWater = false
         end
     end

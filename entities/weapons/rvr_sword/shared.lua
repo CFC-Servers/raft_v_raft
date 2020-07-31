@@ -9,10 +9,10 @@ SWEP.WorldModel = "models/rvr/items/sword.mdl"
 function SWEP:DrawWorldModel()
     if not IsValid( self.Owner ) then return end
 
-    local rightHandID = self.Owner:LookupAttachment("anim_attachment_rh")
+    local rightHandID = self.Owner:LookupAttachment( "anim_attachment_rh" )
     local rightHand = self.Owner:GetAttachment( rightHandID )
 
-    local pos = rightHand.Pos + rightHand.Ang:Forward() * 1 + rightHand.Ang:Right()  + rightHand.Ang:Up()
+    local pos = rightHand.Pos + rightHand.Ang:Forward() * 1 + rightHand.Ang:Right() + rightHand.Ang:Up()
     local ang = rightHand.Ang
 
     self:SetRenderOrigin( pos )

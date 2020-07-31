@@ -149,7 +149,7 @@ function SWEP:Think()
     local _, item, pos, ang = self:GetPlacementInfo()
     if not item then return ghost:SetColor( GHOST_INVIS ) end
     local class = baseclass.Get( item.placeableClass )
-    
+
     ghost:SetColor( GHOST_COLOR )
     ghost:SetModel( class.Model )
     ghost:SetPos( pos )

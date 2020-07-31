@@ -25,7 +25,7 @@ hook.Add( "RVR_ModulesLoaded", "RVR_Inventory_AddCommands", function()
         str = str:lower()
         if str == "^" then
             local itemInstance = RVR.Inventory.getSelectedItem( caller )
-            
+
             if not itemInstance then
                 return nil, "Not holding an item"
             end
