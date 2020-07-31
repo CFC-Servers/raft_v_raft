@@ -305,4 +305,4 @@ config.RECIPES = {
     --     icon = "rvr/icons/craftingmenu_category_other.png",
     --     recipes = {}
     -- }
- }
+}
