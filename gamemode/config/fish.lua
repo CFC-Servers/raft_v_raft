@@ -2,7 +2,7 @@ GM.Config = GM.Config or {}
 GM.Config.Fish = GM.Config.Fish or {}
 
 local config = GM.Config.Fish
-config.FISH_TIMER_DELAY = 10 -- How often fish have the chance to spawn in seconds
+config.FISH_TIMER_DELAY = 10
 config.SPAWN_RADIUS = 1000
 config.DESPAWN_RADIUS = 1500
 config.WATER_LEVEL_BIAS = 20
