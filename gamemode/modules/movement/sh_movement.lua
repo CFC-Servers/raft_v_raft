@@ -3,10 +3,12 @@ local vectorUp = Vector( 0, 0, 1 )
 local function isEmptyPos( ply, pos )
     local mins, maxs = ply:GetCollisionBounds()
 
+    local filter = player.GetAll()
+
     local trace = util.TraceHull{
         start = pos,
         endpos = pos,
-        filter = ply,
+        filter = filter,
         mins = mins,
         maxs = maxs,
         mask = MASK_PLAYERSOLID
@@ -26,11 +28,13 @@ end
 local function calculateStepPos( ply, pos )
     local mins, maxs = ply:GetCollisionBounds()
 
+    local filter = player.GetAll()
+
     if not isEmptyPos( ply, pos ) then
         local trace = util.TraceHull{
             start = pos + vectorUp * ply:GetStepSize(),
             endpos = pos,
-            filter = ply,
+            filter = filter,
             mins = mins,
             maxs = maxs,
             mask = MASK_PLAYERSOLID
@@ -47,7 +51,7 @@ local function calculateStepPos( ply, pos )
     local trace = util.TraceHull{
         start = pos,
         endpos = pos - vectorUp * ply:GetStepSize(),
-        filter = ply,
+        filter = filter,
         mins = mins,
         maxs = maxs,
         mask = MASK_PLAYERSOLID
@@ -86,13 +90,13 @@ end
 
 function GM:FinishMove( ply, mv )
     if ply:GetMoveType() == MOVETYPE_NOCLIP then
-        ply:SetCollisionGroup(COLLISION_GROUP_PLAYER)
+        ply:SetCollisionGroup( COLLISION_GROUP_PASSABLE_DOOR )
         return
     end
 
     local ground = getGroundIfRaft( ply )
     if not ground then
-        ply:SetCollisionGroup( COLLISION_GROUP_PLAYER )
+        ply:SetCollisionGroup( COLLISION_GROUP_PASSABLE_DOOR )
         return
     end
 

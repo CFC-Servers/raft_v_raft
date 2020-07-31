@@ -1,5 +1,5 @@
 RVR.Fish = RVR.Fish or {}
-RVR.Fish.spawnedFish = {}
+RVR.Fish.spawnedFish = RVR.Fish.spawnedFish or {}
 
 local config = GM.Config.Fish
 local nextTick = nextTick or CurTime()
@@ -29,13 +29,14 @@ local function spawnFishForPlayer( ply )
             newFish:SetAngles( ang )
             newFish:Setup( fishData )
             newFish:Spawn()
+
             table.insert( RVR.Fish.spawnedFish, newFish )
         end
     end
 end
 
 timer.Create( "RVR_FishSpawning", config.FISH_TIMER_DELAY, 0, function()
-    if config.FISH_PER_PLAYER * #player.GetHumans() < #RVR.Fish.spawnedFish then
+    if config.FISH_PER_PLAYER * #player.GetHumans() <= #RVR.Fish.spawnedFish then
         return
     end
 
@@ -47,6 +48,7 @@ end )
 timer.Create( "RVR_CleanupFish", 10, 0, function()
     local spawnedFish = RVR.Fish.spawnedFish
     for i = #spawnedFish, 1, -1 do
+        local ent = spawnedFish[i]
         if not IsValid( ent ) then
             table.remove( spawnedFish, i )
         end
