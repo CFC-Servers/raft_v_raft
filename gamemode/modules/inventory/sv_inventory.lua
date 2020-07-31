@@ -453,7 +453,7 @@ function inv.dropItem( ply, position, count )
     local droppedItem = ents.Create( "rvr_dropped_item" )
     if not IsValid( droppedItem ) then return end
 
-    droppedItem:SetPos( ply:GetShootPos() + Angle( 0, ply:EyeAngles().yaw, 0 ):Forward() * 20 )
+    droppedItem:SetPos( ply:GetShootPos() + Angle( 0, ply:EyeAngles().yaw, 0 ):Forward() * 25 )
     droppedItem:Setup( itemData.item, count )
     droppedItem:Spawn()
 

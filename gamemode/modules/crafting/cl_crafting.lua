@@ -182,7 +182,7 @@ function cft.openCraftingMenu( craftingData )
         if shouldAdd then
             firstCat = firstCat or category
 
-            cft.createCategoryButton( category, categoryScroller )
+            cft.createCategoryButton( category, categoryScroller, tier )
         end
     end
 
@@ -232,12 +232,12 @@ function cft.openCraftingMenu( craftingData )
 
     cft.categoryDerma.categoryContent = categoryContent
 
-    cft.setCategory( firstCat )
+    cft.setCategory( firstCat, tier )
     cft.createGrabButton( frame )
     cft.updateCraftingHammers()
 end
 
-function cft.createCategoryButton( category, categoryScroller )
+function cft.createCategoryButton( category, categoryScroller, tier )
     local categoryButton = vgui.Create( "DImageButton", categoryScroller )
     categoryButton:Dock( TOP )
     categoryButton:DockMargin( 10, 10, 10, 10 )
@@ -247,7 +247,7 @@ function cft.createCategoryButton( category, categoryScroller )
     cft.categoryDerma.buttons[category.categoryID] = categoryButton
 
     function categoryButton:DoClick()
-        cft.setCategory( category )
+        cft.setCategory( category, tier )
     end
 
     function categoryButton:Paint( _w, _h )
@@ -277,7 +277,7 @@ function cft.createCategoryButton( category, categoryScroller )
     end
 end
 
-function cft.setCategory( category )
+function cft.setCategory( category, tier )
     local w, h = cft.openMenu:GetSize()
 
     local title = cft.categoryDerma.title
@@ -295,6 +295,8 @@ function cft.setCategory( category )
     local recipePanels = {}
     cft.categoryDerma.recipePanels = recipePanels
     for k, recipe in pairs( category.recipes ) do
+        if ( recipe.tier or 1 ) > tier then continue end
+
         local panel = vgui.Create( "DPanel", content )
         panel:Dock( TOP )
         panel.Paint = nil

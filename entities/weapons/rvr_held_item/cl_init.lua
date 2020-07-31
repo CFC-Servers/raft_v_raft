@@ -4,7 +4,7 @@ include( "shared.lua" )
 local GHOST_COLOR = Color( 0, 255, 0, 150 )
 local GHOST_INVIS = Color( 0, 0, 0, 0 )
 
-local ghost = ClientsideModel( "models/rvr/raft/raft_base.mdl", RENDERGROUP_BOTH ) 
+local ghost = ClientsideModel( "models/rvr/raft/raft_base.mdl", RENDERGROUP_BOTH )
 ghost:SetRenderMode( RENDERMODE_TRANSCOLOR )
 ghost:SetColor( GHOST_INVIS )
 
@@ -62,6 +62,9 @@ function SWEP:PreDrawViewModel( vm, weapon, ply )
 
     if mdl ~= "" and mdl ~= vm:GetModel() then
         vm:SetWeaponModel( mdl, self )
+
+        vm:SetMaterial( self.itemData.material or "" )
+        vm:SetColor( self.itemData.color or Color( 255, 255, 255 ) )
     end
 end
 

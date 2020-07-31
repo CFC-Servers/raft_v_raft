@@ -1,5 +1,3 @@
-GM.Config = GM.Config or  {}
-
 GM.Config.Inventory = {}
 local Config = GM.Config.Inventory
 
