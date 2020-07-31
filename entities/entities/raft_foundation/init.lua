@@ -9,7 +9,17 @@ function ENT:PaddleMovementDecay()
     if not raft then return end
 
     local movement = raft:GetPaddleMovement()
-    raft:SetPaddleMovement( movement * GAMEMODE.Config.Rafts.FOUNDATION_DRAG_MULTIPLIER  )
+    local deltaVel = ( self:GetVelocity() - ( self.prevVelocity or Vector( 0, 0, 0 ) ) )
+    local velMultiplier = 1
+
+    -- TODO: Make this less of a hacky solution for colliding into walls
+    if deltaVel:Length2D() > 10 then
+        velMultiplier = 0.5
+    end
+
+    raft:SetPaddleMovement( movement * GAMEMODE.Config.Rafts.FOUNDATION_DRAG_MULTIPLIER * velMultiplier )
+
+    self.prevVelocity = self:GetVelocity()
 end
 
 function ENT:PhysicsUpdate( phys )
