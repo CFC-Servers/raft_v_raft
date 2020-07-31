@@ -49,7 +49,10 @@ function ENT:Setup( item, count )
     self:SetAmount( count )
     self:SetItemType( itemData.type )
     self:SetItemDisplayName( itemData.displayName )
-    if itemData.model then
+
+    if itemData.isBag then
+        self:SetModel( "models/rvr/items/item_bag.mdl" )
+    elseif itemData.model then
         self:SetModel( itemData.model )
     elseif itemData.swep then
         local wep = weapons.Get( itemData.swep )
