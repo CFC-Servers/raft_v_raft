@@ -177,11 +177,11 @@ hook.Add( "PrePlayerDraw", "RVR_Anti_Interpolation", function( ply )
     end
 
     --print( move_x)
-    print( ply:GetPoseParameter( "move_x" ), move_x * ply:GetPlaybackRate() / maxMoveSpeed )
+    local newMoveX = move_x * ply:GetPlaybackRate() / maxMoveSpeed
+    local newMoveY = move_y * ply:GetPlaybackRate() / maxMoveSpeed
 
-
-    ply:SetPoseParameter( "move_x", move_x * ply:GetPlaybackRate() / maxMoveSpeed )
-    ply:SetPoseParameter( "move_y", move_y * ply:GetPlaybackRate() / maxMoveSpeed )
+    ply:SetPoseParameter( "move_x", newMoveX )
+    ply:SetPoseParameter( "move_y", newMoveY )
 
     ply:InvalidateBoneCache()
     ply:SetupBones()
