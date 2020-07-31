@@ -45,15 +45,10 @@ timer.Create( "RVR_FishSpawning", config.FISH_TIMER_DELAY, 0, function()
 end )
 
 timer.Create( "RVR_CleanupFish", 10, 0, function()
-    local keysToRemove = {}
-    for k, ent in pairs( RVR.Fish.spawnedFish ) do
+    local spawnedFish = RVR.Fish.spawnedFish
+    for i = #spawnedFish, 1, -1 do
         if not IsValid( ent ) then
-            table.insert( keysToRemove, k )
+            table.remove( spawnedFish, i )
         end
-    end
-
-    for _, key in pairs( keysToRemove ) do
-        local ent = table.remove( RVR.Fish.spawnedFish, key )
-        if IsValid( ent ) then ent:Remove() end
     end
 end )
