@@ -247,6 +247,64 @@ config.itemDefinitions = {
         swep = "rvr_paddle",
         icon = "materials/rvr/items/wooden_paddle.png"
     },
+    {
+        type = "spear",
+        displayName = "Spear",
+        description = "For hittin' stuff. uwu",
+        swep = "rvr_spear",
+        stackable = false,
+        icon = "materials/rvr/items/wooden_spear.png",
+        hasDurability = true,
+        maxDurability = 150,
+        durabilityUse = 10,
+        durabilityUseRandomRange = 10
+    },
+
+    {
+        type = "binoculars",
+        displayName = "Binoculars",
+        description = "For lookin' at stuff. uwu",
+        swep = "rvr_binoculars",
+        stackable = false,
+        model = "models/rvr/items/binoculars.mdl",
+        icon = "materials/rvr/items/binoculars.png"
+    },
+    {
+        type = "sword",
+        displayName = "Sword",
+        description = "For hittin' stuff. uwu",
+        swep = "rvr_sword",
+        stackable = false,
+        icon = "materials/rvr/items/sword.png",
+        hasDurability = true,
+        maxDurability = 150,
+        durabilityUse = 5,
+        durabilityUseRandomRange = 6
+    },
+    {
+        type = "wooden_axe",
+        displayName = "Wooden Axe",
+        description = "For hittin' stuff. uwu",
+        swep = "rvr_wooden_axe",
+        stackable = false,
+        icon = "materials/rvr/items/wooden_axe.png",
+        hasDurability = true,
+        maxDurability = 150,
+        durabilityUse = 5,
+        durabilityUseRandomRange = 6
+    },
+    {
+        type = "stone_axe",
+        displayName = "Stone Axe",
+        description = "For hittin' stuff. uwu",
+        swep = "rvr_stone_axe",
+        stackable = false,
+        icon = "materials/rvr/items/stone_axe.png",
+        hasDurability = true,
+        maxDurability = 150,
+        durabilityUse = 5,
+        durabilityUseRandomRange = 6
+    },
 
     -- Placables
     {
