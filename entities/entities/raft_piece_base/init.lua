@@ -35,7 +35,9 @@ function ENT:OnRemove()
 
     if self.walls then
         for _, wall in pairs( self.walls ) do
-            wall:Remove()
+            if IsValid( wall ) then
+                wall:Remove()
+            end
         end
     end
 
