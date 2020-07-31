@@ -78,7 +78,7 @@ function SWEP:PrimaryAttack()
                 util.Effect( "BloodImpact", eData )
             end
 
-            if SERVER and trace.Hit and trace.HitNonWorld and hitEnt:IsPlayer() then
+            if SERVER and trace.Hit and IsValid( hitEnt ) then
                 local dmg = DamageInfo()
                 dmg:SetDamage( self.Primary.Damage )
                 dmg:SetAttacker( owner )
