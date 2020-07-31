@@ -41,7 +41,7 @@ function PANEL:Init()
 
     function self.itemDurabilityBar:Paint( w, h )
         if not this.item then return end
-        if not this.item.hasDurability then return end
+        if not this.item.hasDurability or not this.item.durability then return end
 
         surface.SetDrawColor( 50, 50, 50 )
         surface.DrawRect( 0, 0, w, h )

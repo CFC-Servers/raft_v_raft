@@ -107,6 +107,8 @@ end
 
 function inv.closeInventory( ply )
     local invEnt = ply.RVR_Inventory_Open
+    if not invEnt then return end
+
     invEnt.RVR_Inventory.ActivePlayer = nil
 
     ply.RVR_Inventory_Open = nil

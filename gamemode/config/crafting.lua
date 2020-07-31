@@ -55,13 +55,83 @@ config.RECIPES = {
                     tuna = 1,
                     wood = 1
                 }
+            },
+            {
+                item = "cooked_horse_mackerel",
+                timeToCraft = 3,
+                ingredients = {
+                    horse_mackerel = 1,
+                    wood = 1
+                }
             }
         }
     },
     {
         name = "Weapons",
         icon = "rvr/icons/craftingmenu_category_weapons.png",
-        recipes = {}
+        recipes = {
+            {
+                item = "wooden_axe",
+                timeToCraft = 5,
+                ingredients = {
+                    wood = 10
+                }
+            },
+            {
+                item = "stone_axe",
+                timeToCraft = 10,
+                ingredients = {
+                    wood = 10,
+                    big_rock = 1,
+                    rope = 1
+                }
+            },
+            {
+                item = "metal_axe",
+                timeToCraft = 30,
+                tier = 2,
+                ingredients = {
+                    wood = 15,
+                    iron = 20
+                }
+            },
+            {
+                item = "wooden_spear",
+                timeToCraft = 10,
+                ingredients = {
+                    wood = 15
+                }
+            },
+            {
+                item = "stone_spear",
+                timeToCraft = 20,
+                tier = 2,
+                ingredients = {
+                    wood = 20,
+                    big_rock = 1,
+                    rope = 1
+                }
+            },
+            {
+                item = "metal_spear",
+                timeToCraft = 45,
+                tier = 2,
+                ingredients = {
+                    wood = 20,
+                    iron = 2
+                }
+            },
+            {
+                item = "sword",
+                timeToCraft = 60,
+                tier = 2,
+                ingredients = {
+                    wood = 20,
+                    cloth = 2,
+                    iron = 5
+                }
+            },
+        }
     },
     {
         name = "Tools",
@@ -78,13 +148,32 @@ config.RECIPES = {
             },
             {
                 item = "paddle",
-                timeToCraft = 20,
+                timeToCraft = 15,
                 ingredients = {
                     wood = 50,
                     nail = 1,
                     rope = 1
                 }
             },
+            {
+                item = "binoculars",
+                timeToCraft = 15,
+                tier = 2,
+                ingredients = {
+                    straw = 5,
+                    wood = 5,
+                    cloth = 1
+                }
+            },
+            {
+                item = "tape",
+                timeToCraft = 10,
+                tier = 2,
+                ingredients = {
+                    cloth = 20,
+                    straw = 5
+                }
+            }
         }
     },
     {
@@ -128,6 +217,7 @@ config.RECIPES = {
             {
                 item = "medkit",
                 timeToCraft = 15,
+                tier = 2,
                 ingredients = {
                     bandage = 4,
                     water = 1,
@@ -136,11 +226,11 @@ config.RECIPES = {
             },
         }
     },
-    {
-        name = "Equipment",
-        icon = "rvr/icons/craftingmenu_category_armor.png",
-        recipes = {}
-    },
+    -- {
+    --     name = "Equipment",
+    --     icon = "rvr/icons/craftingmenu_category_armor.png",
+    --     recipes = {}
+    -- },
     -- {
     --     name = "Navigation",
     --     icon = "rvr/icons/craftingmenu_category_navigation.png",
@@ -210,9 +300,9 @@ config.RECIPES = {
             }
         }
     },
-    {
-        name = "Other",
-        icon = "rvr/icons/craftingmenu_category_other.png",
-        recipes = {}
-    }
+    -- {
+    --     name = "Other",
+    --     icon = "rvr/icons/craftingmenu_category_other.png",
+    --     recipes = {}
+    -- }
 }
