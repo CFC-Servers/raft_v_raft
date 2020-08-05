@@ -32,7 +32,7 @@ function ENT:Initialize()
     local physObj = self:GetPhysicsObject()
 
     if physObj:IsValid() then
-        physObj:SetBuoyancyRatio( 0.02 )
+        physObj:SetBuoyancyRatio( 0.2 )
         physObj:Wake()
         physObj:EnableMotion( true )
     end
