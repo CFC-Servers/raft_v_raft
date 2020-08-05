@@ -19,9 +19,6 @@ Config.POSSIBLE_ITEMS = {
     {
         class = "rvr_scrap_barrel",
         weight = 1
-    },
-    {
-        weight = 3
     }
 }
 
