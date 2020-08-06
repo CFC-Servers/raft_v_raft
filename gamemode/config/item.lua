@@ -35,6 +35,7 @@ config.itemDefinitions = {
         stackable = true,
         viewModelOffset = Vector( 5, -1, -3 ),
         worldModelOffset = Vector( 0, 0, 2 ),
+        isBag = true
     },
     {
         type = "big_rock",
@@ -46,6 +47,7 @@ config.itemDefinitions = {
         stackable = true,
         viewModelOffset = Vector( 5, -1, -3 ),
         worldModelOffset = Vector( 3, 0, 5 ),
+        isBag = true
     },
     {
         type = "straw",
@@ -93,7 +95,8 @@ config.itemDefinitions = {
         viewModelOffset = Vector( -20, 1, -4 ),
         viewModelAng = Angle( 0, -90, 0 ),
         worldModelOffset = Vector( 3, 0, 3 ),
-        worldModelAng = Angle( 90, 90, 0 )
+        worldModelAng = Angle( 90, 90, 0 ),
+        isBag = true
     },
     {
         type = "scrap_metal",
@@ -106,7 +109,8 @@ config.itemDefinitions = {
         viewModelOffset = Vector( -13, -25, -5 ),
         viewModelAng = Angle( 0, 180, 0 ),
         worldModelOffset = Vector( 0, 2, 0 ),
-        worldModelAng = Angle( -90, 180, 0 )
+        worldModelAng = Angle( -90, 180, 0 ),
+        isBag = true
     },
 
     -- Food
