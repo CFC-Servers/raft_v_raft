@@ -8,6 +8,8 @@ A mix between Rust and Raft where you build to survive against the harsh ocean a
 The project strictly follows the [CFC styling guidelines](https://github.com/CFC-Servers/cfc_glua_style_guidelines)  
 Any PRs should also follow the same guidelines
 
+Project's Trello: https://trello.com/b/BlEjE9cq/cfc-competiton-raft-gamemode
+
 ## Module READMEs
 - [Items](https://github.com/CFC-Servers/raft_v_raft/blob/master/gamemode/modules/items/README.md)
 - [Commands](https://github.com/CFC-Servers/raft_v_raft/blob/master/gamemode/modules/commands/readme.md)
@@ -29,3 +31,4 @@ More coming soon to a github near you!
   - [Brandon Sturgeon](https://github.com/brandonsturgeon)
 - Emotional support:
   - [Brandon Sturgeon](https://github.com/brandonsturgeon)
+  - [Madi](https://www.instagram.com/yisgramir/)
