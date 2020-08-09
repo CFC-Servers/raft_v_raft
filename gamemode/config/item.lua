@@ -83,6 +83,8 @@ config.itemDefinitions = {
         stackable = true,
         viewModelOffset = Vector( 10, 8, 15 ),
         viewModelAng = Angle( 0, 0, 90 ),
+        worldModelOffset = Vector( -3, 0, 0 ),
+        worldModelAng = Angle( 0, 0, 90 ),
     },
     {
         type = "iron",
