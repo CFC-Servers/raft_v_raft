@@ -9,17 +9,17 @@ Config.BUILDING_REQUIREMENTS = {
     raft_foundation = {
         wood = 35,
         nail = 20,
-        rope = 5
+        rope = 1
     },
     raft_platform = {
         wood = 30,
         nail = 15,
-        rope = 4
+        rope = 1
     },
     raft_stairs = {
         wood = 60,
         nail = 30,
-        rope = 15
+        rope = 2
     },
     raft_fence = {
         wood = 10,

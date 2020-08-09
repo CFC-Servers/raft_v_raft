@@ -36,7 +36,7 @@ config.RECIPES = {
         recipes = {
             {
                 item = "water",
-                timeToCraft = 39,
+                timeToCraft = 20,
                 ingredients = {
                     dirty_water = 1
                 }
@@ -50,15 +50,15 @@ config.RECIPES = {
         recipes = {
             {
                 item = "cooked_tuna",
-                timeToCraft = 5,
+                timeToCraft = 15,
                 ingredients = {
                     tuna = 1,
-                    wood = 1
+                    wood = 2
                 }
             },
             {
                 item = "cooked_horse_mackerel",
-                timeToCraft = 3,
+                timeToCraft = 10,
                 ingredients = {
                     horse_mackerel = 1,
                     wood = 1
@@ -87,15 +87,6 @@ config.RECIPES = {
                 }
             },
             {
-                item = "metal_axe",
-                timeToCraft = 30,
-                tier = 2,
-                ingredients = {
-                    wood = 15,
-                    iron = 20
-                }
-            },
-            {
                 item = "wooden_spear",
                 timeToCraft = 10,
                 ingredients = {
@@ -117,8 +108,8 @@ config.RECIPES = {
                 timeToCraft = 45,
                 tier = 2,
                 ingredients = {
-                    wood = 20,
-                    iron = 2
+                    wood = 30,
+                    iron = 3
                 }
             },
             {
@@ -150,9 +141,8 @@ config.RECIPES = {
                 item = "paddle",
                 timeToCraft = 15,
                 ingredients = {
-                    wood = 50,
-                    nail = 1,
-                    rope = 1
+                    wood = 15,
+                    nail = 1
                 }
             },
             {
@@ -191,7 +181,7 @@ config.RECIPES = {
                 item = "rope",
                 timeToCraft = 15,
                 ingredients = {
-                    cloth = 15
+                    cloth = 5
                 }
             },
             {
@@ -255,7 +245,7 @@ config.RECIPES = {
                 ingredients = {
                     wood = 50,
                     nail = 20,
-                    rope = 5
+                    rope = 1
                 }
             },
             {
@@ -265,7 +255,7 @@ config.RECIPES = {
                 ingredients = {
                     wood = 60,
                     nail = 30,
-                    rope = 10,
+                    rope = 3,
                     iron = 2
                 }
             },
@@ -295,7 +285,7 @@ config.RECIPES = {
                 ingredients = {
                     scrap_metal = 10,
                     wood = 10,
-                    rope = 2
+                    rope = 1
                 }
             }
         }

@@ -47,7 +47,7 @@ Config.SCRAP_BARREL_ITEMS = {
     },
     {
         itemType = "cloth",
-        weight = 3,
+        weight = 5,
         minCount = 1,
         maxCount = 5
     },
@@ -56,5 +56,9 @@ Config.SCRAP_BARREL_ITEMS = {
         weight = 3,
         minCount = 1,
         maxCount = 5
+    },
+    {
+        itemType = "straw",
+        weight = 3
     }
 }
