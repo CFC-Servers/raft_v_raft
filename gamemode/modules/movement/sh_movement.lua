@@ -20,6 +20,21 @@ end
 local function getGroundIfRaft( ply )
     local ground = ply:GetGroundEntity()
 
+    if CLIENT and not IsValid( ground ) and ply ~= LocalPlayer() then
+        local pos = ply:GetPos()
+
+        local trace = util.TraceLine{
+            start = pos,
+            endpos = pos + Vector( 0, 0, -5 ),
+            filter = ply,
+            mask = MASK_PLAYERSOLID
+        }
+
+        if trace.Hit then
+            ground = trace.Entity
+        end
+    end
+
     if not IsValid( ground ) then return end
     if not ground.IsRaft then return end
 
@@ -122,3 +137,68 @@ function GM:FinishMove( ply, mv )
 
     return true
 end
+
+local positionCache = {}
+plyVels = {}
+
+local timerDelay = 0.05
+
+timer.Create( "RVR_Player_Vel", timerDelay, 0, function()
+    for _, ply in pairs( player.GetAll() ) do
+        local plyPos = ply:GetPos()
+
+        if not positionCache[ply] then
+            positionCache[ply] = plyPos
+        end
+
+        local plyVel = ( plyPos - positionCache[ply] ) / timerDelay
+
+        plyVels[ply] = plyVel
+
+        positionCache[ply] = plyPos
+    end
+end )
+
+hook.Add( "PrePlayerDraw", "RVR_Anti_Interpolation", function( ply )
+    local ground = getGroundIfRaft( ply )
+    if not ground then return end
+
+    local plyVel = plyVels[ply] or Vector( 0, 0, 0 )
+
+    local vel = ( plyVel - ground:GetVelocity() ):GetNormalized()
+
+    local ang = ply:EyeAngles()
+    ang.pitch = 0
+    ang.roll = 0
+
+    local move_x, move_y = vel:Dot( ang:Forward() ), vel:Dot( ang:Right() )
+    local maxMoveSpeed = ply:GetSequenceGroundSpeed( ply:GetSequence() )
+
+    move_x = ( move_x + 1 ) / 2
+    move_y = ( move_y + 1 ) / 2
+
+    if maxMoveSpeed <= 1 then
+        maxMoveSpeed = 1
+    end
+
+    --print( move_x)
+    local newMoveX = move_x * ply:GetPlaybackRate() / maxMoveSpeed
+    local newMoveY = move_y * ply:GetPlaybackRate() / maxMoveSpeed
+
+    ply:SetPoseParameter( "move_x", newMoveX )
+    ply:SetPoseParameter( "move_y", newMoveY )
+
+    ply:InvalidateBoneCache()
+    ply:SetupBones()
+
+    local wep = ply:GetActiveWeapon()
+
+    if IsValid( wep ) then
+        wep:InvalidateBoneCache()
+        wep:SetupBones()
+    end
+end )
+
+hook.Add( "DoAnimationEvent", "RVR_DoAnimationEvent", function( ply, event, data )
+    print(event)
+end )
