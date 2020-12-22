@@ -137,7 +137,7 @@ commands.addType( "player", function( arg, ply )
     return nil, "Invalid player: " .. arg
 end )
 
-RVR.Commands.addType( "color", function( str, caller )
+commands.addType( "color", function( str, caller )
     if str[1] ~= "#" or ( #str ~= 7 and #str ~= 9 ) then
         return nil, "Colors should be in hex, prefixed with a #, e.g. #FF0000 for red"
     end
