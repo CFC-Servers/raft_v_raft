@@ -139,7 +139,7 @@ end )
 
 commands.addType( "color", function( str, caller )
     if str[1] ~= "#" or ( #str ~= 7 and #str ~= 9 ) then
-        return nil, "Colors should be in hex, prefixed with a #, e.g. #FF0000 for red"
+        return nil, "Colors should be in hex (with optional alpha), prefixed with a #, e.g. #FF0000 for red or #FFFFFF00 for transparent"
     end
 
     local r = tonumber( str:sub( 2, 3 ), 16 )
