@@ -24,6 +24,7 @@ The **commands module** implements five types.
   - "true", "yes", "enable", "enabled" and "1" will be converted to `true`
   - "false", "no", "disable", "disabled" and "0" will be converted to `false`
 - `player` Checks for a player in-game. It works with the player's name as well as their steam id. Passing `^` will pass the player that ran the command and `@` will pass the player being aimed at by whoever ran the command.
+- `color` Checks for an hexadecimal color code with optional alpha (#RRGGBBAA) such as #FF0000 for red or #FFFFFF00 for transparent.
 
 ### Creating a type
 Custom argument types can be created using:
