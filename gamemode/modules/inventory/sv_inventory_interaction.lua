@@ -13,14 +13,6 @@ util.AddNetworkString( "RVR_Inventory_DropItem" )
 util.AddNetworkString( "RVR_Inventory_RequestPlayerUpdate" )
 util.AddNetworkString( "RVR_Inventory_SetHotbarSelected" )
 
-local function removeFunctions( tab )
-    for k, v in pairs( tab ) do
-        if type( v ) == "function" then
-            tab[k] = nil
-        end
-    end
-end
-
 local function getSendableInventory( ent, inventory, isPlayerUpdate )
     local config = GAMEMODE.Config.Inventory
 
@@ -37,22 +29,14 @@ local function getSendableInventory( ent, inventory, isPlayerUpdate )
         end
     end
 
-    for k, v in pairs( inventory.Inventory ) do
-        v.item = table.Merge( v.item, RVR.Items.getItemData( v.item.type ) )
-        removeFunctions( v.item )
-    end
-
     inventory.Ent = ent
 
     return inventory
 end
 
 function inv.notifyItemPickup( ply, item, count )
-    local itemTable = table.Copy( RVR.Items.getItemData( item.type ) )
-    removeFunctions( itemTable )
-
     net.Start( "RVR_Inventory_OnPickup" )
-        net.WriteTable( itemTable )
+        net.WriteString( item.type )
         net.WriteUInt( count, 16 )
     net.Send( ply )
 end
@@ -66,10 +50,7 @@ function inv.notifyItemSlotChange( plys, ent, slotNum, slotData )
         net.WriteBool( tobool( slotData ) )
 
         if slotData then
-            local data = table.Copy( slotData )
-            table.Merge( data.item, RVR.Items.getItemData( data.item.type ) )
-            removeFunctions( data.item )
-            net.WriteTable( data )
+            net.WriteTable( slotData )
         end
     net.Send( plys )
 end
