@@ -8,12 +8,12 @@ include( "cl_boxinventory.lua" )
 local cursorSlotSize = 60
 
 net.Receive( "RVR_Inventory_Open", function()
-    local inventory = net.ReadTable()
+    local inventory = inv.fromInventoryData( net.ReadTable() )
     local isSelf = net.ReadBool()
     local plyInventory = inventory
 
     if not isSelf then
-        plyInventory = net.ReadTable()
+        plyInventory = inv.fromInventoryData( net.ReadTable() )
     end
 
     -- Update hotbar slots for any inventory open
@@ -62,6 +62,7 @@ net.Receive( "RVR_Inventory_UpdateSlot", function()
 
     if hasSlotData then
         slotData = net.ReadTable()
+        inv.setupItemMeta( slotData.item )
     end
 
     -- Update to the LocalPlayers cursor slot
@@ -124,6 +125,21 @@ hook.Add( "PlayerBindPress", "RVR_Inventory", function( _, bind, pressed )
         return true
     end
 end )
+
+function inv.fromInventoryData( inventory )
+    for k, v in pairs( inventory.Inventory ) do
+        inv.setupItemMeta( v.item )
+    end
+
+    return inventory
+end
+
+function inv.setupItemMeta( item )
+    local mt = { __index = RVR.Items.getItemData( item.type ) }
+    setmetatable( item, mt )
+
+    return item
+end
 
 function inv.closeInventory()
     if inv.openInventory then

@@ -16,7 +16,8 @@ local popupItemMaterial = Material( "rvr/backgrounds/dark_slot_background.png" )
 local brown = Color( 91, 56, 34 )
 
 net.Receive( "RVR_Inventory_OnPickup", function()
-    local itemData = net.ReadTable()
+    local itemType = net.ReadString()
+    local itemData = RVR.Items.getItemData( itemType )
     local count = net.ReadUInt( 16 )
 
     table.insert( inv.pickupPopups, 1, {
