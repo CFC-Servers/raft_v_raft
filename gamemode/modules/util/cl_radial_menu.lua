@@ -1,11 +1,5 @@
 local outerCircleMat = Material( "rvr/icons/radial_circle.png" )
 
-surface.CreateFont( "RVR_RadialMenu_Title", {
-    font = "Bungee Regular",
-    size = ScrH() * 0.055,
-    weight = 500
-} )
-
 local function getCursorAngAndDist()
     local x, y = input.GetCursorPos()
     x, y = x - ScrW() / 2, y - ScrH() / 2

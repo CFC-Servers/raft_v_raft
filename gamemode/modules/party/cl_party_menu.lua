@@ -17,12 +17,6 @@ local dropDownDisabledMat = Material( "rvr/icons/craftingmenu_dropdownclosed.png
 local yellow = Color( 188, 162, 105 )
 local brown = Color( 91, 56, 34 )
 
-surface.CreateFont( "RVR_PartyNameLabel", {
-    font = "Bungee Regular",
-    size = ScrH() * 0.04,
-    weight = 700,
-} )
-
 hook.Add( "RVR_Party_PartyChanged", "RVR_Party_Menu", function( id, data )
     timer.Simple( 0.2, party.reloadMenu )
 end )

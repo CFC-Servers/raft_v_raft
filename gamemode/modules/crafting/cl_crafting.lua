@@ -37,25 +37,6 @@ local function formatScrollbar( bar )
     end
 end
 
-
-surface.CreateFont( "RVR_CraftingHeader", {
-    font = "Bungee Regular",
-    size = ScrH() * 0.12,
-    weight = 700
-} )
-
-surface.CreateFont( "RVR_CraftingSubHeader", {
-    font = "Bungee Regular",
-    size = ScrH() * 0.08,
-    weight = 700
-} )
-
-surface.CreateFont( "RVR_CraftingLabel", {
-    font = "Bungee Regular",
-    size = ScrH() * 0.07,
-    weight = 700
-} )
-
 function cft.openCraftingMenu( craftingData )
     if cft.openMenu then
         cft.closeCraftingMenu()
