@@ -3,12 +3,6 @@ local inv = RVR.Inventory
 
 local backgroundMat = Material( "rvr/backgrounds/generic_menu_background.png" )
 
-surface.CreateFont( "RVR_BoxInventoryHeader", {
-    font = "Bungee Regular",
-    size = ScrH() * 0.08,
-    weight = 700
-} )
-
 function inv.openBoxInventory( boxInventory, playerInventory )
     local config = GAMEMODE.Config.Inventory
     local w, h = ScrH() * 0.91, ScrH() * 0.7

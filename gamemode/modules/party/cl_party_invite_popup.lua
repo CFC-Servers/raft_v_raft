@@ -12,12 +12,6 @@ local buttonBackgroundAspectRatio = buttonBackgroundMat:Width() / buttonBackgrou
 
 local blacklist = {}
 
-surface.CreateFont( "RVR_PartyInviteLabel", {
-    font = "Bungee Regular",
-    size = ScrH() * 0.04,
-    weight = 700,
-} )
-
 hook.Add( "RVR_Party_gotInvite", "RVR_ShowPopup", function( partyID, inviter )
     local partyData = RVR.Party.getParty( partyID )
     if not partyData then return end

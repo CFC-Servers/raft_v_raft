@@ -9,12 +9,6 @@ local yellow = Color( 188, 162, 105 )
 
 local spillover = 6
 
-surface.CreateFont( "RVR_TooltipDesc", {
-    font = "Tahoma",
-    size = ScrH() * 0.02,
-    weight = 500
-} )
-
 function PANEL:Init()
     self:SetSize( w, h )
 

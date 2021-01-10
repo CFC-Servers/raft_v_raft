@@ -14,30 +14,6 @@ mainMenu.MENU_MODEL = 3
 
 mainMenu.backgrounds = mainMenu.backgrounds or {}
 
-surface.CreateFont( "RVR_StartMenuButton", {
-    font = "Bungee Regular",
-    size = ScrH() * 0.09,
-    weight = 700
-} )
-
-surface.CreateFont( "RVR_StartMenuLabel", {
-    font = "Bungee Regular",
-    size = ScrH() * 0.07,
-    weight = 700
-} )
-
-surface.CreateFont( "RVR_StartMenuSmall", {
-    font = "Bungee Regular",
-    size = ScrH() * 0.05,
-    weight = 700
-} )
-
-surface.CreateFont( "RVR_StartMenuTextEntry", {
-    font = "Roboto",
-    size = ScrH() * 0.04,
-    weight = 700
-} )
-
 hook.Add( "HUDShouldDraw", "RVR_MainMenu_HideHud", function( hudType )
     if hudType == "CHudGMod" then return end
     if mainMenu.frame or mainMenu.hideGui then return false end
