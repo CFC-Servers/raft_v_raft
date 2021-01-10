@@ -1,4 +1,5 @@
 
+if SERVER then return end
 
 surface.CreateFont( "RVR_BoxInventoryHeader", {
     font = "Bungee Regular",
